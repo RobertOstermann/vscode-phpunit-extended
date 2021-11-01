@@ -26,13 +26,7 @@
     "php"
   ],
   "activationEvents": [
-    "onCommand:phpunit.Test",
-    "onCommand:phpunit.TestFile",
-    "onCommand:phpunit.TestSuite",
-    "onCommand:phpunit.TestSuiteWithExclusions",
-    "onCommand:phpunit.TestNearest",
-    "onCommand:phpunit.LastTest",
-    "onCommand:phpunit.CancelCurrentTest"
+    "workspaceContains:*.php"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -118,6 +112,8 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "node ./node_modules/vscode/bin/test",
+    "download-api": "vscode-dts dev",
+    "postdownload-api": "vscode-dts main",
     "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run -S esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run -S esbuild-base -- --sourcemap --watch"
@@ -125,10 +121,11 @@
   "devDependencies": {
     "@types/mocha": "^2.2.48",
     "@types/node": "^6.0.106",
+    "@types/vscode": "^1.61.0",
     "esbuild": "^0.13.10",
     "mocha": "^3.5.0",
     "typescript": "^2.8.3",
-    "@types/vscode": "^1.61.0",
-    "vscode-test": "^1.6.1"
+    "vscode-test": "^1.6.1",
+    "vscode-dts": "^0.3.1"
   }
 }

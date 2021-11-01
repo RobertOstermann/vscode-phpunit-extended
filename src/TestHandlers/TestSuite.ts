@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { PhpUnit } from '../PhpUnit';
+import { PhpUnit } from '../phpUnit';
 
 export class TestSuite {
 

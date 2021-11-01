@@ -4,7 +4,7 @@ import { CurrentFileTest } from './TestHandlers/CurrentFileTest';
 import { TestSuite } from './TestHandlers/TestSuite';
 import { NeareastTest } from './TestHandlers/NeareastTest';
 import { RunLastTest } from './TestHandlers/RunLastTest';
-import { PhpUnit } from "./PhpUnit";
+import { PhpUnit } from "./phpUnit";
 import { TestHandler } from './utils';
 import cp = require('child_process');
 import fs = require('fs');

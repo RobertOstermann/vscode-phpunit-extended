@@ -1,16 +1,16 @@
 import * as vscode from 'vscode';
 
 export class Helper {
-    private readonly regex = {
+    private static readonly regex = {
         method: /\s*(public\s+){0,1}function\s+(\w+)\s*\(/gi,
         class: /class\s+(\w*)\s*{?/gi
     };
 
-    public getRegex() {
+    static getRegex() {
         return this.regex;
     }
 
-    public getClassNameOrMethod(editor: vscode.TextEditor, type: string): string | undefined {
+    static getClassNameOrMethod(editor: vscode.TextEditor, type: string): string | undefined {
         if (!this.regex.hasOwnProperty(type)) {
             throw new Error('Invalid type property passed: ' + type);
         }
@@ -36,5 +36,29 @@ export class Helper {
         }
 
         return result;
+    }
+
+    static getAvailableTests(editor: vscode.TextEditor) {
+        if (editor.document.fileName != null) {
+            let testFunctions = [];
+
+            // testFunctions.push('class - ' + this.getClassNameOrMethod(editor, 'class'));
+
+            let windowText = editor.document.getText();
+            let result = null;
+
+            while ((result = this.getRegex().method.exec(windowText))) {
+                let testToAdd = result[2].toString().trim();
+
+                // if (!testFunctions.length || testFunctions[0] != testToAdd) {
+                //     testFunctions.push('function - ' + testToAdd);
+                // }
+                testFunctions.push(testToAdd);
+            }
+
+            return testFunctions;
+        }
+
+        return null;
     }
 }

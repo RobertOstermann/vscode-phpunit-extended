@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { Helper } from '../Helper';
-import { PhpUnit } from '../PhpUnit';
+import { Helper } from '../helper';
+import { PhpUnit } from '../phpUnit';
 
 export class SelectWindowTest {
 
@@ -51,20 +51,19 @@ export class SelectWindowTest {
 
     private getUserSelectedTest(): Thenable<any> | null {
         if (this.editor.document.fileName != null) {
-            let helper = new Helper;
             let testFunctions = [];
 
-            let currentTest = helper.getClassNameOrMethod(this.editor, 'method');
+            let currentTest = Helper.getClassNameOrMethod(this.editor, 'method');
             if (currentTest) {
                 testFunctions.push('function - ' + currentTest);
             }
 
-            testFunctions.push('class - ' + helper.getClassNameOrMethod(this.editor, 'class'));
+            testFunctions.push('class - ' + Helper.getClassNameOrMethod(this.editor, 'class'));
 
             let windowText = this.editor.document.getText();
             let result = null;
 
-            while ((result = helper.getRegex().method.exec(windowText))) {
+            while ((result = Helper.getRegex().method.exec(windowText))) {
                 let testToAdd = result[2].toString().trim();
 
                 if (!testFunctions.length || testFunctions[0] != testToAdd) {

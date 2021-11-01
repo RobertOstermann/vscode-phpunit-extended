@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { Helper } from '../Helper';
-import { PhpUnit } from '../PhpUnit';
+import { Helper } from '../helper';
+import { PhpUnit } from '../phpUnit';
 
 export class NeareastTest {
 
@@ -19,7 +19,7 @@ export class NeareastTest {
             return;
         }
 
-        let currentTest = (new Helper).getClassNameOrMethod(this.editor, 'method');
+        let currentTest = Helper.getClassNameOrMethod(this.editor, 'method');
 
         if (currentTest) {
             this.args.push("--filter");

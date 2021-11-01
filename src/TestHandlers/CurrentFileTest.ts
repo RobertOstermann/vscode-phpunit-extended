@@ -1,13 +1,11 @@
-import {PhpUnit} from '../PhpUnit';
+import * as vscode from 'vscode';
+import { PhpUnit } from '../PhpUnit';
 
 export class CurrentFileTest {
+    private args: string[];
+    private outputChannel: any;
 
-    private editor;
-    private args;
-    private outputChannel;
-
-    constructor(editor, args, outputChannel) {
-        this.editor = editor;
+    constructor(args: string[], outputChannel: vscode.OutputChannel) {
         this.args = args;
         this.outputChannel = outputChannel;
     }

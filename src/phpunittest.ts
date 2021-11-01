@@ -1,5 +1,3 @@
-'use strict';
-
 import * as vscode from 'vscode';
 import { SelectWindowTest } from './TestHandlers/SelectWindowTest';
 import { CurrentFileTest } from './TestHandlers/CurrentFileTest';
@@ -7,14 +5,14 @@ import { TestSuite } from './TestHandlers/TestSuite';
 import { NeareastTest } from './TestHandlers/NeareastTest';
 import { RunLastTest } from './TestHandlers/RunLastTest';
 import { PhpUnit } from "./PhpUnit";
-
+import { TestHandler } from './utils';
 import cp = require('child_process');
-const fs = require('fs');
+import fs = require('fs');
 
 export class TestRunner {
     private outputChannel: vscode.OutputChannel;
 
-    constructor(channel) {
+    constructor(channel: vscode.OutputChannel) {
         this.outputChannel = channel;
     }
 
@@ -38,13 +36,11 @@ export class TestRunner {
         this.executeTest('nearest');
     }
 
-    public runLastTest()
-    {
+    public runLastTest() {
         this.executeTest('last');
     }
 
-    public cancelCurrentTest()
-    {
+    public cancelCurrentTest() {
         PhpUnit.cancelCurrentTest();
     }
 
@@ -52,26 +48,26 @@ export class TestRunner {
         let config = vscode.workspace.getConfiguration("phpunit");
         let args = [].concat(config.get<Array<string>>("args", []));
         const editor = vscode.window.activeTextEditor;
-        let testHandler;
+        let testHandler: TestHandler;
 
         switch (type) {
             case 'select-window':
                 testHandler = new SelectWindowTest(editor, args, this.outputChannel);
                 break;
             case 'current-file':
-                testHandler = new CurrentFileTest(editor, args, this.outputChannel);
+                testHandler = new CurrentFileTest(args, this.outputChannel);
                 break;
             case 'suite':
-                testHandler = new TestSuite(editor, args, this.outputChannel);
+                testHandler = new TestSuite(args, this.outputChannel);
                 break;
             case 'suite-with-exclusions':
-                testHandler = new TestSuite(editor, args, this.outputChannel, true);
+                testHandler = new TestSuite(args, this.outputChannel, true);
                 break;
             case 'nearest':
                 testHandler = new NeareastTest(editor, args, this.outputChannel);
                 break;
             case 'last':
-                testHandler = new RunLastTest(editor, args, this.outputChannel);
+                testHandler = new RunLastTest(this.outputChannel);
                 break;
         }
 

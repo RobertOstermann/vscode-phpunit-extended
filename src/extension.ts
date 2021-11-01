@@ -1,42 +1,36 @@
-'use strict';
+import * as vscode from 'vscode';
+import { TestRunner } from './PhpUnitTest';
 
-import {window, commands, ExtensionContext} from 'vscode';
-import {TestRunner} from './phpunittest';
+export function activate(context: vscode.ExtensionContext) {
 
-export function activate(context: ExtensionContext) {
-
-	let outputChannel = window.createOutputChannel("phpunit");
+	let outputChannel = vscode.window.createOutputChannel("phpunit");
 	let PHPUnitTestRunner: TestRunner = new TestRunner(outputChannel);
 
-	context.subscriptions.push(commands.registerCommand('phpunit.Test', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('phpunit.Test', () => {
 		PHPUnitTestRunner.runTest();
 	}));
 
-	context.subscriptions.push(commands.registerCommand('phpunit.TestFile', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('phpunit.TestFile', () => {
 		PHPUnitTestRunner.runCurrentFileTest();
 	}));
 
-	context.subscriptions.push(commands.registerCommand('phpunit.TestSuite', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('phpunit.TestSuite', () => {
 		PHPUnitTestRunner.runTestSuite();
 	}));
 
-	context.subscriptions.push(commands.registerCommand('phpunit.TestSuiteWithExclusions', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('phpunit.TestSuiteWithExclusions', () => {
 		PHPUnitTestRunner.runTestSuiteWithExclusions();
 	}));
 
-	context.subscriptions.push(commands.registerCommand('phpunit.TestNearest', () => {
+	context.subscriptions.push(vscode.commands.registerCommand('phpunit.TestNearest', () => {
 		PHPUnitTestRunner.runNearestTest();
 	}));
 
-	context.subscriptions.push(commands.registerCommand('phpunit.LastTest', () => {
-		PHPUnitTestRunner.runLastTest()
+	context.subscriptions.push(vscode.commands.registerCommand('phpunit.LastTest', () => {
+		PHPUnitTestRunner.runLastTest();
 	}));
 
-	context.subscriptions.push(commands.registerCommand('phpunit.CancelCurrentTest', () => {
-		PHPUnitTestRunner.cancelCurrentTest()
+	context.subscriptions.push(vscode.commands.registerCommand('phpunit.CancelCurrentTest', () => {
+		PHPUnitTestRunner.cancelCurrentTest();
 	}));
-}
-
-// this method is called when your extension is deactivated
-export function deactivate() {
 }

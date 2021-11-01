@@ -1,22 +1,20 @@
-import {PhpUnit} from '../PhpUnit';
-import { workspace } from 'vscode';
+import * as vscode from 'vscode';
+import { PhpUnit } from '../PhpUnit';
 
 export class TestSuite {
 
-    private editor;
-    private args;
-    private outputChannel;
-    private withExclutions;
+    private args: string[];
+    private outputChannel: vscode.OutputChannel;
+    private withExclutions: boolean;
 
-    constructor(editor, args, outputChannel, withExclutions = false) {
-        this.editor = editor;
+    constructor(args: string[], outputChannel: vscode.OutputChannel, withExclutions = false) {
         this.args = args;
         this.outputChannel = outputChannel;
         this.withExclutions = withExclutions;
     }
 
     public run() {
-        let config = workspace.getConfiguration("phpunit");
+        let config = vscode.workspace.getConfiguration("phpunit");
 
         if (this.withExclutions) {
             this.args.push('--exclude-group');

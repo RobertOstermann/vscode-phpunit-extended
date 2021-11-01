@@ -1,22 +1,22 @@
-import { workspace, window } from 'vscode';
+import * as vscode from 'vscode';
 import cp = require('child_process');
-const fs = require('fs');
+import fs = require('fs');
 
 export class PhpUnit {
-    private args;
-    private putFsPathIntoArgs;
-    private outputChannel;
-    public static lastCommand;
-    public static currentTest;
+    private args: any;
+    private putFsPathIntoArgs: boolean;
+    private outputChannel: any;
+    public static lastCommand: any;
+    public static currentTest: cp.ChildProcess;
 
-    constructor(outputChannel, args: string[], putFsPathIntoArgs: boolean = true) {
+    constructor(outputChannel: any, args: string[], putFsPathIntoArgs: boolean = true) {
         this.outputChannel = outputChannel;
         this.args = args;
         this.putFsPathIntoArgs = putFsPathIntoArgs;
     }
 
     public run() {
-        let config = workspace.getConfiguration("phpunit");
+        let config = vscode.workspace.getConfiguration("phpunit");
         let phpunitPath = config.get<string>("execPath", "phpunit");
 
         if (phpunitPath == "") {
@@ -32,7 +32,7 @@ export class PhpUnit {
         if (phpUnitComposerBinFile != null) {
             this.execPhpUnit(phpUnitComposerBinFile);
         } else {
-            window.showErrorMessage('Couldn\'t find a vendor/bin/phpunit file.');
+            vscode.window.showErrorMessage('Couldn\'t find a vendor/bin/phpunit file.');
         }
     }
 
@@ -40,7 +40,7 @@ export class PhpUnit {
         this.outputChannel.clear();
 
         workingDirectory = workingDirectory == null ? this.findWorkingDirectory() : workingDirectory;
-        let showOutput = workspace.getConfiguration('phpunit').showOutput;
+        let showOutput = vscode.workspace.getConfiguration('phpunit').showOutput;
         if (showOutput != 'always') {
             this.outputChannel.hide();
         }
@@ -50,7 +50,7 @@ export class PhpUnit {
         }
 
         if (this.putFsPathIntoArgs) {
-            this.args.push(window.activeTextEditor.document.uri.fsPath);
+            this.args.push(vscode.window.activeTextEditor.document.uri.fsPath);
         }
 
         PhpUnit.lastCommand = {
@@ -73,7 +73,7 @@ export class PhpUnit {
         let phpunitProcess = cp.spawn(
             command,
             this.args,
-            { cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ''), env: workspace.getConfiguration('phpunit').envVars }
+            { cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ''), env: vscode.workspace.getConfiguration('phpunit').envVars }
         );
 
         PhpUnit.currentTest = phpunitProcess;
@@ -94,8 +94,8 @@ export class PhpUnit {
                 this.outputChannel.show();
             }
 
-            workspace.getConfiguration('phpunit').scriptsAfterTests[status]
-                .forEach(script => {
+            vscode.workspace.getConfiguration('phpunit').scriptsAfterTests[status]
+                .forEach((script: any) => {
                     if (typeof script === 'string') {
                         cp.spawn(script);
                     } else {
@@ -115,11 +115,11 @@ export class PhpUnit {
         }
     }
 
-    private findNearestFileFullPath(fileRelativeName, currentPath = '') {
-        let rootPath = workspace.rootPath;
+    private findNearestFileFullPath(fileRelativeName: string, currentPath = '') {
+        let rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
 
         if (currentPath == '') {
-            let filePath = window.activeTextEditor.document.uri.fsPath;
+            let filePath = vscode.window.activeTextEditor.document.uri.fsPath;
             currentPath = filePath.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, '');
         } else {
             currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, '');
@@ -141,7 +141,7 @@ export class PhpUnit {
             || this.findNearestFileFullPath('phpunit.xml.dist');
 
         if (workingDirectory == null) {
-            window.showErrorMessage('Couldn\'t find a working directory.');
+            vscode.window.showErrorMessage('Couldn\'t find a working directory.');
         }
 
         return workingDirectory;
@@ -152,7 +152,7 @@ export class PhpUnit {
             PhpUnit.currentTest.kill();
             PhpUnit.currentTest = null;
         } else {
-            window.showInformationMessage("There are no tests running.");
+            vscode.window.showInformationMessage("There are no tests running.");
         }
     }
 }

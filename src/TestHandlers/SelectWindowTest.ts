@@ -1,14 +1,14 @@
-import {window} from 'vscode';
-import {Helper} from '../Helper';
-import {PhpUnit} from '../PhpUnit';
+import * as vscode from 'vscode';
+import { Helper } from '../Helper';
+import { PhpUnit } from '../PhpUnit';
 
 export class SelectWindowTest {
 
-    private editor;
-    private args;
-    private outputChannel;
+    private editor: vscode.TextEditor;
+    private args: string[];
+    private outputChannel: vscode.OutputChannel;
 
-    constructor(editor, args, outputChannel) {
+    constructor(editor: vscode.TextEditor, args: string[], outputChannel: vscode.OutputChannel) {
         this.editor = editor;
         this.args = args;
         this.outputChannel = outputChannel;
@@ -16,8 +16,8 @@ export class SelectWindowTest {
 
     public run() {
         let range = this.editor
-                    ? this.editor.document.getWordRangeAtPosition(this.editor.selection.active)
-                    : null;
+            ? this.editor.document.getWordRangeAtPosition(this.editor.selection.active)
+            : null;
 
         if (range) {
             let line = this.editor.document.lineAt(range.start.line);
@@ -72,7 +72,7 @@ export class SelectWindowTest {
                 }
             }
 
-            return window.showQuickPick(testFunctions, {});
+            return vscode.window.showQuickPick(testFunctions, {});
         }
 
         return null;

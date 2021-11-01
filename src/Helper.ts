@@ -1,3 +1,5 @@
+import * as vscode from 'vscode';
+
 export class Helper {
     private readonly regex = {
         method: /\s*(public\s+){0,1}function\s+(\w+)\s*\(/gi,
@@ -8,7 +10,7 @@ export class Helper {
         return this.regex;
     }
 
-    public getClassNameOrMethod(editor, type: string): string | undefined {
+    public getClassNameOrMethod(editor: vscode.TextEditor, type: string): string | undefined {
         if (!this.regex.hasOwnProperty(type)) {
             throw new Error('Invalid type property passed: ' + type);
         }

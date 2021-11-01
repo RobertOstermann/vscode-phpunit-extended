@@ -1,129 +1,134 @@
 {
-    "name": "phpunit-extended",
-    "displayName": "PHPUnit Extended",
-    "description": "Run PHPUnit tests from VSCode.",
-    "version": "1.0.7",
-    "publisher": "santigarcor",
-    "icon": "images/phpunit.png",
-    "engines": {
-        "vscode": "^1.17.0"
-    },
-    "categories": [
-        "Other"
+  "name": "phpunit-extended",
+  "displayName": "PHPUnit Extended With TestExplorer",
+  "description": "Run PHPUnit tests from VSCode.",
+  "version": "0.1.0",
+  "publisher": "RobertOstermann",
+  "icon": "images/phpunit.png",
+  "engines": {
+    "vscode": "^1.59.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RobertOstermann/vscode-phpunit-extended"
+  },
+  "homepage": "https://github.com/RobertOstermann/vscode-phpunit-extended/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/RobertOstermann/vscode-phpunit-extended/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "phpunit",
+    "test",
+    "php"
+  ],
+  "activationEvents": [
+    "onCommand:phpunit.Test",
+    "onCommand:phpunit.TestFile",
+    "onCommand:phpunit.TestSuite",
+    "onCommand:phpunit.TestSuiteWithExclusions",
+    "onCommand:phpunit.TestNearest",
+    "onCommand:phpunit.LastTest",
+    "onCommand:phpunit.CancelCurrentTest"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "phpunit.Test",
+        "title": "PHPUnit Test"
+      },
+      {
+        "command": "phpunit.TestFile",
+        "title": "PHPUnit Test Current File"
+      },
+      {
+        "command": "phpunit.TestSuite",
+        "title": "PHPUnit Test All Suite"
+      },
+      {
+        "command": "phpunit.TestSuiteWithExclusions",
+        "title": "PHPUnit Test All Suite With Exclusions"
+      },
+      {
+        "command": "phpunit.TestNearest",
+        "title": "PHPUnit Test Nearest"
+      },
+      {
+        "command": "phpunit.LastTest",
+        "title": "PHPUnit Run Last Test"
+      },
+      {
+        "command": "phpunit.CancelCurrentTest",
+        "title": "PHPUnit Cancel Current Test"
+      }
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/santigarcor/vscode-phpunit-extended"
-    },
-    "homepage": "https://github.com/santigarcor/vscode-phpunit-extended/blob/master/README.md",
-    "bugs": {
-        "url": "https://github.com/santigarcor/vscode-phpunit-extended/issues"
-    },
-    "license": "MIT",
-    "keywords": [
-        "phpunit",
-        "test",
-        "php"
-    ],
-    "activationEvents": [
-        "onCommand:phpunit.Test",
-        "onCommand:phpunit.TestFile",
-        "onCommand:phpunit.TestSuite",
-        "onCommand:phpunit.TestSuiteWithExclusions",
-        "onCommand:phpunit.TestNearest",
-        "onCommand:phpunit.LastTest",
-        "onCommand:phpunit.CancelCurrentTest"
-    ],
-    "main": "./out/src/extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "phpunit.Test",
-                "title": "PHPUnit Test"
-            },
-            {
-                "command": "phpunit.TestFile",
-                "title": "PHPUnit Test Current File"
-            },
-            {
-                "command": "phpunit.TestSuite",
-                "title": "PHPUnit Test All Suite"
-            },
-            {
-                "command": "phpunit.TestSuiteWithExclusions",
-                "title": "PHPUnit Test All Suite With Exclusions"
-            },
-            {
-                "command": "phpunit.TestNearest",
-                "title": "PHPUnit Test Nearest"
-            },
-            {
-                "command": "phpunit.LastTest",
-                "title": "PHPUnit Run Last Test"
-            },
-            {
-                "command": "phpunit.CancelCurrentTest",
-                "title": "PHPUnit Cancel Current Test"
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "PHPUnit Configuration",
-            "properties": {
-                "phpunit.execPath": {
-                    "type": "string",
-                    "default": "",
-                    "description": "Path to phpunit executable (if empty it tries to use composer installation)."
-                },
-                "phpunit.args": {
-                    "type": "array",
-                    "default": [],
-                    "description": "Any phpunit args (phpunit --help)"
-                },
-                "phpunit.envVars": {
-                    "type": "object",
-                    "default": {},
-                    "title": "Set environment variables before running phpunit"
-                },
-                "phpunit.excludedGroups": {
-                    "type": "array",
-                    "default": [],
-                    "description": "Groups to be excluded from the tests"
-                },
-                "phpunit.scriptsAfterTests": {
-                    "type": "object",
-                    "default": {
-                        "ok": [],
-                        "error": []
-                    },
-                    "description": "Scripts to execute after the tests run"
-                },
-                "phpunit.showOutput": {
-                    "type": "string",
-                    "default": "always",
-                    "description": "Show the output console after the tests run (always, error, ok)."
-                }
-            }
+    "configuration": {
+      "type": "object",
+      "title": "PHPUnit Configuration",
+      "properties": {
+        "phpunit.execPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to phpunit executable (if empty it tries to use composer installation)."
         },
-        "grammars": [
-            {
-                "language": "Log",
-                "scopeName": "code.log",
-                "path": "./syntaxes/phpunit.tmLanguage"
-            }
-        ]
+        "phpunit.args": {
+          "type": "array",
+          "default": [],
+          "description": "Any phpunit args (phpunit --help)"
+        },
+        "phpunit.envVars": {
+          "type": "object",
+          "default": {},
+          "title": "Set environment variables before running phpunit"
+        },
+        "phpunit.excludedGroups": {
+          "type": "array",
+          "default": [],
+          "description": "Groups to be excluded from the tests"
+        },
+        "phpunit.scriptsAfterTests": {
+          "type": "object",
+          "default": {
+            "ok": [],
+            "error": []
+          },
+          "description": "Scripts to execute after the tests run"
+        },
+        "phpunit.showOutput": {
+          "type": "string",
+          "default": "always",
+          "description": "Show the output console after the tests run (always, error, ok)."
+        }
+      }
     },
-    "scripts": {
-        "vscode:prepublish": "tsc -p ./",
-        "compile": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "@types/mocha": "^2.2.48",
-        "@types/node": "^6.0.106",
-        "mocha": "^3.5.0",
-        "typescript": "^2.8.3",
-        "vscode": "^1.1.16"
-    }
+    "grammars": [
+      {
+        "language": "Log",
+        "scopeName": "code.log",
+        "path": "./syntaxes/phpunit.tmLanguage"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run -S esbuild-base -- --minify",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node ./node_modules/vscode/bin/test",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run -S esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run -S esbuild-base -- --sourcemap --watch"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^6.0.106",
+    "esbuild": "^0.13.10",
+    "mocha": "^3.5.0",
+    "typescript": "^2.8.3",
+    "@types/vscode": "^1.61.0",
+    "vscode-test": "^1.6.1"
+  }
 }

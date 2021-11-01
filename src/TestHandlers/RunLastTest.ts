@@ -1,20 +1,17 @@
-import {PhpUnit} from '../PhpUnit';
+import * as vscode from 'vscode';
+import { PhpUnit } from '../PhpUnit';
 
 export class RunLastTest {
 
-    private editor;
-    private args;
-    private outputChannel;
+    private outputChannel: { appendLine: (arg0: string) => void; show: () => void; };
 
-    constructor(editor, args, outputChannel) {
-        this.editor = editor;
-        this.args = args;
+    constructor(outputChannel: vscode.OutputChannel) {
         this.outputChannel = outputChannel;
     }
 
     public run() {
         if (PhpUnit.lastCommand == null) {
-            this.outputChannel.appendLine("No test was run yet.");
+            this.outputChannel.appendLine("No previous test available.");
             this.outputChannel.show();
         } else {
             let phpunit = new PhpUnit(

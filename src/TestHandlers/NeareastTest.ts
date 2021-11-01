@@ -1,13 +1,14 @@
-import {Helper} from '../Helper';
-import {PhpUnit} from '../PhpUnit';
+import * as vscode from 'vscode';
+import { Helper } from '../Helper';
+import { PhpUnit } from '../PhpUnit';
 
 export class NeareastTest {
 
-    private editor;
-    private args;
-    private outputChannel;
+    private editor: vscode.TextEditor;
+    private args: string[];
+    private outputChannel: any;
 
-    constructor(editor, args, outputChannel) {
+    constructor(editor: vscode.TextEditor, args: string[], outputChannel: vscode.OutputChannel) {
         this.editor = editor;
         this.args = args;
         this.outputChannel = outputChannel;

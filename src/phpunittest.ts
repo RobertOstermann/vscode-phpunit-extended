@@ -6,8 +6,6 @@ import { NeareastTest } from './TestHandlers/NeareastTest';
 import { RunLastTest } from './TestHandlers/RunLastTest';
 import { PhpUnit } from "./phpUnit";
 import { TestHandler } from './utils';
-import cp = require('child_process');
-import fs = require('fs');
 
 export class TestRunner {
     private outputChannel: vscode.OutputChannel;

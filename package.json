@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
+  "enableProposedApi": true,
   "engines": {
     "vscode": "^1.59.0"
   },
@@ -26,7 +27,7 @@
     "php"
   ],
   "activationEvents": [
-    "workspaceContains:*.php"
+    "*"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -114,18 +115,18 @@
     "test": "node ./node_modules/vscode/bin/test",
     "download-api": "vscode-dts dev",
     "postdownload-api": "vscode-dts main",
+    "postinstall": "npm run download-api",
     "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run -S esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run -S esbuild-base -- --sourcemap --watch"
   },
   "devDependencies": {
-    "@types/mocha": "^2.2.48",
-    "@types/node": "^6.0.106",
-    "@types/vscode": "^1.61.0",
     "esbuild": "^0.13.10",
-    "mocha": "^3.5.0",
-    "typescript": "^2.8.3",
-    "vscode-test": "^1.6.1",
-    "vscode-dts": "^0.3.1"
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.6",
+    "mocha": "^9.1.3",
+    "typescript": "^4.4.4",
+    "vscode-dts": "^0.3.1",
+    "vscode-test": "^1.6.1"
   }
 }

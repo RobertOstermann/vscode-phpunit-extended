@@ -5,11 +5,11 @@ import fs = require('fs');
 export class PhpUnit {
     private args: any;
     private putFsPathIntoArgs: boolean;
-    private outputChannel: any;
+    private outputChannel: vscode.OutputChannel;
     public static lastCommand: any;
     public static currentTest: cp.ChildProcess;
 
-    constructor(outputChannel: any, args: string[], putFsPathIntoArgs: boolean = true) {
+    constructor(outputChannel: vscode.OutputChannel, args: string[], putFsPathIntoArgs: boolean = true) {
         this.outputChannel = outputChannel;
         this.args = args;
         this.putFsPathIntoArgs = putFsPathIntoArgs;

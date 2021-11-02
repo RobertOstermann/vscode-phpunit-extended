@@ -38,13 +38,11 @@ export class Helper {
         return result;
     }
 
-    static getAvailableTests(editor: vscode.TextEditor) {
-        if (editor.document.fileName != null) {
+    static getAvailableTests(document: vscode.TextDocument) {
+        if (document.fileName != null) {
             let testFunctions = [];
 
-            // testFunctions.push('class - ' + this.getClassNameOrMethod(editor, 'class'));
-
-            let windowText = editor.document.getText();
+            let windowText = document.getText();
             let result = null;
 
             while ((result = this.getRegex().method.exec(windowText))) {

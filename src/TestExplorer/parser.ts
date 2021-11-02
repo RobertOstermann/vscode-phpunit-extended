@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 const methodRegex = /\s*(public\s+){0,1}function\s+(\w+)\s*\(/gi;
-const classRegex = /class\s+(\w*)\s*{?/gi;
+const classRegex = /^\s*class\s+(\w*)\s*{?/gi;
 
 // const testMethodRegex = /\s*(public\s+){0,1}function\s+(\w*test\w*)\s*\(/gi;
 

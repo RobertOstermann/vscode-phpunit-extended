@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import TestRunnerHelper from './TestRunnerHelper';
-import TestProcess from './TestProcess';
+import TestRunnerHelper from './testRunnerHelper';
+import TestProcess from './testProcess';
 import { SpawnOptions } from 'child_process';
 
 export default class TestRunner {

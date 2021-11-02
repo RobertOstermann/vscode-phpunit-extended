@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import TestRunner from './TestRunner';
+import TestRunner from './testRunner';
 
 export default class TestCase {
   public generation: number;

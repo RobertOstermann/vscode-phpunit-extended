@@ -41,20 +41,4 @@ export default class TestProcess {
       });
     });
   }
-
-  kill(): boolean {
-    if (!this.process) {
-      return false;
-    }
-
-    this.process.kill();
-
-    if (this.process.killed === true && this.reject) {
-      this.reject('killed');
-
-      return true;
-    }
-
-    return false;
-  }
 }

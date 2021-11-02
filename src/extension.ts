@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import Commands from './commands';
-import TestCase from './TestExplorer/TestCase';
-import { testData, TestFile } from './TestExplorer/TestFile';
+import TestCase from './TestExplorer/testCase';
+import { testData, TestFile } from './TestExplorer/testFile';
 
 export async function activate(context: vscode.ExtensionContext) {
 	Commands.registerCommands(context);
@@ -35,17 +35,29 @@ export async function activate(context: vscode.ExtensionContext) {
 		};
 
 		const runTestQueue = async () => {
-			for (const { test, data } of queue) {
-				run.appendOutput(`\r\n------------------------------\r\nRunning ${test.label}\r\n------------------------------\r\n`);
-				if (cancellation.isCancellationRequested) {
-					run.skipped(test);
-				} else {
-					run.started(test);
-					await data.run(test, run);
-				}
+			const delay = 250;
+			let index = 0;
+			let promises = [];
 
-				run.appendOutput(`\r\nCompleted ${test.label}\r\n`);
+			for (const { test, data } of queue) {
+				promises.push(
+					new Promise(async () => {
+						await new Promise(res => setTimeout(res, delay * index));
+
+						await new Promise(() => {
+							if (cancellation.isCancellationRequested) {
+								run.skipped(test);
+							} else {
+								run.started(test);
+								data.run(test, run);
+							}
+						});
+					})
+				);
+				index++;
 			}
+
+			await Promise.all(promises);
 
 			run.end();
 		};

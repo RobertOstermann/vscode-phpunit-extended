@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { parsePHP } from './parser';
-import TestCase from './TestCase';
+import TestCase from './testCase';
 
 export type phpTestData = TestFile | TestClass | TestCase;
 

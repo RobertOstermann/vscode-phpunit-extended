@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import TestRunnerHelper from './testRunnerHelper';
+import TestRunnerHelper from './TestRunnerHelper';
 import cp = require('child_process');
 import fs = require('fs');
 
@@ -65,11 +65,9 @@ export default class TestRunner {
       env: vscode.workspace.getConfiguration("phpunit").envVars,
     });
 
-    // TODO: Improve REGEX
-    if (phpunitProcess.stdout.includes("OK (")) {
-      return { success: true, output: phpunitProcess.stdout.toString() };
-    }
+    const output = phpunitProcess.stdout.toString();
+    const { success, message } = TestRunnerHelper.parsePhpUnitOutput(output);
 
-    return { success: false, output: phpunitProcess.stdout.toString() };
+    return { success: success, message: message, output: phpunitProcess.stdout.toString() };
   }
 }

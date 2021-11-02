@@ -31,24 +31,35 @@ export default class TestRunnerHelper {
     }
   }
 
-  private static readonly successRegex = /class\s+(\w*)\s*{?/gi;
-  private static readonly failureRegex = /class\s+(\w*)\s*{?/gi;
-
   static parsePhpUnitOutput(text: string) {
+    const successRegex = /OK\s+\(.*\)/gi;
+    const failureRegex = /Failed\s+(\w*\s*)*/gi;
+    const noTestsRegex = /No\stests(\w*\s*)*/gi;
+
     const lines = text.split('\n');
 
     for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
       const line = lines[lineNumber];
 
-      const success = this.successRegex.exec(line);
-      if (success) {
-        return success;
+      const successMessage = successRegex.exec(line);
+      if (successMessage) {
+        const [message] = successMessage;
+        return { success: true, message: message };
       }
 
-      const failure = this.failureRegex.exec(line);
-      if (failure) {
-        return failure;
+      const failureMessage = failureRegex.exec(line);
+      if (failureMessage) {
+        const [message] = failureMessage;
+        return { success: false, message: message };
+      }
+
+      const noTestsMessage = noTestsRegex.exec(line);
+      if (noTestsMessage) {
+        const [message] = noTestsMessage;
+        return { success: false, message: message}
       }
     }
+
+    return { success: false, message: "ERROR" };
   }
 }

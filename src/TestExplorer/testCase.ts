@@ -22,21 +22,23 @@ export default class TestCase {
       args.push(this.currentTest);
 
       let phpUnit = new TestRunner(args, this.fsPath);
-      const { success, output } = phpUnit.run();
+      const { success, message, output } = phpUnit.run();
       const duration = Date.now() - start;
+      let location = new vscode.Location(item.uri!, item.range!);
 
       if (success) {
         options.passed(item, duration);
+        options.appendOutput(message, location, item);
         options.appendOutput(output);
       } else {
-        const message = new vscode.TestMessage(output);
-        message.location = new vscode.Location(item.uri!, item.range!);
-        options.failed(item, message, duration);
+        const errorMessage = new vscode.TestMessage(message);
+        errorMessage.location = location;
+        options.failed(item, errorMessage, duration);
         options.appendOutput(output);
       }
     } else {
-      const message = new vscode.TestMessage(`${item.label} not found`);
-      options.failed(item, message);
+      const testMessage = new vscode.TestMessage(`${item.label} not found`);
+      options.failed(item, testMessage);
     }
   }
 }

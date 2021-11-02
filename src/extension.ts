@@ -4,6 +4,8 @@ import TestCase from './TestExplorer/TestCase';
 import { testData, TestFile } from './TestExplorer/TestFile';
 
 export async function activate(context: vscode.ExtensionContext) {
+	Commands.registerCommands(context);
+
 	const controller = vscode.tests.createTestController('PHPUnitTests', 'PHPUnit Tests');
 	context.subscriptions.push(controller);
 
@@ -53,14 +55,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	controller.createRunProfile('Run Tests', vscode.TestRunProfileKind.Run, runHandler, true);
 
-	context.subscriptions.push(
-		vscode.window.onDidChangeActiveTextEditor(editor => updateNodeForDocument(editor.document)),
-		vscode.workspace.onDidOpenTextDocument(document => updateNodeForDocument(document)),
-		vscode.workspace.onDidChangeTextDocument(editor => updateNodeForDocument(editor.document)),
-	);
-
-	Commands.registerCommands(context);
-
 	function updateNodeForDocument(document: vscode.TextDocument) {
 		if (document.uri.scheme !== 'file') {
 			return;
@@ -70,9 +64,29 @@ export async function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
+		// TODO: Add ability to make the pattern case sensitive
+		const fileRegexString: string = vscode.workspace
+			.getConfiguration("phpunit")
+			.get("fileRegex");
+		const fileRegex = new RegExp(fileRegexString, 'gi');
+
+		if (!fileRegex.exec(document.uri.path)) {
+			return;
+		}
+
 		const { file, data } = getOrCreateFile(controller, document.uri);
 
 		data.updateFromContents(controller, document.getText(), file);
+	}
+
+	context.subscriptions.push(
+		vscode.workspace.onDidOpenTextDocument(document => updateNodeForDocument(document)),
+		vscode.workspace.onDidChangeTextDocument(editor => updateNodeForDocument(editor.document)),
+		vscode.window.onDidChangeActiveTextEditor(editor => updateNodeForDocument(editor.document)),
+	);
+
+	if (vscode.window.activeTextEditor) {
+		updateNodeForDocument(vscode.window.activeTextEditor.document);
 	}
 }
 

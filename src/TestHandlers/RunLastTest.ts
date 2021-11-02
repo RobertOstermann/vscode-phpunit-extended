@@ -3,7 +3,7 @@ import { PhpUnit } from '../phpUnit';
 
 export class RunLastTest {
 
-    private outputChannel: { appendLine: (arg0: string) => void; show: () => void; };
+    private outputChannel: any;
 
     constructor(outputChannel: vscode.OutputChannel) {
         this.outputChannel = outputChannel;

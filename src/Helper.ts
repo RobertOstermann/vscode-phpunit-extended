@@ -37,26 +37,4 @@ export class Helper {
 
         return result;
     }
-
-    static getAvailableTests(document: vscode.TextDocument) {
-        if (document.fileName != null) {
-            let testFunctions = [];
-
-            let windowText = document.getText();
-            let result = null;
-
-            while ((result = this.getRegex().method.exec(windowText))) {
-                let testToAdd = result[2].toString().trim();
-
-                // if (!testFunctions.length || testFunctions[0] != testToAdd) {
-                //     testFunctions.push('function - ' + testToAdd);
-                // }
-                testFunctions.push(testToAdd);
-            }
-
-            return testFunctions;
-        }
-
-        return null;
-    }
 }

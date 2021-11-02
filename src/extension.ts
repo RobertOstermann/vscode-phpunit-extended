@@ -1,10 +1,9 @@
 import * as vscode from 'vscode';
 import Commands from './commands';
-import { Helper } from './helper';
-import TestCase from './TestExplorer/testCase';
-import { testData, TestFile } from './TestExplorer/testFile';
+import TestCase from './TestExplorer/TestCase';
+import { testData, TestFile } from './TestExplorer/TestFile';
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 	const controller = vscode.tests.createTestController('PHPUnitTests', 'PHPUnit Tests');
 	context.subscriptions.push(controller);
 
@@ -24,7 +23,11 @@ export function activate(context: vscode.ExtensionContext) {
 					run.enqueued(test);
 					queue.push({ test, data });
 				} else {
-					continue;
+					if (data instanceof TestFile && !data.didResolve) {
+						await data.updateFromDisk(controller, test);
+					}
+
+					await discoverTests(gatherTestItems(test.children));
 				}
 			}
 		};

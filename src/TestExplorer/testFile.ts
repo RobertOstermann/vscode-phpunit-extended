@@ -1,16 +1,37 @@
 import * as vscode from 'vscode';
+import { TextDecoder } from 'util';
 import { parsePHP } from './parser';
-import TestClass from './testClass';
-import TestCase from './testCase';
+import TestClass from './TestClass';
+import TestCase from './TestCase';
 
 export type phpTestData = TestFile | TestClass | TestCase;
-
 export const testData = new WeakMap<vscode.TestItem, phpTestData>();
+const textDecoder = new TextDecoder('utf-8');
 
 let generationCounter = 0;
 
+export const getContentFromFilesystem = async (uri: vscode.Uri) => {
+  try {
+    const rawContent = await vscode.workspace.fs.readFile(uri);
+    return textDecoder.decode(rawContent);
+  } catch (error) {
+    console.warn(`Error providing tests for ${uri.fsPath}`, error);
+    return '';
+  }
+};
+
 export class TestFile {
   public didResolve = false;
+
+  public async updateFromDisk(controller: vscode.TestController, item: vscode.TestItem) {
+    try {
+      const content = await getContentFromFilesystem(item.uri!);
+      item.error = undefined;
+      this.updateFromContents(controller, content, item);
+    } catch (error) {
+      item.error = error.stack;
+    }
+  }
 
   /**
    * Parses the tests from the input text, and updates the tests contained
@@ -33,7 +54,7 @@ export class TestFile {
     parsePHP(content, {
       onTest: (range: vscode.Range, name: string) => {
         const parent = ancestors[ancestors.length - 1];
-        const data = new TestCase(name, thisGeneration);
+        const data = new TestCase(name, item.uri, thisGeneration);
         const id = `${item.uri}/${name}`;
 
         const testCase = controller.createTestItem(id, name, item.uri);

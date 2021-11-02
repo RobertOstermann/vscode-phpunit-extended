@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { parsePHP } from './parser';
-import PhpUnitTestRunner from './phpUnitTestRunner';
+import TestCase from './TestCase';
 
 export type phpTestData = TestFile | TestClass | TestCase;
 
@@ -33,7 +33,7 @@ export class TestFile {
     parsePHP(content, {
       onTest: (range: vscode.Range, name: string) => {
         const parent = ancestors[ancestors.length - 1];
-        const data = new TestCase(name, args, thisGeneration);
+        const data = new TestCase(name, item.uri, thisGeneration);
         const id = `${item.uri}/${name}`;
 
         const testCase = controller.createTestItem(id, name, item.uri);
@@ -61,36 +61,4 @@ export class TestFile {
 
 export class TestClass {
   constructor(public generation: number) { }
-}
-export class TestCase {
-  constructor(
-    private readonly currentTest: string,
-    private readonly args: string[],
-    public generation: number
-  ) { };
-
-  async run(item: vscode.TestItem, options: vscode.TestRun) {
-    const start = Date.now();
-
-    if (this.currentTest) {
-      this.args.push("--filter");
-      this.args.push(this.currentTest);
-
-      // this.phpUnit = new PhpUnitTestRunner(this.outputChannel, this.args);
-      let phpUnit = new PhpUnitTestRunner(this.args);
-      let testSuccess = phpUnit.run();
-      const duration = Date.now() - start;
-
-      if (testSuccess) {
-        options.passed(item, duration);
-      } else {
-        const message = new vscode.TestMessage(`${item.label} Failed`);
-        message.location = new vscode.Location(item.uri!, item.range!);
-        options.failed(item, message, duration);
-      }
-    } else {
-      const message = new vscode.TestMessage(`${item.label} not found`);
-      options.failed(item, message);
-    }
-  }
 }

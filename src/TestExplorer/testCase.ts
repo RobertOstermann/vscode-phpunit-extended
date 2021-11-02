@@ -1,21 +1,14 @@
 import * as vscode from 'vscode';
-import PhpUnitTestRunner from './phpUnitTestRunner';
+import TestRunner from './TestRunner';
 
 export default class TestCase {
   public generation: number;
-
   private currentTest: string;
+  private fsPath: string;
 
-  // private outputChannel: vscode.OutputChannel;
-
-  // constructor(currentTest: string, args: string[], outputChannel: vscode.OutputChannel) {
-  //   this.currentTest = currentTest;
-  //   this.args = args;
-  //   this.outputChannel = outputChannel;
-  // }
-
-  constructor(currentTest: string, generation: number) {
+  constructor(currentTest: string, fsPath: vscode.Uri, generation: number) {
     this.currentTest = currentTest;
+    this.fsPath = fsPath.fsPath;
     this.generation = generation;
   }
 
@@ -28,17 +21,18 @@ export default class TestCase {
       args.push("--filter");
       args.push(this.currentTest);
 
-      // this.phpUnit = new PhpUnitTestRunner(this.outputChannel, args);
-      let phpUnit = new PhpUnitTestRunner(args);
-      let testSuccess = phpUnit.run();
+      let phpUnit = new TestRunner(args, this.fsPath);
+      const { success, output } = phpUnit.run();
       const duration = Date.now() - start;
 
-      if (testSuccess) {
+      if (success) {
         options.passed(item, duration);
+        options.appendOutput(output);
       } else {
-        const message = new vscode.TestMessage(`${item.label} Failed`);
+        const message = new vscode.TestMessage(output);
         message.location = new vscode.Location(item.uri!, item.range!);
         options.failed(item, message, duration);
+        options.appendOutput(output);
       }
     } else {
       const message = new vscode.TestMessage(`${item.label} not found`);

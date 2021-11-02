@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
-  "enableProposedApi": true,
+  "enableProposedApi": false,
   "engines": {
     "vscode": "^1.59.0"
   },

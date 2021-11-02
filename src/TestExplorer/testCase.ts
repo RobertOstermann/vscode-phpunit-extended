@@ -22,7 +22,7 @@ export default class TestCase {
       args.push(this.currentTest);
 
       let phpUnit = new TestRunner(args, this.fsPath);
-      const { success, message, output } = phpUnit.run();
+      const { success, message, output } = await phpUnit.run();
       const duration = Date.now() - start;
       let location = new vscode.Location(item.uri!, item.range!);
 

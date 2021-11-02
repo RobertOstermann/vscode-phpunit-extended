@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended With TestExplorer for VSCode",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "enableProposedApi": false,

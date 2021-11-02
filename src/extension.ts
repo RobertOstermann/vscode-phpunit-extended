@@ -36,7 +36,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		const runTestQueue = async () => {
 			for (const { test, data } of queue) {
-				run.appendOutput(`Running ${test.id}\r\n`);
+				run.appendOutput(`\r\n------------------------------\r\nRunning ${test.label}\r\n------------------------------\r\n`);
 				if (cancellation.isCancellationRequested) {
 					run.skipped(test);
 				} else {
@@ -44,7 +44,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					await data.run(test, run);
 				}
 
-				run.appendOutput(`Completed ${test.id}\r\n`);
+				run.appendOutput(`\r\nCompleted ${test.label}\r\n`);
 			}
 
 			run.end();

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import TestRunnerHelper from './TestRunnerHelper';
-import cp = require('child_process');
-import fs = require('fs');
+import TestProcess from './TestProcess';
+import { SpawnOptions } from 'child_process';
 
 export default class TestRunner {
   private args: string[];
@@ -13,22 +13,22 @@ export default class TestRunner {
     this.fsPath = fsPath;
   }
 
-  public run() {
+  async run() {
     let config = vscode.workspace.getConfiguration("phpunit");
     let phpunitPath = config.get<string>("execPath", "phpunit");
 
     if (phpunitPath == "") {
-      return this.execThroughComposer();
+      return await this.execThroughComposer();
     } else {
-      return this.execPhpUnit(phpunitPath);
+      return await this.execPhpUnit(phpunitPath);
     }
   }
 
-  private execThroughComposer() {
+  private async execThroughComposer() {
     let phpUnitComposerBinFile = TestRunnerHelper.findNearestFileFullPath('vendor/bin/phpunit');
 
     if (phpUnitComposerBinFile != null) {
-      return this.execPhpUnit(phpUnitComposerBinFile);
+      return await this.execPhpUnit(phpUnitComposerBinFile);
     } else {
       let errorMessage = 'Couldn\'t find a vendor/bin/phpunit file.';
       vscode.window.showErrorMessage(errorMessage);
@@ -36,8 +36,7 @@ export default class TestRunner {
     }
   }
 
-  public execPhpUnit(phpunitPath: string, workingDirectory = null) {
-
+  public async execPhpUnit(phpunitPath: string, workingDirectory = null) {
     workingDirectory = workingDirectory == null ? TestRunnerHelper.findWorkingDirectory() : workingDirectory;
 
     if (workingDirectory == null) {
@@ -60,14 +59,15 @@ export default class TestRunner {
       command = phpunitPath;
     }
 
-    let phpunitProcess = cp.spawnSync(command, this.args, {
+    let spawnOptions: SpawnOptions = {
       cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ""),
       env: vscode.workspace.getConfiguration("phpunit").envVars,
-    });
+    };
 
-    const output = phpunitProcess.stdout.toString();
+    const output = await (new TestProcess()).run(command, this.args, spawnOptions);
+
     const { success, message } = TestRunnerHelper.parsePhpUnitOutput(output);
 
-    return { success: success, message: message, output: phpunitProcess.stdout.toString() };
+    return { success: success, message: message, output: output };
   }
 }

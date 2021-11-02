@@ -44,14 +44,9 @@ export default class PhpUnitTestRunner {
   }
 
   public execPhpUnit(phpunitPath: string, workingDirectory = null): boolean {
-    let testSuccess = false;
-    // this.outputChannel.clear();
 
     workingDirectory = workingDirectory == null ? this.findWorkingDirectory() : workingDirectory;
     let showOutput = vscode.workspace.getConfiguration('phpunit').showOutput;
-    if (showOutput != 'always') {
-      // this.outputChannel.hide();
-    }
 
     if (workingDirectory == null) {
       return;
@@ -71,51 +66,13 @@ export default class PhpUnitTestRunner {
       command = phpunitPath;
     }
 
-
-    let phpunitProcess = cp.spawn(
+    let phpunitProcess = cp.spawnSync(
       command,
       this.args,
       { cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ''), env: vscode.workspace.getConfiguration('phpunit').envVars }
     );
 
-    this.currentTest = phpunitProcess;
-
-    // this.outputChannel.appendLine(phpunitPath + ' ' + this.args.join(' '));
-
-    phpunitProcess.stderr.on("data", (buffer: Buffer) => {
-      // this.outputChannel.append(buffer.toString());
-    });
-
-    phpunitProcess.stdout.on("data", (buffer: Buffer) => {
-      // this.outputChannel.append(buffer.toString());
-      if (buffer.toString().includes("OK (")) {
-        testSuccess = true;
-      }
-      console.log(buffer.toString());
-    });
-
-    phpunitProcess.on("close", (code) => {
-      testSuccess = true;
-      if (showOutput == 'ok' && code == 0) {
-        // this.outputChannel.show();
-      } else if (showOutput == 'error' && code == 1) {
-        // this.outputChannel.show();
-      }
-    });
-
-    phpunitProcess.on("exit", (code, signal) => {
-      if (signal != null) {
-        // this.outputChannel.append('Cancelled');
-      }
-    });
-
-    if (showOutput == 'always') {
-      // this.outputChannel.show();
-    }
-
-
-
-    return testSuccess;
+    return phpunitProcess.stdout.includes("OK (");
   }
 
   private findNearestFileFullPath(fileRelativeName: string, currentPath = '') {

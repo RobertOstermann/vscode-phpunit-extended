@@ -1,30 +1,62 @@
 import * as vscode from 'vscode';
 import Commands from './commands';
 import { Helper } from './helper';
+import { TestCase, testData, TestFile } from './TestExplorer/testTree';
 
 export function activate(context: vscode.ExtensionContext) {
 	const controller = vscode.tests.createTestController('PHPUnitTests', 'PHPUnit Tests');
 	context.subscriptions.push(controller);
 
 	const runHandler = (request: vscode.TestRunRequest, cancellation: vscode.CancellationToken) => {
-		// const queue: { test: vscode.TestItem, data: TestCase }[] = [];
+		const queue: { test: vscode.TestItem, data: TestCase; }[] = [];
+		const run = controller.createTestRun(request);
 
+		const discoverTests = async (tests: Iterable<vscode.TestItem>) => {
+			for (const test of tests) {
+				if (request.exclude?.includes(test)) {
+					continue;
+				}
+				const data = testData.get(test);
+				let value = data instanceof TestCase;
+				// if (data instanceof TestCase) {
+				// 	run.enqueued(test);
+				// 	queue.push({ test, data });
+				// } else {
+				// 	continue;
+				// }
+				run.enqueued(test);
+				queue.push({ test, data });
+			}
+		};
+
+		const runTestQueue = async () => {
+			for (const { test, data } of queue) {
+				run.appendOutput(`Running ${test.id}\r\n`);
+				if (cancellation.isCancellationRequested) {
+					run.skipped(test);
+				} else {
+					run.started(test);
+					await data.run(test, run);
+				}
+
+				run.appendOutput(`Completed ${test.id}\r\n`);
+			}
+
+			run.end();
+		};
+
+		discoverTests(request.include ?? gatherTestItems(controller.items)).then(runTestQueue);
 	};
 
+	controller.createRunProfile('Run Tests', vscode.TestRunProfileKind.Run, runHandler, true);
+
 	context.subscriptions.push(
+		vscode.window.onDidChangeActiveTextEditor(editor => updateNodeForDocument(editor.document)),
 		vscode.workspace.onDidOpenTextDocument(document => updateNodeForDocument(document)),
 		vscode.workspace.onDidChangeTextDocument(editor => updateNodeForDocument(editor.document)),
 	);
 
-	// vscode.window.onDidChangeActiveTextEditor(
-	// 	(editor) => {
-	// 		activeEditor = editor;
-	// 		updateNodeForDocument(activeEditor.document, controller);
-	// 	}
-	// );
-
 	Commands.registerCommands(context);
-
 
 	function updateNodeForDocument(document: vscode.TextDocument) {
 		if (document.uri.scheme !== 'file') {
@@ -35,27 +67,31 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
-		const file = getOrCreateFile(controller, document.uri);
+		const { file, data } = getOrCreateFile(controller, document.uri);
 		const tests = Helper.getAvailableTests(document);
 
-		console.log('updateNodeForDocument');
-		tests.forEach((test, index) => {
-			let testItem = controller.createTestItem(index.toString(), test, file.uri);
-			controller.items.add(testItem);
-		});
+		data.updateFromContents(controller, document.getText(), file);
 	}
 }
 
-function getOrCreateFile(controller: vscode.TestController, uri: vscode.Uri): vscode.TestItem {
+function getOrCreateFile(controller: vscode.TestController, uri: vscode.Uri) {
 	const existing = controller.items.get(uri.toString());
-
 	if (existing) {
-		return existing;
+		return { file: existing, data: testData.get(existing) as TestFile };
 	}
 
 	const file = controller.createTestItem(uri.toString(), uri.path.split('/').pop()!, uri);
 	controller.items.add(file);
 
+	const data = new TestFile();
+	testData.set(file, data);
+
 	file.canResolveChildren = true;
-	return file;
+	return { file, data };
+}
+
+function gatherTestItems(collection: vscode.TestItemCollection) {
+	const items: vscode.TestItem[] = [];
+	collection.forEach(item => items.push(item));
+	return items;
 }

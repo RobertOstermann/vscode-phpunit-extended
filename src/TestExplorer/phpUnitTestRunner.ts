@@ -3,13 +3,18 @@ import cp = require('child_process');
 import fs = require('fs');
 
 export default class PhpUnitTestRunner {
-  private args: any;
+  private args: string[];
   private putFsPathIntoArgs: boolean;
-  private outputChannel: any;
+  // private outputChannel: vscode.OutputChannel;
   private currentTest: cp.ChildProcess;
 
-  constructor(outputChannel: any, args: string[], putFsPathIntoArgs: boolean = true) {
-    this.outputChannel = outputChannel;
+  // constructor(outputChannel: vscode.OutputChannel, args: string[], putFsPathIntoArgs: boolean = true) {
+  //   this.outputChannel = outputChannel;
+  //   this.args = args;
+  //   this.putFsPathIntoArgs = putFsPathIntoArgs;
+  // }
+
+  constructor(args: string[], putFsPathIntoArgs: boolean = true) {
     this.args = args;
     this.putFsPathIntoArgs = putFsPathIntoArgs;
   }
@@ -40,12 +45,12 @@ export default class PhpUnitTestRunner {
 
   public execPhpUnit(phpunitPath: string, workingDirectory = null): boolean {
     let testSuccess = true;
-    this.outputChannel.clear();
+    // this.outputChannel.clear();
 
     workingDirectory = workingDirectory == null ? this.findWorkingDirectory() : workingDirectory;
     let showOutput = vscode.workspace.getConfiguration('phpunit').showOutput;
     if (showOutput != 'always') {
-      this.outputChannel.hide();
+      // this.outputChannel.hide();
     }
 
     if (workingDirectory == null) {
@@ -74,14 +79,14 @@ export default class PhpUnitTestRunner {
 
     this.currentTest = phpunitProcess;
 
-    this.outputChannel.appendLine(phpunitPath + ' ' + this.args.join(' '));
+    // this.outputChannel.appendLine(phpunitPath + ' ' + this.args.join(' '));
 
     phpunitProcess.stderr.on("data", (buffer: Buffer) => {
-      this.outputChannel.append(buffer.toString());
+      // this.outputChannel.append(buffer.toString());
     });
 
     phpunitProcess.stdout.on("data", (buffer: Buffer) => {
-      this.outputChannel.append(buffer.toString());
+      // this.outputChannel.append(buffer.toString());
       if (buffer.toString().includes("FAILURES")) {
         testSuccess = false;
       }
@@ -89,20 +94,20 @@ export default class PhpUnitTestRunner {
 
     phpunitProcess.on("close", (code) => {
       if (showOutput == 'ok' && code == 0) {
-        this.outputChannel.show();
+        // this.outputChannel.show();
       } else if (showOutput == 'error' && code == 1) {
-        this.outputChannel.show();
+        // this.outputChannel.show();
       }
     });
 
     phpunitProcess.on("exit", (code, signal) => {
       if (signal != null) {
-        this.outputChannel.append('Cancelled');
+        // this.outputChannel.append('Cancelled');
       }
     });
 
     if (showOutput == 'always') {
-      this.outputChannel.show();
+      // this.outputChannel.show();
     }
 
     return testSuccess;

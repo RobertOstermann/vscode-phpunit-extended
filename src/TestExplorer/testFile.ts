@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { parsePHP } from './parser';
-import PhpUnitTestRunner from './phpUnitTestRunner';
+import TestClass from './testClass';
+import TestCase from './testCase';
 
 export type phpTestData = TestFile | TestClass | TestCase;
 
@@ -56,41 +57,5 @@ export class TestFile {
     });
 
     ascend(0); // finish and assign children for all remaining items
-  }
-}
-
-export class TestClass {
-  constructor(public generation: number) { }
-}
-export class TestCase {
-  constructor(
-    private readonly currentTest: string,
-    private readonly args: string[],
-    public generation: number
-  ) { };
-
-  async run(item: vscode.TestItem, options: vscode.TestRun) {
-    const start = Date.now();
-
-    if (this.currentTest) {
-      this.args.push("--filter");
-      this.args.push(this.currentTest);
-
-      // this.phpUnit = new PhpUnitTestRunner(this.outputChannel, this.args);
-      let phpUnit = new PhpUnitTestRunner(this.args);
-      let testSuccess = phpUnit.run();
-      const duration = Date.now() - start;
-
-      if (testSuccess) {
-        options.passed(item, duration);
-      } else {
-        const message = new vscode.TestMessage(`${item.label} Failed`);
-        message.location = new vscode.Location(item.uri!, item.range!);
-        options.failed(item, message, duration);
-      }
-    } else {
-      const message = new vscode.TestMessage(`${item.label} not found`);
-      options.failed(item, message);
-    }
   }
 }

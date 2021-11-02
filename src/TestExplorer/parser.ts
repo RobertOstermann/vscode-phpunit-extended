@@ -14,7 +14,7 @@ export const parsePHP = (text: string, events: {
 
     const test = methodRegex.exec(line);
     if (test) {
-      const [, name] = test;
+      const [, , name] = test;
       const range = new vscode.Range(
         new vscode.Position(lineNumber, 0),
         new vscode.Position(lineNumber, line.length)

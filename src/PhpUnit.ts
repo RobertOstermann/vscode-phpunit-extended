@@ -3,7 +3,7 @@ import cp = require('child_process');
 import fs = require('fs');
 
 export class PhpUnit {
-    private args: any;
+    private args: string[];
     private putFsPathIntoArgs: boolean;
     private outputChannel: vscode.OutputChannel;
     public static lastCommand: any;

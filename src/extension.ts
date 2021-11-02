@@ -1,14 +1,15 @@
 import * as vscode from 'vscode';
 import Commands from './commands';
 import { Helper } from './helper';
-import { TestCase, testData, TestFile } from './TestExplorer/testTree';
+import TestCase from './TestExplorer/testCase';
+import { testData, TestFile } from './TestExplorer/testFile';
 
 export function activate(context: vscode.ExtensionContext) {
 	const controller = vscode.tests.createTestController('PHPUnitTests', 'PHPUnit Tests');
 	context.subscriptions.push(controller);
 
 	const runHandler = (request: vscode.TestRunRequest, cancellation: vscode.CancellationToken) => {
-		const queue: { test: vscode.TestItem, data: TestCase; }[] = [];
+		const queue: { test: vscode.TestItem; data: TestCase; }[] = [];
 		const run = controller.createTestRun(request);
 
 		const discoverTests = async (tests: Iterable<vscode.TestItem>) => {
@@ -16,16 +17,15 @@ export function activate(context: vscode.ExtensionContext) {
 				if (request.exclude?.includes(test)) {
 					continue;
 				}
+
 				const data = testData.get(test);
-				let value = data instanceof TestCase;
-				// if (data instanceof TestCase) {
-				// 	run.enqueued(test);
-				// 	queue.push({ test, data });
-				// } else {
-				// 	continue;
-				// }
-				run.enqueued(test);
-				queue.push({ test, data });
+
+				if (data instanceof TestCase) {
+					run.enqueued(test);
+					queue.push({ test, data });
+				} else {
+					continue;
+				}
 			}
 		};
 
@@ -68,7 +68,6 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		const { file, data } = getOrCreateFile(controller, document.uri);
-		const tests = Helper.getAvailableTests(document);
 
 		data.updateFromContents(controller, document.getText(), file);
 	}

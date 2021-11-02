@@ -4,8 +4,8 @@ import PhpUnitTestRunner from './phpUnitTestRunner';
 export default class TestCase {
   public generation: number;
 
-  private readonly currentTest: string;
-  private readonly args: string[];
+  private currentTest: string;
+
   // private outputChannel: vscode.OutputChannel;
 
   // constructor(currentTest: string, args: string[], outputChannel: vscode.OutputChannel) {
@@ -14,21 +14,22 @@ export default class TestCase {
   //   this.outputChannel = outputChannel;
   // }
 
-  constructor(currentTest: string, args: string[], generation: number) {
+  constructor(currentTest: string, generation: number) {
     this.currentTest = currentTest;
-    this.args = args;
     this.generation = generation;
   }
 
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
+    let config = vscode.workspace.getConfiguration("phpunit");
+    let args = [].concat(config.get<Array<string>>("args", []));
 
     if (this.currentTest) {
-      this.args.push("--filter");
-      this.args.push(this.currentTest);
+      args.push("--filter");
+      args.push(this.currentTest);
 
-      // this.phpUnit = new PhpUnitTestRunner(this.outputChannel, this.args);
-      let phpUnit = new PhpUnitTestRunner(this.args);
+      // this.phpUnit = new PhpUnitTestRunner(this.outputChannel, args);
+      let phpUnit = new PhpUnitTestRunner(args);
       let testSuccess = phpUnit.run();
       const duration = Date.now() - start;
 

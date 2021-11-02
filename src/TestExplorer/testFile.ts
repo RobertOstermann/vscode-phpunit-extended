@@ -21,8 +21,7 @@ export class TestFile {
     const thisGeneration = generationCounter++;
     this.didResolve = true;
 
-    let config = vscode.workspace.getConfiguration("phpunit");
-    let args = [].concat(config.get<Array<string>>("args", []));
+
 
     const ascend = (depth: number) => {
       while (ancestors.length > depth) {
@@ -34,7 +33,7 @@ export class TestFile {
     parsePHP(content, {
       onTest: (range: vscode.Range, name: string) => {
         const parent = ancestors[ancestors.length - 1];
-        const data = new TestCase(name, args, thisGeneration);
+        const data = new TestCase(name, thisGeneration);
         const id = `${item.uri}/${name}`;
 
         const testCase = controller.createTestItem(id, name, item.uri);

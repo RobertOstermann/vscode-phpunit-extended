@@ -44,7 +44,7 @@ export default class PhpUnitTestRunner {
   }
 
   public execPhpUnit(phpunitPath: string, workingDirectory = null): boolean {
-    let testSuccess = true;
+    let testSuccess = false;
     // this.outputChannel.clear();
 
     workingDirectory = workingDirectory == null ? this.findWorkingDirectory() : workingDirectory;
@@ -71,6 +71,7 @@ export default class PhpUnitTestRunner {
       command = phpunitPath;
     }
 
+
     let phpunitProcess = cp.spawn(
       command,
       this.args,
@@ -87,12 +88,14 @@ export default class PhpUnitTestRunner {
 
     phpunitProcess.stdout.on("data", (buffer: Buffer) => {
       // this.outputChannel.append(buffer.toString());
-      if (buffer.toString().includes("FAILURES")) {
-        testSuccess = false;
+      if (buffer.toString().includes("OK (")) {
+        testSuccess = true;
       }
+      console.log(buffer.toString());
     });
 
     phpunitProcess.on("close", (code) => {
+      testSuccess = true;
       if (showOutput == 'ok' && code == 0) {
         // this.outputChannel.show();
       } else if (showOutput == 'error' && code == 1) {
@@ -109,6 +112,8 @@ export default class PhpUnitTestRunner {
     if (showOutput == 'always') {
       // this.outputChannel.show();
     }
+
+
 
     return testSuccess;
   }

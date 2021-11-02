@@ -56,11 +56,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	controller.createRunProfile('Run Tests', vscode.TestRunProfileKind.Run, runHandler, true);
 
 	function updateNodeForDocument(document: vscode.TextDocument) {
-		if (document.uri.scheme !== 'file') {
-			return;
-		}
-
-		if (!document.uri.path.endsWith('.php')) {
+		if (!document || document.uri.scheme !== 'file' || !document.uri.path.endsWith('.php')) {
 			return;
 		}
 

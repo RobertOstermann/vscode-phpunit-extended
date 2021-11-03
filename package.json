@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended With TestExplorer for VSCode",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "enableProposedApi": false,
@@ -65,15 +65,15 @@
       "type": "object",
       "title": "PHPUnit Configuration",
       "properties": {
-        "phpunit.execPath": {
-          "type": "string",
-          "default": "",
-          "description": "Path to phpunit executable (if empty it tries to use composer installation)."
-        },
         "phpunit.args": {
           "type": "array",
           "default": [],
           "description": "Any phpunit args (phpunit --help)"
+        },
+        "phpunit.discoverAllTests": {
+          "type":"boolean",
+          "default": true,
+          "description": "Determines whether to discover all tests immediately or discover them individually once opened in the editor."
         },
         "phpunit.envVars": {
           "type": "object",
@@ -84,6 +84,26 @@
           "type": "array",
           "default": [],
           "description": "Groups to be excluded from the tests"
+        },
+        "phpunit.execPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to phpunit executable (if empty it tries to use composer installation)."
+        },
+        "phpunit.fileRegex": {
+          "type": "string",
+          "default": ".*(test|tests)\\w*\\.php",
+          "description": "The regular expression used to determine test files."
+        },
+        "phpunit.folderPattern": {
+          "type": "string",
+          "default": "**/{test,tests,Test,Tests}/**/*.php",
+          "description": "A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true."
+        },
+        "phpunit.functionRegex": {
+          "type": "string",
+          "default": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
+          "description": "The regular expression used to determine the functions within a file to test."
         },
         "phpunit.scriptsAfterTests": {
           "type": "object",
@@ -97,16 +117,6 @@
           "type": "string",
           "default": "always",
           "description": "Show the output console after the tests run (always, error, ok)."
-        },
-        "phpunit.fileRegex": {
-          "type": "string",
-          "default": ".*(test|tests)\\w*\\.php",
-          "description": "The regular expression used to determine test files."
-        },
-        "phpunit.functionRegex": {
-          "type": "string",
-          "default": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
-          "description": "The regular expression used to determine the functions within a file to test."
         }
       }
     },

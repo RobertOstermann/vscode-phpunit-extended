@@ -42,8 +42,6 @@ export class TestFile {
     const thisGeneration = generationCounter++;
     this.didResolve = true;
 
-
-
     const ascend = (depth: number) => {
       while (ancestors.length > depth) {
         const finished = ancestors.pop()!;

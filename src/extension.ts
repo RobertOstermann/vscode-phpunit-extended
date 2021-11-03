@@ -36,16 +36,13 @@ export async function activate(context: vscode.ExtensionContext) {
 		};
 
 		const runTestQueue = async () => {
-			for (const { test, data } of queue) {
-				run.appendOutput(`\r\n------------------------------\r\nRunning ${test.label}\r\n------------------------------\r\n`);
+			for await (const { test, data } of queue) {
 				if (cancellation.isCancellationRequested) {
 					run.skipped(test);
 				} else {
 					run.started(test);
 					await data.run(test, run);
 				}
-
-				run.appendOutput(`\r\nCompleted ${test.label}\r\n`);
 			}
 
 			run.end();
@@ -56,18 +53,25 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	controller.createRunProfile('Run Tests', vscode.TestRunProfileKind.Run, runHandler, true);
 
-	function updateNodeForDocument(document: vscode.TextDocument) {
-		if (!document || document.uri.scheme !== 'file' || !document.uri.path.endsWith('.php')) {
+	controller.resolveHandler = async item => {
+		if (!item) {
+			const discoverAllTests: boolean = vscode.workspace
+				.getConfiguration("phpunit")
+				.get("discoverAllTests");
+			if (discoverAllTests) {
+				context.subscriptions.push(...startWatchingWorkspace(controller));
+			}
 			return;
 		}
 
-		// TODO: Add ability to make the pattern case sensitive
-		const fileRegexString: string = vscode.workspace
-			.getConfiguration("phpunit")
-			.get("fileRegex");
-		const fileRegex = new RegExp(fileRegexString, 'gi');
+		const data = testData.get(item);
+		if (data instanceof TestFile) {
+			await data.updateFromDisk(controller, item);
+		}
+	};
 
-		if (!fileRegex.exec(document.uri.path)) {
+	function updateNodeForDocument(document: vscode.TextDocument) {
+		if (!document || document.uri.scheme !== 'file' || !validTestFilePath(document.uri.path)) {
 			return;
 		}
 
@@ -94,12 +98,12 @@ function getOrCreateFile(controller: vscode.TestController, uri: vscode.Uri) {
 	}
 
 	const file = controller.createTestItem(uri.toString(), uri.path.split('/').pop()!, uri);
+	file.canResolveChildren = true;
 	controller.items.add(file);
 
 	const data = new TestFile();
 	testData.set(file, data);
 
-	file.canResolveChildren = true;
 	return { file, data };
 }
 
@@ -107,4 +111,61 @@ function gatherTestItems(collection: vscode.TestItemCollection) {
 	const items: vscode.TestItem[] = [];
 	collection.forEach(item => items.push(item));
 	return items;
+}
+
+function startWatchingWorkspace(controller: vscode.TestController) {
+	if (!vscode.workspace.workspaceFolders) {
+		return [];
+	}
+
+	const folderPattern: string = vscode.workspace
+		.getConfiguration("phpunit")
+		.get("folderPattern");
+
+	return vscode.workspace.workspaceFolders.map(workspaceFolder => {
+		const pattern = new vscode.RelativePattern(workspaceFolder, folderPattern);
+		const watcher = vscode.workspace.createFileSystemWatcher(pattern);
+
+		watcher.onDidCreate(uri => {
+			if (validTestFilePath(uri.path)) {
+				getOrCreateFile(controller, uri);
+			}
+		});
+		watcher.onDidChange(uri => {
+			if (validTestFilePath(uri.path)) {
+				const { file, data } = getOrCreateFile(controller, uri);
+				if (data.didResolve) {
+					data.updateFromDisk(controller, file);
+				}
+			}
+		});
+		watcher.onDidDelete(uri => {
+			controller.items.delete(uri.toString());
+		});
+
+		vscode.workspace.findFiles(pattern).then(files => {
+			for (const file of files) {
+				if (validTestFilePath(file.path)) {
+					getOrCreateFile(controller, file);
+				}
+			}
+		});
+
+		return watcher;
+	});
+}
+
+function validTestFilePath(path: string) {
+	// TODO: Add ability to make the pattern case sensitive
+	const fileRegexString: string = vscode.workspace
+		.getConfiguration("phpunit")
+		.get("fileRegex");
+
+	const fileRegex = new RegExp(fileRegexString, 'gi');
+
+	if (fileRegex.exec(path)) {
+		return true;
+	}
+
+	return false;
 }

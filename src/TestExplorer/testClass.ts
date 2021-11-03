@@ -30,6 +30,7 @@ export default class TestClass {
       const { success, message, output } = await phpUnit.run();
       const duration = Date.now() - start;
       const location = new vscode.Location(item.uri!, item.range!);
+      let error = false;
 
       if (success) {
         options.passed(item, duration);
@@ -37,28 +38,30 @@ export default class TestClass {
         options.appendOutput(output);
       } else {
         const errorMessage = TestRunnerHelper.parsePhpUnitOutputForClassTest(output);
+        error = errorMessage === "Test Failed: Check Terminal Output" ? true : false;
         options.failed(item, [], duration);
         options.appendOutput(errorMessage, location, item);
         options.appendOutput(output);
       }
 
-      this.populateChildTestOutput(item, options, success, output, duration);
+      this.populateChildTestOutput(item, options, output, success, error);
     } else {
       const testMessage = new vscode.TestMessage(`${item.label} not found`);
       options.failed(item, testMessage);
     }
   }
 
-  private populateChildTestOutput(parent: vscode.TestItem, options: vscode.TestRun, success: boolean, output: string, duration: number) {
+  private populateChildTestOutput(parent: vscode.TestItem, options: vscode.TestRun, output: string, success: boolean, error: boolean) {
     parent.children.forEach(item => {
       const location = new vscode.Location(item.uri!, item.range!);
       const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label);
 
-      if (success || !testResult) {
-        options.passed(item, duration);
+      if (success && testResult === 'OK' && !error) {
+        options.passed(item);
+        // options.appendOutput(testResult, location, item);
       } else {
-        options.failed(item, [], duration);
-        options.appendOutput(testResult, location, item);
+        options.failed(item, []);
+        options.appendOutput(error ? "" : testResult, location, item);
       }
     });
   }

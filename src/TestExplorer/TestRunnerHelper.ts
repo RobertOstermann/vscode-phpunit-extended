@@ -67,19 +67,19 @@ export default class TestRunnerHelper {
       }
     }
 
-    return { success: false, message: "ERROR" };
+    return { success: false, message: "Test Failed: Check Terminal Output" };
   }
 
   static parsePhpUnitOutputForClassTest(text: string) {
-    const outputRegex = /(Tests:.*Assertions.*Failures(\w*[^\\S\r\n\.]*)*)/gis;
-    const result = outputRegex.exec(text);
+    const regex = /(Tests:.*Assertions.*Failures(\w*[^\\S\r\n\.]*)*)/gis;
+    const result = regex.exec(text);
 
     if (result) {
       const [message] = result;
       return message;
     }
 
-    return "Failing Tests";
+    return "Test Failed: Check Terminal Output";
   }
 
   static parsePhpUnitOutputForIndividualTest(text: string, name: string) {
@@ -92,6 +92,6 @@ export default class TestRunnerHelper {
       return message;
     }
 
-    return "";
+    return "OK";
   }
 }

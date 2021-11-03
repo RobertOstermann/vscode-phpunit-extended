@@ -81,7 +81,7 @@ Run with (`Cmd+Shift+P` on OSX or `Ctrl+Shift+P` on Windows and Linux) and execu
 | `phpunit.envVars`           | Set environment variables before running phpunit                                                              | `{}`                                                     |
 | `phpunit.excludedGroups`    | Groups to be excluded from the tests                                                                          | `[]`                                                     |
 | `phpunit.execPath`          | Path to phpunit executable (if empty it tries to use composer installation).                                  | `""`                                                     |
-| `phpunit.fileRegex`         | The regular expression used to determine test files.                                                          | `".\*(test(&#124;)tests)\\w\*\\.php"`                    |
+| `phpunit.fileRegex`         | The regular expression used to determine test files.                                                          | `".\*(test\|tests)\\w\*\\.php"`                          |
 | `phpunit.folderPattern`     | A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true.   | `"**/{test,tests,Test,Tests}/**/*.php"`                  |
 | `phpunit.functionRegex`     | The regular expression used to determine the functions within a file to test.                                 | `\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(` |
 | `phpunit.scriptsAfterTests` | Scripts to execute after the tests run                                                                        | `{ "ok": [], "error": []}`                               |

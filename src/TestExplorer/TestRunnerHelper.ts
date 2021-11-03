@@ -67,6 +67,10 @@ export default class TestRunnerHelper {
       }
     }
 
+    if (text.match(/timeout/)) {
+      return { success: false, message: "Test Failed: Timeout" };
+    }
+
     return { success: false, message: "Test Failed: Check Terminal Output" };
   }
 
@@ -93,5 +97,19 @@ export default class TestRunnerHelper {
     }
 
     return "OK";
+  }
+
+  static promiseWithTimeout(promise, timeout: number, timeoutMessage: string) {
+    if (!timeout) {
+      return promise;
+    }
+
+    const timeoutPromise = new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(timeoutMessage);
+      }, timeout);
+    });
+
+    return Promise.race([promise, timeoutPromise]);
   }
 }

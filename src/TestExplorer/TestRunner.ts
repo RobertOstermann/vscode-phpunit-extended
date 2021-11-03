@@ -1,14 +1,14 @@
-import * as vscode from 'vscode';
-import TestRunnerHelper from './testRunnerHelper';
-import TestProcess from './testProcess';
-import { SpawnOptions } from 'child_process';
+import * as vscode from "vscode";
+import TestRunnerHelper from "./testRunnerHelper";
+import TestProcess from "./testProcess";
+import { SpawnOptions } from "child_process";
 
 export default class TestRunner {
   private args: string[];
   private fsPath: string;
   private putFsPathIntoArgs: boolean;
 
-  constructor(args: string[], fsPath: string = '') {
+  constructor(args: string[], fsPath: string = "") {
     this.args = args;
     this.fsPath = fsPath;
   }
@@ -25,22 +25,26 @@ export default class TestRunner {
   }
 
   private async execThroughComposer() {
-    let phpUnitComposerBinFile = TestRunnerHelper.findNearestFileFullPath('vendor/bin/phpunit');
+    let phpUnitComposerBinFile =
+      TestRunnerHelper.findNearestFileFullPath("vendor/bin/phpunit");
 
     if (phpUnitComposerBinFile != null) {
       return await this.execPhpUnit(phpUnitComposerBinFile);
     } else {
-      let errorMessage = 'Couldn\'t find a vendor/bin/phpunit file.';
+      let errorMessage = "Couldn't find a vendor/bin/phpunit file.";
       vscode.window.showErrorMessage(errorMessage);
       return { success: false, output: errorMessage };
     }
   }
 
   public async execPhpUnit(phpunitPath: string, workingDirectory = null) {
-    workingDirectory = workingDirectory == null ? TestRunnerHelper.findWorkingDirectory() : workingDirectory;
+    workingDirectory =
+      workingDirectory == null
+        ? TestRunnerHelper.findWorkingDirectory()
+        : workingDirectory;
 
     if (workingDirectory == null) {
-      let errorMessage = 'Couldn\'t find a working directory.';
+      let errorMessage = "Couldn't find a working directory.";
       vscode.window.showErrorMessage(errorMessage);
       return { success: false, output: errorMessage };
     }
@@ -49,12 +53,12 @@ export default class TestRunner {
       this.args.push(this.fsPath);
     }
 
-    let command = '';
+    let command = "";
 
     if (/^win/.test(process.platform)) {
-      command = 'cmd';
+      command = "cmd";
       this.args.unshift(phpunitPath);
-      this.args.unshift('/c');
+      this.args.unshift("/c");
     } else {
       command = phpunitPath;
     }
@@ -64,7 +68,15 @@ export default class TestRunner {
       env: vscode.workspace.getConfiguration("phpunit").envVars,
     };
 
-    const output = await (new TestProcess()).run(command, this.args, spawnOptions);
+    const timeout: number = vscode.workspace
+      .getConfiguration("phpunit")
+      .get("timeout");
+
+    const output = await TestRunnerHelper.promiseWithTimeout(
+      new TestProcess().run(command, this.args, spawnOptions),
+      timeout,
+      "timeout"
+    );
 
     const { success, message } = TestRunnerHelper.parsePhpUnitOutput(output);
 

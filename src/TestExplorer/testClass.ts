@@ -30,6 +30,7 @@ export default class TestClass {
       const { success, message, output } = await phpUnit.run();
       const duration = Date.now() - start;
       const location = new vscode.Location(item.uri!, item.range!);
+      let errorMessage = "";
       let error = false;
 
       if (success) {
@@ -37,8 +38,12 @@ export default class TestClass {
         options.appendOutput(message, location, item);
         options.appendOutput(output);
       } else {
-        const errorMessage = TestRunnerHelper.parsePhpUnitOutputForClassTest(output);
-        error = errorMessage === "Test Failed: Check Terminal Output" ? true : false;
+        if (errorMessage.match(/Test Failed: Timeout/)) {
+          errorMessage = message;
+        } else {
+          errorMessage = TestRunnerHelper.parsePhpUnitOutputForClassTest(output);
+        }
+        error = errorMessage ? true : false;
         options.failed(item, [], duration);
         options.appendOutput(errorMessage, location, item);
         options.appendOutput(output);
@@ -58,7 +63,6 @@ export default class TestClass {
 
       if (success && testResult === 'OK' && !error) {
         options.passed(item);
-        // options.appendOutput(testResult, location, item);
       } else {
         options.failed(item, []);
         options.appendOutput(error ? "" : testResult, location, item);

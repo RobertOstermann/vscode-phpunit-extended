@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.1.2] - 2021-11-01
 
+- Running a class runs tests much faster.
+
+## [0.1.2] - 2021-11-01
+
 - Bug Fixes
 
 ## [0.1.1] - 2021-11-01

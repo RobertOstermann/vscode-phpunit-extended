@@ -2,9 +2,9 @@ import * as vscode from 'vscode';
 import TestRunner from './testRunner';
 
 export default class TestCase {
-  public generation: number;
   private currentTest: string;
   private fsPath: string;
+  public generation: number;
 
   constructor(currentTest: string, fsPath: vscode.Uri, generation: number) {
     this.currentTest = currentTest;
@@ -31,9 +31,8 @@ export default class TestCase {
         options.appendOutput(message, location, item);
         options.appendOutput(output);
       } else {
-        const errorMessage = new vscode.TestMessage(message);
-        errorMessage.location = location;
-        options.failed(item, errorMessage, duration);
+        options.failed(item, [], duration);
+        options.appendOutput(message, location, item);
         options.appendOutput(output);
       }
     } else {

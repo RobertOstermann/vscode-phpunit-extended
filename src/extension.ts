@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import Commands from './commands';
 import TestCase from './TestExplorer/testCase';
+import TestClass from './TestExplorer/testClass';
 import { testData, TestFile } from './TestExplorer/testFile';
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -10,7 +11,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(controller);
 
 	const runHandler = (request: vscode.TestRunRequest, cancellation: vscode.CancellationToken) => {
-		const queue: { test: vscode.TestItem; data: TestCase; }[] = [];
+		const queue: { test: vscode.TestItem; data: TestClass | TestCase; }[] = [];
 		const run = controller.createTestRun(request);
 
 		const discoverTests = async (tests: Iterable<vscode.TestItem>) => {
@@ -21,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 				const data = testData.get(test);
 
-				if (data instanceof TestCase) {
+				if (data instanceof TestClass || data instanceof TestCase) {
 					run.enqueued(test);
 					queue.push({ test, data });
 				} else {
@@ -35,29 +36,17 @@ export async function activate(context: vscode.ExtensionContext) {
 		};
 
 		const runTestQueue = async () => {
-			const delay = 250;
-			let index = 0;
-			let promises = [];
-
 			for (const { test, data } of queue) {
-				promises.push(
-					new Promise(async () => {
-						await new Promise(res => setTimeout(res, delay * index));
+				run.appendOutput(`\r\n------------------------------\r\nRunning ${test.label}\r\n------------------------------\r\n`);
+				if (cancellation.isCancellationRequested) {
+					run.skipped(test);
+				} else {
+					run.started(test);
+					await data.run(test, run);
+				}
 
-						await new Promise(() => {
-							if (cancellation.isCancellationRequested) {
-								run.skipped(test);
-							} else {
-								run.started(test);
-								data.run(test, run);
-							}
-						});
-					})
-				);
-				index++;
+				run.appendOutput(`\r\nCompleted ${test.label}\r\n`);
 			}
-
-			await Promise.all(promises);
 
 			run.end();
 		};

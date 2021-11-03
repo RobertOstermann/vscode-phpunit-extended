@@ -66,11 +66,12 @@ export class TestFile {
       onClass: (range: vscode.Range, name: string) => {
         ascend(1);
         const parent = ancestors[ancestors.length - 1];
+        const data = new TestClass(name, item.uri, thisGeneration);
         const id = `${item.uri}/${name}`;
 
         const testClass = controller.createTestItem(id, name, item.uri);
+        testData.set(testClass, data);
         testClass.range = range;
-        testData.set(testClass, new TestClass(thisGeneration));
         parent.children.push(testClass);
         ancestors.push({ item: testClass, children: [] });
       },

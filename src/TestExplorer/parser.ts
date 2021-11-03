@@ -3,8 +3,6 @@ import * as vscode from 'vscode';
 const methodRegex = /\s*(public\s+){0,1}function\s+(\w+)\s*\(/gi;
 const classRegex = /^\s*class\s+(\w*)\s*{?/gi;
 
-// const testMethodRegex = /\s*(public\s+){0,1}function\s+(\w*test\w*)\s*\(/gi;
-
 export const parsePHP = (text: string, events: {
   onTest(range: vscode.Range, name: string): void;
   onClass(range: vscode.Range, name: string): void;

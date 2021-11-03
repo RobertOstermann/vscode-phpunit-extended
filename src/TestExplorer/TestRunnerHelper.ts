@@ -35,6 +35,7 @@ export default class TestRunnerHelper {
     const successRegex = /OK\s+\(.*\)/gi;
     const failureRegex = /Failed\s+(\w*\s*)*/gi;
     const noTestsRegex = /No\stests(\w*\s*)*/gi;
+    const noAssertionsRegex = /.*not\sperform\sany\sassertions(\w*\s*)*/gi;
 
     const lines = text.split('\n');
 
@@ -56,10 +57,41 @@ export default class TestRunnerHelper {
       const noTestsMessage = noTestsRegex.exec(line);
       if (noTestsMessage) {
         const [message] = noTestsMessage;
-        return { success: false, message: message}
+        return { success: false, message: message };
+      }
+
+      const noAssertionsMessage = noAssertionsRegex.exec(line);
+      if (noAssertionsMessage) {
+        const [message] = noAssertionsMessage;
+        return { success: false, message: message };
       }
     }
 
     return { success: false, message: "ERROR" };
+  }
+
+  static parsePhpUnitOutputForClassTest(text: string) {
+    const outputRegex = /(Tests:.*Assertions.*Failures(\w*[^\\S\r\n\.]*)*)/gis;
+    const result = outputRegex.exec(text);
+
+    if (result) {
+      const [message] = result;
+      return message;
+    }
+
+    return "Failing Tests";
+  }
+
+  static parsePhpUnitOutputForIndividualTest(text: string, name: string) {
+    const regexString = `::${name}.*(Failed(\\w*[^\\S\r\n]*)*)`;
+    const regex = new RegExp(regexString, 'gis');
+    const result = regex.exec(text);
+
+    if (result) {
+      const [, message] = result;
+      return message;
+    }
+
+    return "";
   }
 }

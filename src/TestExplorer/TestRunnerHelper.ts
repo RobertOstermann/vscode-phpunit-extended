@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import cp = require('child_process');
 import fs = require('fs');
+import { Constants } from './Helpers/constants';
 
 export default class TestRunnerHelper {
   static findWorkingDirectory() {
@@ -10,7 +10,7 @@ export default class TestRunnerHelper {
     return workingDirectory;
   }
 
-  static findNearestFileFullPath(fileRelativeName: string, currentPath = '') {
+  static findNearestFileFullPath(fileRelativeName: string, currentPath = '', index = 0) {
     let rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
 
     if (currentPath == '') {
@@ -24,66 +24,60 @@ export default class TestRunnerHelper {
 
     if (fs.existsSync(fileFullPath)) {
       return fileFullPath;
-    } else if (currentPath != rootPath) {
-      return this.findNearestFileFullPath(fileRelativeName, currentPath);
+    } else if (currentPath != rootPath && index < Constants.nearestFileSearchDepth) {
+      return this.findNearestFileFullPath(fileRelativeName, currentPath, index++);
     } else {
       return null;
     }
   }
 
   static parsePhpUnitOutput(text: string) {
-    const successRegex = /OK\s+\(.*\)/gi;
-    const failureRegex = /Failed\s+(\w*\s*)*/gi;
-    const noTestsRegex = /No\stests(\w*\s*)*/gi;
-    const noAssertionsRegex = /.*not\sperform\sany\sassertions(\w*\s*)*/gi;
-
     const lines = text.split('\n');
 
     for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
       const line = lines[lineNumber];
 
-      const successMessage = successRegex.exec(line);
+      const successMessage = Constants.phpUnitSuccessRegex.exec(line);
       if (successMessage) {
         const [message] = successMessage;
         return { success: true, message: message };
       }
 
-      const failureMessage = failureRegex.exec(line);
+      const failureMessage = Constants.phpUnitFailureRegex.exec(line);
       if (failureMessage) {
         const [message] = failureMessage;
         return { success: false, message: message };
       }
 
-      const noTestsMessage = noTestsRegex.exec(line);
+      const noTestsMessage = Constants.phpUnitNoTestsRegex.exec(line);
       if (noTestsMessage) {
         const [message] = noTestsMessage;
         return { success: false, message: message };
       }
 
-      const noAssertionsMessage = noAssertionsRegex.exec(line);
+      const noAssertionsMessage = Constants.phpUnitNoAssertionsRegex.exec(line);
       if (noAssertionsMessage) {
         const [message] = noAssertionsMessage;
         return { success: false, message: message };
       }
     }
 
-    if (text.match(/timeout/)) {
-      return { success: false, message: "Test Failed: Timeout" };
+    if (text === Constants.timeoutMessage) {
+      return { success: false, message: Constants.timeoutMessage };
     }
 
-    return { success: false, message: "Test Failed: Check Terminal Output" };
+    return { success: false, message: Constants.invalidTestMessage };
   }
 
   static parsePhpUnitOutputForClassTest(text: string) {
-    const regex = /(Tests:.*Assertions.*Failures(\w*[^\\S\r\n\.]*)*)/gis;
-    const result = regex.exec(text);
+    const result = Constants.classOutputRegex.exec(text);
 
     if (result) {
       const [message] = result;
-      return message;
+      return { errorStatus: false, errorOutput: message };
     }
 
-    return "Test Failed: Check Terminal Output";
+    return { errorStatus: true, output: Constants.timeoutMessage };
   }
 
   static parsePhpUnitOutputForIndividualTest(text: string, name: string) {
@@ -96,7 +90,7 @@ export default class TestRunnerHelper {
       return message;
     }
 
-    return "OK";
+    return Constants.individualTestPassedMessage;
   }
 
   static promiseWithTimeout(promise, timeout: number, timeoutMessage: string) {

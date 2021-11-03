@@ -1,25 +1,18 @@
 import * as vscode from 'vscode';
-
-const methodRegex = /\s*(public\s+){0,1}function\s+(\w+)\s*\(/gi;
-const classRegex = /^\s*class\s+(\w*)\s*{?/gi;
+import { Configuration } from './Helpers/configuration';
+import { Constants } from './Helpers/constants';
 
 export const parsePHP = (text: string, events: {
   onTest(range: vscode.Range, name: string): void;
   onClass(range: vscode.Range, name: string): void;
 }) => {
-  // TODO: Add ability to make the pattern case sensitive
-  const testMethodRegexString: string = vscode.workspace
-    .getConfiguration("phpunit")
-    .get("functionRegex");
-  const testMethodRegex = new RegExp(testMethodRegexString, 'gi');
-
   const lines = text.split('\n');
 
   for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
     const line = lines[lineNumber];
 
-    const validTestMethod = testMethodRegex.exec(line);
-    const test = methodRegex.exec(line);
+    const validTestMethod = Configuration.functionRegex().exec(line);
+    const test = Constants.phpMethodRegex.exec(line);
     if (validTestMethod && test) {
       const [, , name] = test;
       const range = new vscode.Range(
@@ -29,7 +22,7 @@ export const parsePHP = (text: string, events: {
       events.onTest(range, name);
     }
 
-    const heading = classRegex.exec(line);
+    const heading = Constants.phpClassRegex.exec(line);
     if (heading) {
       const [, name] = heading;
       const range = new vscode.Range(

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import Commands from './commands';
+import { Configuration } from './TestExplorer/Helpers/configuration';
 import TestCase from './TestExplorer/testCase';
 import TestClass from './TestExplorer/testClass';
 import { testData, TestFile } from './TestExplorer/testFile';
@@ -55,10 +56,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	controller.resolveHandler = async item => {
 		if (!item) {
-			const discoverAllTests: boolean = vscode.workspace
-				.getConfiguration("phpunit")
-				.get("discoverAllTests");
-			if (discoverAllTests) {
+			if (Configuration.discoverAllTests()) {
 				context.subscriptions.push(...startWatchingWorkspace(controller));
 			}
 			return;
@@ -118,12 +116,8 @@ function startWatchingWorkspace(controller: vscode.TestController) {
 		return [];
 	}
 
-	const folderPattern: string = vscode.workspace
-		.getConfiguration("phpunit")
-		.get("folderPattern");
-
 	return vscode.workspace.workspaceFolders.map(workspaceFolder => {
-		const pattern = new vscode.RelativePattern(workspaceFolder, folderPattern);
+		const pattern = new vscode.RelativePattern(workspaceFolder, Configuration.folderPattern());
 		const watcher = vscode.workspace.createFileSystemWatcher(pattern);
 
 		watcher.onDidCreate(uri => {
@@ -156,14 +150,7 @@ function startWatchingWorkspace(controller: vscode.TestController) {
 }
 
 function validTestFilePath(path: string) {
-	// TODO: Add ability to make the pattern case sensitive
-	const fileRegexString: string = vscode.workspace
-		.getConfiguration("phpunit")
-		.get("fileRegex");
-
-	const fileRegex = new RegExp(fileRegexString, 'gi');
-
-	if (fileRegex.exec(path)) {
+	if (Configuration.fileRegex().exec(path)) {
 		return true;
 	}
 

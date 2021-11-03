@@ -33,10 +33,6 @@ export class TestFile {
     }
   }
 
-  /**
-   * Parses the tests from the input text, and updates the tests contained
-   * by this file to be those from the text,
-   */
   public updateFromContents(controller: vscode.TestController, content: string, item: vscode.TestItem) {
     const ancestors = [{ item, children: [] as vscode.TestItem[] }];
     const thisGeneration = generationCounter++;
@@ -75,6 +71,6 @@ export class TestFile {
       },
     });
 
-    ascend(0); // finish and assign children for all remaining items
+    ascend(0);
   }
 }

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.8] - 2021-11-03
+
+- Improve terminal output. Behind the scenes changes.
+
 ## [0.1.7] - 2021-11-03
 
 - Add a timeout option to running the test from the test explorer.

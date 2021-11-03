@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import TestRunnerHelper from "./testRunnerHelper";
 import TestProcess from "./testProcess";
 import { SpawnOptions } from "child_process";
+import { Constants } from "./Helpers/constants";
 
 export default class TestRunner {
   private args: string[];
@@ -74,8 +75,8 @@ export default class TestRunner {
 
     const output = await TestRunnerHelper.promiseWithTimeout(
       new TestProcess().run(command, this.args, spawnOptions),
-      timeout,
-      "timeout"
+      timeout * 1000,
+      Constants.timeoutMessage
     );
 
     const { success, message } = TestRunnerHelper.parsePhpUnitOutput(output);

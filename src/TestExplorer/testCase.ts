@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { OptionsHelper } from './Helpers/optionsHelper';
 import TestRunner from './testRunner';
 
 export default class TestCase {
@@ -24,16 +25,11 @@ export default class TestCase {
       let phpUnit = new TestRunner(args, this.fsPath);
       const { success, message, output } = await phpUnit.run();
       const duration = Date.now() - start;
-      let location = new vscode.Location(item.uri!, item.range!);
 
       if (success) {
-        options.passed(item, duration);
-        options.appendOutput(message, location, item);
-        options.appendOutput(output);
+        OptionsHelper.appendPassedOutput(item, options, message, output, duration);
       } else {
-        options.failed(item, [], duration);
-        options.appendOutput(message, location, item);
-        options.appendOutput(output);
+        OptionsHelper.appendFailedOutput(item, options, message, output, duration);
       }
     } else {
       const testMessage = new vscode.TestMessage(`${item.label} not found`);

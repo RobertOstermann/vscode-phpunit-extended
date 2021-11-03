@@ -1,8 +1,6 @@
-// export default class TestClass {
-//   constructor(public generation: number) { }
-// }
-
 import * as vscode from 'vscode';
+import { Constants } from './Helpers/constants';
+import { OptionsHelper } from './Helpers/optionsHelper';
 import TestRunner from './testRunner';
 import TestRunnerHelper from './testRunnerHelper';
 
@@ -29,43 +27,42 @@ export default class TestClass {
       const phpUnit = new TestRunner(args, this.fsPath);
       const { success, message, output } = await phpUnit.run();
       const duration = Date.now() - start;
-      const location = new vscode.Location(item.uri!, item.range!);
+
       let errorMessage = "";
       let error = false;
 
       if (success) {
-        options.passed(item, duration);
-        options.appendOutput(message, location, item);
-        options.appendOutput(output);
+        OptionsHelper.appendPassedOutput(item, options, message, output, duration);
       } else {
-        if (errorMessage.match(/Test Failed: Timeout/)) {
+        if (message === Constants.timeoutMessage) {
           errorMessage = message;
+          error = true;
         } else {
-          errorMessage = TestRunnerHelper.parsePhpUnitOutputForClassTest(output);
+          const { errorStatus, errorOutput } = TestRunnerHelper.parsePhpUnitOutputForClassTest(output);
+          error = errorStatus;
+          errorMessage = errorOutput;
         }
-        error = errorMessage ? true : false;
-        options.failed(item, [], duration);
-        options.appendOutput(errorMessage, location, item);
-        options.appendOutput(output);
+        OptionsHelper.appendFailedOutput(item, options, errorMessage, output, duration);
       }
 
       this.populateChildTestOutput(item, options, output, success, error);
     } else {
-      const testMessage = new vscode.TestMessage(`${item.label} not found`);
-      options.failed(item, testMessage);
+      OptionsHelper.appendFailedOutput(item, options);
     }
   }
 
   private populateChildTestOutput(parent: vscode.TestItem, options: vscode.TestRun, output: string, success: boolean, error: boolean) {
     parent.children.forEach(item => {
-      const location = new vscode.Location(item.uri!, item.range!);
       const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label);
 
-      if (success && testResult === 'OK' && !error) {
-        options.passed(item);
+      if (success || (testResult === Constants.individualTestPassedMessage && !error)) {
+        OptionsHelper.appendPassedOutput(item, options);
       } else {
-        options.failed(item, []);
-        options.appendOutput(error ? "" : testResult, location, item);
+        if (error) {
+          OptionsHelper.appendFailedOutput(item, options);
+        } else {
+          OptionsHelper.appendFailedOutput(item, options, testResult);
+        }
       }
     });
   }

@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended With TestExplorer for VSCode",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "enableProposedApi": false,
@@ -71,7 +71,7 @@
           "description": "Any phpunit args (phpunit --help)"
         },
         "phpunit.discoverAllTests": {
-          "type":"boolean",
+          "type": "boolean",
           "default": true,
           "description": "Determines whether to discover all tests immediately or discover them individually once opened in the editor."
         },

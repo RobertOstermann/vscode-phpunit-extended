@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { SelectWindowTest } from './TestHandlers/SelectWindowTest';
-import { CurrentFileTest } from './TestHandlers/CurrentFileTest';
-import { TestSuite } from './TestHandlers/TestSuite';
-import { NeareastTest } from './TestHandlers/NeareastTest';
-import { RunLastTest } from './TestHandlers/RunLastTest';
+import { SelectWindowTest } from './TestHandlers/selectWindowTest';
+import { CurrentFileTest } from './TestHandlers/currentFileTest';
+import { TestSuite } from './TestHandlers/testSuite';
+import { NeareastTest } from './TestHandlers/neareastTest';
+import { RunLastTest } from './TestHandlers/runLastTest';
 import { PhpUnit } from "./phpUnit";
 import { TestHandler } from './utils';
 

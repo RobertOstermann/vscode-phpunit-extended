@@ -1,5 +1,3 @@
-import * as vscode from 'vscode';
-
 export class Constants {
   static readonly nearestFileSearchDepth: number = 100;
 

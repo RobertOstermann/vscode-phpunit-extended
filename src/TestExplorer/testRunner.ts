@@ -20,9 +20,9 @@ export default class TestRunner {
     const phpunitPath = config.get<string>("execPath", "phpunit");
 
     if (phpunitPath == "") {
-      return await this.execThroughComposer();
+      return this.execThroughComposer();
     } else {
-      return await this.execPhpUnit(phpunitPath);
+      return this.execPhpUnit(phpunitPath);
     }
   }
 
@@ -31,7 +31,7 @@ export default class TestRunner {
       TestRunnerHelper.findNearestFileFullPath("vendor/bin/phpunit");
 
     if (phpUnitComposerBinFile != null) {
-      return await this.execPhpUnit(phpUnitComposerBinFile);
+      return this.execPhpUnit(phpUnitComposerBinFile);
     } else {
       const errorMessage = "Couldn't find a vendor/bin/phpunit file.";
       vscode.window.showErrorMessage(errorMessage);

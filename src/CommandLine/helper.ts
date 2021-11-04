@@ -11,7 +11,7 @@ export class Helper {
     }
 
     static getClassNameOrMethod(editor: vscode.TextEditor, type: string): string | undefined {
-        if (!this.regex.hasOwnProperty(type)) {
+        if (Object.prototype.hasOwnProperty.call(this.regex, type)) {
             throw new Error('Invalid type property passed: ' + type);
         }
 
@@ -26,9 +26,9 @@ export class Helper {
 
         while (result === undefined && position > -1) {
             const line = editor.document.lineAt(position);
-            let regexResult = null;
+            const regexResult = this.regex[type].exec(line.text);
 
-            if ((regexResult = this.regex[type].exec(line.text))) {
+            if ((regexResult)) {
                 result = regexResult[type === 'method' ? 2 : 1].toString().trim();
             }
 

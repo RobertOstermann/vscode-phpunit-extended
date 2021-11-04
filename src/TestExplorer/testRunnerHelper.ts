@@ -4,13 +4,11 @@ import { Constants } from './Helpers/constants';
 
 export default class TestRunnerHelper {
   static findWorkingDirectory() {
-    const workingDirectory = this.findNearestFileFullPath('phpunit.xml')
+    return this.findNearestFileFullPath('phpunit.xml')
       || this.findNearestFileFullPath('phpunit.xml.dist');
-
-    return workingDirectory;
   }
 
-  static findNearestFileFullPath(fileRelativeName: string, currentPath = '', index = 0) {
+  static findNearestFileFullPath(fileRelativeName: string, currentPath = '') {
     const rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
 
     if (currentPath == '') {
@@ -24,8 +22,8 @@ export default class TestRunnerHelper {
 
     if (fs.existsSync(fileFullPath)) {
       return fileFullPath;
-    } else if (currentPath != rootPath && index < Constants.nearestFileSearchDepth) {
-      return this.findNearestFileFullPath(fileRelativeName, currentPath, index++);
+    } else if (currentPath != rootPath) {
+      return this.findNearestFileFullPath(fileRelativeName, currentPath);
     } else {
       return null;
     }
@@ -34,9 +32,7 @@ export default class TestRunnerHelper {
   static parsePhpUnitOutput(text: string) {
     const lines = text.split('\n');
 
-    for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-      const line = lines[lineNumber];
-
+    for (let line of lines) {
       const successMessage = Constants.phpUnitSuccessRegex.exec(line);
       if (successMessage) {
         const [message] = successMessage;

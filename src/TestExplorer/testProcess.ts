@@ -20,11 +20,11 @@ export default class TestProcess {
         return;
       }
 
-      this.process.stdout!.on('data', data => {
+      this.process.stdout?.on('data', data => {
         buffers.push(data);
       });
 
-      this.process.stderr!.on('data', data => {
+      this.process.stderr?.on('data', data => {
         buffers.push(data);
       });
 
@@ -34,7 +34,8 @@ export default class TestProcess {
 
       this.process.on('close', () => {
         const output = buffers.reduce((response, buffer) => {
-          return (response += buffer.toString());
+          response += buffer.toString();
+          return (response);
         }, '');
 
         resolve(output);

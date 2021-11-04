@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 export class OptionsHelper {
   static appendItemOutput(item: vscode.TestItem, options: vscode.TestRun, message: string): void {
-    const location = new vscode.Location(item.uri!, item.range!);
+    const location = new vscode.Location(item.uri, item.range);
 
     options.appendOutput(message, location, item);
   }

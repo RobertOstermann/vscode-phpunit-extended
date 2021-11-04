@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import fs = require('fs');
@@ -6,7 +7,7 @@ export class PhpUnit {
     private args: string[];
     private putFsPathIntoArgs: boolean;
     private outputChannel: vscode.OutputChannel;
-    public static lastCommand: any;
+    public static lastCommand: { args: string[]; putFsPathIntoArgs: boolean; phpunitPath: string; workingDirectory: string; };
     public static currentTest: cp.ChildProcess;
 
     constructor(outputChannel: vscode.OutputChannel, args: string[], putFsPathIntoArgs = true) {
@@ -20,13 +21,13 @@ export class PhpUnit {
         const phpunitPath = config.get<string>("execPath", "phpunit");
 
         if (phpunitPath == "") {
-            this.execThroughComposer(phpunitPath);
+            this.execThroughComposer();
         } else {
             this.execPhpUnit(phpunitPath);
         }
     }
 
-    private execThroughComposer(phpunitPath: string, currentPath = '') {
+    private execThroughComposer() {
         const phpUnitComposerBinFile = this.findNearestFileFullPath('vendor/bin/phpunit');
 
         if (phpUnitComposerBinFile != null) {
@@ -88,14 +89,12 @@ export class PhpUnit {
         });
         phpunitProcess.on("close", (code) => {
             const status = code == 0 ? 'ok' : 'error';
-            if (showOutput == 'ok' && code == 0) {
-                this.outputChannel.show();
-            } else if (showOutput == 'error' && code == 1) {
+            if ((showOutput == 'ok' && code == 0) || (showOutput == 'error' && code == 1)) {
                 this.outputChannel.show();
             }
 
             vscode.workspace.getConfiguration('phpunit').scriptsAfterTests[status]
-                .forEach((script: any) => {
+                .forEach((script) => {
                     if (typeof script === 'string') {
                         cp.spawn(script);
                     } else {

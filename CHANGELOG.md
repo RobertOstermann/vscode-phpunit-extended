@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.9] - 2021-11-03
+
+- Update timeout to use seconds instead of milliseconds.
+
 ## [0.1.8] - 2021-11-03
 
 - Improve terminal output. Behind the scenes changes.

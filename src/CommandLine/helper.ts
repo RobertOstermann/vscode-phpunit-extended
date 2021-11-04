@@ -25,7 +25,7 @@ export class Helper {
         }
 
         while (result === undefined && position > -1) {
-            let line = editor.document.lineAt(position);
+            const line = editor.document.lineAt(position);
             let regexResult = null;
 
             if ((regexResult = this.regex[type].exec(line.text))) {

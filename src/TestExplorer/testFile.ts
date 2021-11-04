@@ -1,8 +1,9 @@
-import * as vscode from 'vscode';
 import { TextDecoder } from 'util';
+import * as vscode from 'vscode';
+
 import { parsePHP } from './parser';
-import TestClass from './testClass';
 import TestCase from './testCase';
+import TestClass from './testClass';
 
 export type phpTestData = TestFile | TestClass | TestCase;
 export const testData = new WeakMap<vscode.TestItem, phpTestData>();

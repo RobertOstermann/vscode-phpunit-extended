@@ -4,23 +4,23 @@ import { Constants } from './Helpers/constants';
 
 export default class TestRunnerHelper {
   static findWorkingDirectory() {
-    let workingDirectory = this.findNearestFileFullPath('phpunit.xml')
+    const workingDirectory = this.findNearestFileFullPath('phpunit.xml')
       || this.findNearestFileFullPath('phpunit.xml.dist');
 
     return workingDirectory;
   }
 
   static findNearestFileFullPath(fileRelativeName: string, currentPath = '', index = 0) {
-    let rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+    const rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
 
     if (currentPath == '') {
-      let filePath = vscode.window.activeTextEditor.document.uri.fsPath;
+      const filePath = vscode.window.activeTextEditor.document.uri.fsPath;
       currentPath = filePath.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, '');
     } else {
       currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, '');
     }
 
-    let fileFullPath = `${currentPath}/${fileRelativeName}`;
+    const fileFullPath = `${currentPath}/${fileRelativeName}`;
 
     if (fs.existsSync(fileFullPath)) {
       return fileFullPath;

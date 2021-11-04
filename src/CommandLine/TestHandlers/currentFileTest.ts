@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { PhpUnit } from '../phpUnit';
 
 export class CurrentFileTest {

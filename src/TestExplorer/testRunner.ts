@@ -1,22 +1,23 @@
-import * as vscode from "vscode";
-import TestRunnerHelper from "./testRunnerHelper";
-import TestProcess from "./testProcess";
 import { SpawnOptions } from "child_process";
+import * as vscode from "vscode";
+
 import { Constants } from "./Helpers/constants";
+import TestProcess from "./testProcess";
+import TestRunnerHelper from "./testRunnerHelper";
 
 export default class TestRunner {
   private args: string[];
   private fsPath: string;
   private putFsPathIntoArgs: boolean;
 
-  constructor(args: string[], fsPath: string = "") {
+  constructor(args: string[], fsPath = "") {
     this.args = args;
     this.fsPath = fsPath;
   }
 
   async run() {
-    let config = vscode.workspace.getConfiguration("phpunit");
-    let phpunitPath = config.get<string>("execPath", "phpunit");
+    const config = vscode.workspace.getConfiguration("phpunit");
+    const phpunitPath = config.get<string>("execPath", "phpunit");
 
     if (phpunitPath == "") {
       return await this.execThroughComposer();
@@ -26,13 +27,13 @@ export default class TestRunner {
   }
 
   private async execThroughComposer() {
-    let phpUnitComposerBinFile =
+    const phpUnitComposerBinFile =
       TestRunnerHelper.findNearestFileFullPath("vendor/bin/phpunit");
 
     if (phpUnitComposerBinFile != null) {
       return await this.execPhpUnit(phpUnitComposerBinFile);
     } else {
-      let errorMessage = "Couldn't find a vendor/bin/phpunit file.";
+      const errorMessage = "Couldn't find a vendor/bin/phpunit file.";
       vscode.window.showErrorMessage(errorMessage);
       return { success: false, output: errorMessage };
     }
@@ -45,7 +46,7 @@ export default class TestRunner {
         : workingDirectory;
 
     if (workingDirectory == null) {
-      let errorMessage = "Couldn't find a working directory.";
+      const errorMessage = "Couldn't find a working directory.";
       vscode.window.showErrorMessage(errorMessage);
       return { success: false, output: errorMessage };
     }
@@ -64,7 +65,7 @@ export default class TestRunner {
       command = phpunitPath;
     }
 
-    let spawnOptions: SpawnOptions = {
+    const spawnOptions: SpawnOptions = {
       cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ""),
       env: vscode.workspace.getConfiguration("phpunit").envVars,
     };

@@ -1,10 +1,11 @@
 import * as vscode from 'vscode';
-import { SelectWindowTest } from './TestHandlers/selectWindowTest';
+
+import { PhpUnit } from "./phpUnit";
 import { CurrentFileTest } from './TestHandlers/currentFileTest';
-import { TestSuite } from './TestHandlers/testSuite';
 import { NeareastTest } from './TestHandlers/neareastTest';
 import { RunLastTest } from './TestHandlers/runLastTest';
-import { PhpUnit } from "./phpUnit";
+import { SelectWindowTest } from './TestHandlers/selectWindowTest';
+import { TestSuite } from './TestHandlers/testSuite';
 import { TestHandler } from './utils';
 
 export class TestRunner {
@@ -43,8 +44,8 @@ export class TestRunner {
     }
 
     private executeTest(type: string) {
-        let config = vscode.workspace.getConfiguration("phpunit");
-        let args = [].concat(config.get<Array<string>>("args", []));
+        const config = vscode.workspace.getConfiguration("phpunit");
+        const args = [].concat(config.get<Array<string>>("args", []));
         const editor = vscode.window.activeTextEditor;
         let testHandler: TestHandler;
 

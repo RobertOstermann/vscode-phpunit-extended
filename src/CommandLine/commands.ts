@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { TestRunner } from './phpUnitTest';
 
 export default class Commands {

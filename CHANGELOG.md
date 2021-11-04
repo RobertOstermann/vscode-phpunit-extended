@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2021-11-04
+
+-
+
 ## [0.1.9] - 2021-11-03
 
 - Update timeout to use seconds instead of milliseconds.

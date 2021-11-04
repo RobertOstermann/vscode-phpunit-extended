@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+
 import { Configuration } from './Helpers/configuration';
 import { Constants } from './Helpers/constants';
 

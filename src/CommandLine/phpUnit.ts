@@ -9,15 +9,15 @@ export class PhpUnit {
     public static lastCommand: any;
     public static currentTest: cp.ChildProcess;
 
-    constructor(outputChannel: vscode.OutputChannel, args: string[], putFsPathIntoArgs: boolean = true) {
+    constructor(outputChannel: vscode.OutputChannel, args: string[], putFsPathIntoArgs = true) {
         this.outputChannel = outputChannel;
         this.args = args;
         this.putFsPathIntoArgs = putFsPathIntoArgs;
     }
 
     public run() {
-        let config = vscode.workspace.getConfiguration("phpunit");
-        let phpunitPath = config.get<string>("execPath", "phpunit");
+        const config = vscode.workspace.getConfiguration("phpunit");
+        const phpunitPath = config.get<string>("execPath", "phpunit");
 
         if (phpunitPath == "") {
             this.execThroughComposer(phpunitPath);
@@ -27,7 +27,7 @@ export class PhpUnit {
     }
 
     private execThroughComposer(phpunitPath: string, currentPath = '') {
-        let phpUnitComposerBinFile = this.findNearestFileFullPath('vendor/bin/phpunit');
+        const phpUnitComposerBinFile = this.findNearestFileFullPath('vendor/bin/phpunit');
 
         if (phpUnitComposerBinFile != null) {
             this.execPhpUnit(phpUnitComposerBinFile);
@@ -40,7 +40,7 @@ export class PhpUnit {
         this.outputChannel.clear();
 
         workingDirectory = workingDirectory == null ? this.findWorkingDirectory() : workingDirectory;
-        let showOutput = vscode.workspace.getConfiguration('phpunit').showOutput;
+        const showOutput = vscode.workspace.getConfiguration('phpunit').showOutput;
         if (showOutput != 'always') {
             this.outputChannel.hide();
         }
@@ -70,7 +70,7 @@ export class PhpUnit {
             command = phpunitPath;
         }
 
-        let phpunitProcess = cp.spawn(
+        const phpunitProcess = cp.spawn(
             command,
             this.args,
             { cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ''), env: vscode.workspace.getConfiguration('phpunit').envVars }
@@ -87,7 +87,7 @@ export class PhpUnit {
             this.outputChannel.append(buffer.toString());
         });
         phpunitProcess.on("close", (code) => {
-            let status = code == 0 ? 'ok' : 'error';
+            const status = code == 0 ? 'ok' : 'error';
             if (showOutput == 'ok' && code == 0) {
                 this.outputChannel.show();
             } else if (showOutput == 'error' && code == 1) {
@@ -116,16 +116,16 @@ export class PhpUnit {
     }
 
     private findNearestFileFullPath(fileRelativeName: string, currentPath = '') {
-        let rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        const rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
 
         if (currentPath == '') {
-            let filePath = vscode.window.activeTextEditor.document.uri.fsPath;
+            const filePath = vscode.window.activeTextEditor.document.uri.fsPath;
             currentPath = filePath.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, '');
         } else {
             currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, '');
         }
 
-        let fileFullPath = `${currentPath}/${fileRelativeName}`;
+        const fileFullPath = `${currentPath}/${fileRelativeName}`;
 
         if (fs.existsSync(fileFullPath)) {
             return fileFullPath;
@@ -137,7 +137,7 @@ export class PhpUnit {
     }
 
     private findWorkingDirectory() {
-        let workingDirectory = this.findNearestFileFullPath('phpunit.xml')
+        const workingDirectory = this.findNearestFileFullPath('phpunit.xml')
             || this.findNearestFileFullPath('phpunit.xml.dist');
 
         if (workingDirectory == null) {

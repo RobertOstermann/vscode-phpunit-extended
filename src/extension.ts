@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import Commands from './commands';
+import Commands from './CommandLine/commands';
 import { Configuration } from './TestExplorer/Helpers/configuration';
+import { testData, TestFile } from './TestExplorer/testFile';
 import TestCase from './TestExplorer/testCase';
 import TestClass from './TestExplorer/testClass';
-import { testData, TestFile } from './TestExplorer/testFile';
 
 export async function activate(context: vscode.ExtensionContext) {
 	Commands.registerCommands(context);

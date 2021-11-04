@@ -15,15 +15,15 @@ export class SelectWindowTest {
     }
 
     public run() {
-        let range = this.editor
+        const range = this.editor
             ? this.editor.document.getWordRangeAtPosition(this.editor.selection.active)
             : null;
 
         if (range) {
-            let line = this.editor.document.lineAt(range.start.line);
-            var wordOnCursor = this.editor.document.getText(range);
-            var isFunction = line.text.indexOf("function") != -1;
-            var isClass = line.text.indexOf("class") != -1;
+            const line = this.editor.document.lineAt(range.start.line);
+            const wordOnCursor = this.editor.document.getText(range);
+            const isFunction = line.text.indexOf("function") != -1;
+            const isClass = line.text.indexOf("class") != -1;
 
             if (isFunction && wordOnCursor != null) {
                 this.args.push("--filter");
@@ -51,20 +51,20 @@ export class SelectWindowTest {
 
     private getUserSelectedTest(): Thenable<any> | null {
         if (this.editor.document.fileName != null) {
-            let testFunctions = [];
+            const testFunctions = [];
 
-            let currentTest = Helper.getClassNameOrMethod(this.editor, 'method');
+            const currentTest = Helper.getClassNameOrMethod(this.editor, 'method');
             if (currentTest) {
                 testFunctions.push('function - ' + currentTest);
             }
 
             testFunctions.push('class - ' + Helper.getClassNameOrMethod(this.editor, 'class'));
 
-            let windowText = this.editor.document.getText();
+            const windowText = this.editor.document.getText();
             let result = null;
 
             while ((result = Helper.getRegex().method.exec(windowText))) {
-                let testToAdd = result[2].toString().trim();
+                const testToAdd = result[2].toString().trim();
 
                 if (!testFunctions.length || testFunctions[0] != testToAdd) {
                     testFunctions.push('function - ' + testToAdd);

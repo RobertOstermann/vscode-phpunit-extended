@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 export class Helper {
     private static readonly regex = {
-        method: /\s*(public\s+){0,1}function\s+(\w+)\s*\(/gi,
+        method: /\s*(public\s+)?function\s+(\w+)\s*\(/gi,
         class: /class\s+(\w*)\s*{?/gi
     };
 

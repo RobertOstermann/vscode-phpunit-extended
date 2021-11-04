@@ -14,7 +14,7 @@ export class TestSuite {
     }
 
     public run() {
-        let config = vscode.workspace.getConfiguration("phpunit");
+        const config = vscode.workspace.getConfiguration("phpunit");
 
         if (this.withExclutions) {
             this.args.push('--exclude-group');

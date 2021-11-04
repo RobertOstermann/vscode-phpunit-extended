@@ -14,7 +14,7 @@ export class RunLastTest {
             this.outputChannel.appendLine("No previous test available.");
             this.outputChannel.show();
         } else {
-            let phpunit = new PhpUnit(
+            const phpunit = new PhpUnit(
                 this.outputChannel,
                 PhpUnit.lastCommand.args,
                 PhpUnit.lastCommand.putFsPathIntoArgs

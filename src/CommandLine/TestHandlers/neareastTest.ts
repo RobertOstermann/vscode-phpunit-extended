@@ -19,7 +19,7 @@ export class NeareastTest {
             return;
         }
 
-        let currentTest = Helper.getClassNameOrMethod(this.editor, 'method');
+        const currentTest = Helper.getClassNameOrMethod(this.editor, 'method');
 
         if (currentTest) {
             this.args.push("--filter");

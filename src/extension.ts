@@ -81,13 +81,11 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.workspace.onDidOpenTextDocument(document => updateNodeForDocument(document)),
-		vscode.workspace.onDidChangeTextDocument(editor => updateNodeForDocument(editor.document)),
-		vscode.window.onDidChangeActiveTextEditor(editor => updateNodeForDocument(editor.document)),
+		vscode.workspace.onDidChangeTextDocument(editor => updateNodeForDocument(editor?.document)),
+		vscode.window.onDidChangeActiveTextEditor(editor => updateNodeForDocument(editor?.document)),
 	);
 
-	if (vscode.window.activeTextEditor) {
-		updateNodeForDocument(vscode.window.activeTextEditor.document);
-	}
+	updateNodeForDocument(vscode.window?.activeTextEditor?.document);
 }
 
 function getOrCreateFile(controller: vscode.TestController, uri: vscode.Uri) {

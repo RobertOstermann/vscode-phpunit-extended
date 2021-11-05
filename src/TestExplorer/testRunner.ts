@@ -8,9 +8,8 @@ import TestRunnerHelper from "./testRunnerHelper";
 export default class TestRunner {
   private args: string[];
   private fsPath: string;
-  private putFsPathIntoArgs: boolean;
 
-  constructor(args: string[], fsPath = "") {
+  constructor(args: string[], fsPath: string) {
     this.args = args;
     this.fsPath = fsPath;
   }
@@ -28,7 +27,7 @@ export default class TestRunner {
 
   private async execThroughComposer() {
     const phpUnitComposerBinFile =
-      TestRunnerHelper.findNearestFileFullPath("vendor/bin/phpunit");
+      TestRunnerHelper.findNearestFileFullPath("vendor/bin/phpunit", this.fsPath);
 
     if (phpUnitComposerBinFile != null) {
       return this.execPhpUnit(phpUnitComposerBinFile);
@@ -40,10 +39,9 @@ export default class TestRunner {
   }
 
   public async execPhpUnit(phpunitPath: string, workingDirectory = null) {
-    workingDirectory =
-      workingDirectory == null
-        ? TestRunnerHelper.findWorkingDirectory()
-        : workingDirectory;
+    if (!workingDirectory) {
+      workingDirectory = TestRunnerHelper.findWorkingDirectory(this.fsPath);
+    }
 
     if (workingDirectory == null) {
       const errorMessage = "Couldn't find a working directory.";

@@ -11,7 +11,7 @@ export class Helper {
     }
 
     static getClassNameOrMethod(editor: vscode.TextEditor, type: string): string | undefined {
-        if (Object.prototype.hasOwnProperty.call(this.regex, type)) {
+        if (this.regex.hasOwnProperty.call(type)) {
             throw new Error('Invalid type property passed: ' + type);
         }
 

@@ -18,8 +18,9 @@ export default class TestClass {
 
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
-    const config = vscode.workspace.getConfiguration("phpunit");
-    const args = [].concat(config.get<Array<string>>("args", []));
+    // const config = vscode.workspace.getConfiguration("phpunit");
+    // const args = [].concat(config.get<Array<string>>("args", []));
+    const args = [];
 
     if (this.currentTest) {
       args.push("--filter");

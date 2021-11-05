@@ -3,20 +3,22 @@ import fs = require('fs');
 import { Constants } from './Helpers/constants';
 
 export default class TestRunnerHelper {
-  static findWorkingDirectory() {
-    return this.findNearestFileFullPath('phpunit.xml')
-      || this.findNearestFileFullPath('phpunit.xml.dist');
+  static findWorkingDirectory(currentPath: string) {
+    return this.findNearestFileFullPath('phpunit.xml', currentPath)
+      || this.findNearestFileFullPath('phpunit.xml.dist', currentPath);
   }
 
-  static findNearestFileFullPath(fileRelativeName: string, currentPath = '') {
-    const rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-
-    if (currentPath == '') {
-      const filePath = vscode.window.activeTextEditor.document.uri.fsPath;
-      currentPath = filePath.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, '');
-    } else {
-      currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, '');
+  static findNearestFileFullPath(fileRelativeName: string, currentPath: string) {
+    let rootPath: string = null;
+    for (let workspaceFolder of vscode.workspace.workspaceFolders) {
+      const workspacePath = workspaceFolder.uri.fsPath;
+      if (currentPath.includes(workspacePath)) {
+        rootPath = workspacePath;
+        break;
+      }
     }
+
+    currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, '');
 
     const fileFullPath = `${currentPath}/${fileRelativeName}`;
 
@@ -77,19 +79,24 @@ export default class TestRunnerHelper {
   }
 
   static parsePhpUnitOutputForIndividualTest(text: string, name: string) {
-    const regexString = `::${name}.*(Failed(\\w*[^\\S\r\n]*)*)`;
-    const regex = new RegExp(regexString, 'gis');
+    const regexString = `(${name}(?:[^\\)])*).*(?:Tests:.*Assertions.*(?:Incomplete|Risky|Skipped|Failures)(?:\\w*[^\\r\\n\\.])*)`;
+    const regex = new RegExp(regexString, 'is');
     const result = regex.exec(text);
 
     if (result) {
-      const [, message] = result;
-      return message;
+      const [, output] = result;
+      const { success, message } = this.parsePhpUnitOutput(output);
+
+      if (!success) {
+        return message;
+      }
     }
+
 
     return Constants.individualTestPassedMessage;
   }
 
-  static promiseWithTimeout(promise, timeout: number, timeoutMessage: string) {
+  static promiseWithTimeout(promise: any, timeout: number, timeoutMessage: string) {
     if (!timeout) {
       return promise;
     }

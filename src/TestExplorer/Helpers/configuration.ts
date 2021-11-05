@@ -33,4 +33,10 @@ export class Configuration {
       .get("functionRegex");
     return new RegExp(regexString, 'gi');
   }
+
+  public static verboseTestExplorerOutput(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit")
+      .get("verboseTestExplorerOutput");
+  }
 }

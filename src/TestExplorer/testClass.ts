@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { Configuration } from './Helpers/configuration';
 
 import { Constants } from './Helpers/constants';
 import { OptionsHelper } from './Helpers/optionsHelper';
@@ -47,7 +48,9 @@ export default class TestClass {
         OptionsHelper.appendFailedOutput(item, options, errorMessage, output, duration);
       }
 
-      this.populateChildTestOutput(item, options, output, success, error);
+      if (!Configuration.verboseTestExplorerOutput()) {
+        this.populateChildTestOutput(item, options, output, success, error);
+      }
     } else {
       OptionsHelper.appendFailedOutput(item, options);
     }

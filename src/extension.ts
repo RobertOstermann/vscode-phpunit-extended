@@ -25,7 +25,13 @@ export async function activate(context: vscode.ExtensionContext) {
 
 				const data = testData.get(test);
 
-				if (data instanceof TestClass || data instanceof TestCase) {
+				if (data instanceof TestClass) {
+					run.enqueued(test);
+					queue.push({ test, data });
+					if (Configuration.verboseTestExplorerOutput()) {
+						await discoverTests(TestDiscover.gatherTestItems(test.children));
+					}
+				} else if (data instanceof TestCase) {
 					run.enqueued(test);
 					queue.push({ test, data });
 				} else {
@@ -47,7 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					run.started(test);
 					promises.push(data.run(test, run));
 				}
-				if (promises.length === Configuration.parallelTests()) {
+				if (promises.length > Configuration.parallelTests()) {
 					await Promise.all(promises);
 					promises = [];
 				}
@@ -90,4 +96,20 @@ export async function activate(context: vscode.ExtensionContext) {
 	);
 
 	TestDiscover.updateNodeForDocument(controller, vscode.window?.activeTextEditor?.document);
+
+	vscode.workspace.onDidChangeConfiguration((event) => {
+		if (event.affectsConfiguration("phpunit.discoverAllTests")) {
+			const action = 'Reload';
+			vscode.window
+				.showInformationMessage(
+					`Reload window for configuration change to take effect.`,
+					action
+				)
+				.then(selectedAction => {
+					if (selectedAction === action) {
+						vscode.commands.executeCommand('workbench.action.reloadWindow');
+					}
+				});
+		}
+	});
 }

@@ -1,8 +1,8 @@
 {
   "name": "phpunit-extended-test-explorer",
-  "displayName": "PHPUnit Extended With TestExplorer for VSCode",
+  "displayName": "PHPUnit Extended With TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "enableProposedApi": false,
@@ -107,7 +107,7 @@
         },
         "phpunit.parallelTests": {
           "type": "number",
-          "default": 8,
+          "default": 0,
           "description": "The number of tests to run in parallel in the test explorer."
         },
         "phpunit.scriptsAfterTests": {
@@ -127,6 +127,11 @@
           "type": "string",
           "default": "always",
           "description": "Show the output console after the tests run (always, error, ok)."
+        },
+        "phpunit.verboseTestExplorerOutput": {
+          "type": "boolean",
+          "default": false,
+          "description": "Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test."
         }
       }
     },

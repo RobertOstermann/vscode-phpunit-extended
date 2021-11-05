@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.2] - 2021-11-04
+
+- Allow for verbose test explorer output
+- Fix problem with parallelTests configuration
+
 ## [0.2.1] - 2021-11-04
 
 - Add configuration to run tests in parallel

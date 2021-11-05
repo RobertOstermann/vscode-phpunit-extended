@@ -4,7 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.0] - 2021-11-04
 
--
+- Improve output messages for skipped and risky tests
+- Fix problem of arguments affecting the test explorer
+- Fix problem with finding the correct `.phpunit.xml` file when running tests in a workspace
+- Fix invalid document error
 
 ## [0.1.9] - 2021-11-03
 

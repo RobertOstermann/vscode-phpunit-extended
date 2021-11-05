@@ -39,14 +39,21 @@ export async function activate(context: vscode.ExtensionContext) {
 		};
 
 		const runTestQueue = async () => {
+			let promises = [];
 			for await (const { test, data } of queue) {
 				if (cancellation.isCancellationRequested) {
 					run.skipped(test);
 				} else {
 					run.started(test);
-					await data.run(test, run);
+					promises.push(data.run(test, run));
+				}
+				if (promises.length === Configuration.parallelTests()) {
+					await Promise.all(promises);
+					promises = [];
 				}
 			}
+
+			await Promise.all(promises);
 
 			run.end();
 		};

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2021-11-04
+
+- Add configuration to run tests in parallel
+
 ## [0.2.0] - 2021-11-04
 
 - Improve output messages for skipped and risky tests

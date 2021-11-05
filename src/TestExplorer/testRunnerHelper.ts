@@ -92,7 +92,6 @@ export default class TestRunnerHelper {
       }
     }
 
-
     return Constants.individualTestPassedMessage;
   }
 

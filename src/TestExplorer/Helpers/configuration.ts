@@ -15,6 +15,12 @@ export class Configuration {
     return new RegExp(regexString, 'gi');
   }
 
+  public static parallelTests(): number {
+    return vscode.workspace
+      .getConfiguration("phpunit")
+      .get("parallelTests");
+  }
+
   public static folderPattern(): string {
     return vscode.workspace
       .getConfiguration("phpunit")

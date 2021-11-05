@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended With TestExplorer for VSCode",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "enableProposedApi": false,
@@ -104,6 +104,11 @@
           "type": "string",
           "default": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
           "description": "The regular expression used to determine the functions within a file to test."
+        },
+        "phpunit.parallelTests": {
+          "type": "number",
+          "default": 8,
+          "description": "The number of tests to run in parallel in the test explorer."
         },
         "phpunit.scriptsAfterTests": {
           "type": "object",

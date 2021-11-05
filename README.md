@@ -84,6 +84,7 @@ Run with (`Cmd+Shift+P` on OSX or `Ctrl+Shift+P` on Windows and Linux) and execu
 | `phpunit.fileRegex`         | The regular expression used to determine test files.                                                          | `".\*(test\|tests)\\w\*\\.php"`                          |
 | `phpunit.folderPattern`     | A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true.   | `"**/{test,tests,Test,Tests}/**/*.php"`                  |
 | `phpunit.functionRegex`     | The regular expression used to determine the functions within a file to test.                                 | `\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(` |
+| `phpunit.parallelTests`     | The number of tests to run in parallel in the test explorer.                                                  | `8`                                                      |
 | `phpunit.scriptsAfterTests` | Scripts to execute after the tests run                                                                        | `{ "ok": [], "error": []}`                               |
 | `phpunit.showOutput`        | Show the output console after the tests run (always, error, ok).                                              | `always`                                                 |
 | `phpunit.timeout`           | The time (seconds) to allow a test to run. The default is no timeout.                                         | `0`                                                      |

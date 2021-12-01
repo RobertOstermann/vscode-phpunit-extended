@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.3] - 2021-12-01
+
+- Update the name of the extension
+- Fix problem with outfile
+
 ## [0.2.2] - 2021-11-04
 
 - Allow for verbose test explorer output

@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "enableProposedApi": false,
@@ -29,7 +29,7 @@
   "activationEvents": [
     "onLanguage:php"
   ],
-  "main": "./out/src/extension",
+  "main": "./out/extension",
   "contributes": {
     "commands": [
       {
@@ -144,13 +144,16 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run -S esbuild-base -- --minify",
     "compile": "rimraf out && tsc -p ./",
     "watch": "tsc -watch -p ./",
     "test": "node ./node_modules/vscode/bin/test",
     "download-api": "vscode-dts dev",
     "postdownload-api": "vscode-dts main",
-    "postinstall": "npm run download-api"
+    "postinstall": "npm run download-api",
+    "esbuild-base": "rimraf out && esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run -S esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run -S esbuild-base -- --sourcemap --watch"
   },
   "devDependencies": {
     "@types/mocha": "^9.0.0",

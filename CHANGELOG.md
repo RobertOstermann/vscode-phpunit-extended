@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.5] - 2021-12-01
+
+- Update the build steps to improve performance
+
 ## [0.2.4] - 2021-12-01
 
 - Fix problems with the last update

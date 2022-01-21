@@ -42,6 +42,40 @@
 }
 ```
 
+## Settings
+
+| Name                                | Description                                                                                                                      | Default                                                  |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `phpunit.args`                      | Any phpunit args (phpunit --help)                                                                                                | `[]`                                                     |
+| `phpunit.discoverAllTests`          | Determines whether to discover all tests immediately or discover them individually once opened in the editor.                    | `true`                                                   |
+| `phpunit.envVars`                   | Set environment variables before running phpunit                                                                                 | `{}`                                                     |
+| `phpunit.excludedGroups`            | Groups to be excluded from the tests                                                                                             | `[]`                                                     |
+| `phpunit.execPath`                  | Path to phpunit executable (if empty it tries to use composer installation).                                                     | `""`                                                     |
+| `phpunit.fileRegex`                 | The regular expression used to determine test files.                                                                             | `".*(test\|tests)\\w\*\\.php"`                           |
+| `phpunit.folderPattern`             | A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true.                      | `"**/{test,tests,Test,Tests}/**/*.php"`                  |
+| `phpunit.functionRegex`             | The regular expression used to determine the functions within a file to test.                                                    | `\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(` |
+| `phpunit.parallelTests`             | The number of tests to run in parallel in the test explorer.                                                                     | `0`                                                      |
+| `phpunit.scriptsAfterTests`         | Scripts to execute after the tests run                                                                                           | `{ "ok": [], "error": []}`                               |
+| `phpunit.showOutput`                | Show the output console after the tests run (always, error, ok).                                                                 | `always`                                                 |
+| `phpunit.timeout`                   | The time (seconds) to allow a test to run. The default is no timeout.                                                            | `0`                                                      |
+| `phpunit.verboseTestExplorerOutput` | Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test. | `false`                                                  |
+
+## Notes / Tips / Advanced
+
+- **args** is recommended to set in your 'workspace settings'. You can add any phpunit args, check phpunit --help.
+- To hook into the debugger ([github.com/felixfbecker/vscode-php-debug](https://github.com/felixfbecker/vscode-php-debug)). Add Key:`XDEBUG_CONFIG`, Value:`idekey=VSCODE` to your `phpunit.envVars` object.
+
+## Test Explorer Settings
+
+- Setting `args` only affects tests run from the provided commands.
+- `fileRegex` is used to determine the files to add to the test explorer.
+- `folderPattern` is only used when `discoverAllTests` is set to `true`.
+- The file in the active editor is added based solely upon the `fileRegex`.
+- `functionRegex` sets the regex to find functions within a test file.
+- `parallelTests` allows multiple tests to run concurrently. I would not recommend setting this above `8`.
+- `timeout` sets the time a test can run. A test that does not complete before the timeout will be cancelled.
+- `verboseTestExplorerOutput` allows output to show for each test, but can take longer to run.
+
 ## How to use
 
 Run with (`Cmd+Shift+P` on OSX or `Ctrl+Shift+P` on Windows and Linux) and execute:
@@ -71,40 +105,6 @@ Run with (`Cmd+Shift+P` on OSX or `Ctrl+Shift+P` on Windows and Linux) and execu
 - `PHPUnit Cancel Current Test`: This command will cancel the current running test.
 
 ![test-cancel](images/test-cancel.gif)
-
-## Settings
-
-| Name                                | Description                                                                                                                      | Default                                                  |
-| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `phpunit.args`                      | Any phpunit args (phpunit --help)                                                                                                | `[]`                                                     |
-| `phpunit.discoverAllTests`          | Determines whether to discover all tests immediately or discover them individually once opened in the editor.                    | `true`                                                   |
-| `phpunit.envVars`                   | Set environment variables before running phpunit                                                                                 | `{}`                                                     |
-| `phpunit.excludedGroups`            | Groups to be excluded from the tests                                                                                             | `[]`                                                     |
-| `phpunit.execPath`                  | Path to phpunit executable (if empty it tries to use composer installation).                                                     | `""`                                                     |
-| `phpunit.fileRegex`                 | The regular expression used to determine test files.                                                                             | `".\*(test\|tests)\\w\*\\.php"`                          |
-| `phpunit.folderPattern`             | A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true.                      | `"**/{test,tests,Test,Tests}/**/*.php"`                  |
-| `phpunit.functionRegex`             | The regular expression used to determine the functions within a file to test.                                                    | `\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(` |
-| `phpunit.parallelTests`             | The number of tests to run in parallel in the test explorer.                                                                     | `0`                                                      |
-| `phpunit.scriptsAfterTests`         | Scripts to execute after the tests run                                                                                           | `{ "ok": [], "error": []}`                               |
-| `phpunit.showOutput`                | Show the output console after the tests run (always, error, ok).                                                                 | `always`                                                 |
-| `phpunit.timeout`                   | The time (seconds) to allow a test to run. The default is no timeout.                                                            | `0`                                                      |
-| `phpunit.verboseTestExplorerOutput` | Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test. | `false`                                                  |
-
-## Notes / Tips / Advanced
-
-- **args** is recommended to set in your 'workspace settings'. You can add any phpunit args, check phpunit --help.
-- To hook into the debugger ([github.com/felixfbecker/vscode-php-debug](https://github.com/felixfbecker/vscode-php-debug)). Add Key:`XDEBUG_CONFIG`, Value:`idekey=VSCODE` to your `phpunit.envVars` object.
-
-## Test Explorer Settings
-
-- Setting `args` only affects tests run from the provided commands.
-- `fileRegex` is used to determine the files to add to the test explorer.
-- `folderPattern` is only used when `discoverAllTests` is set to `true`.
-- The file in the active editor is added based solely upon the `fileRegex`.
-- `functionRegex` sets the regex to find functions within a test file.
-- `parallelTests` allows multiple tests to run concurrently. I would not recommend setting this above `8`.
-- `timeout` sets the time a test can run. A test that does not complete before the timeout will be cancelled.
-- `verboseTestExplorerOutput` allows output to show for each test, but can take longer to run.
 
 ## Credits / Links
 

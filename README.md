@@ -35,8 +35,8 @@
         "error": []
     },
     "phpunit.showOutput": "always", // always, error, ok
-    "phpunit.fileRegex": "/.*(test|tests)\\w*\\.php",
-    "phpunit.functionRegex": "/\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
+    "phpunit.fileRegex": ".*(test|tests)\\w*\\.php",
+    "phpunit.functionRegex": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
     "phpunit.folderPattern": "**/{test,tests,Test,Tests}/**/*.php",
     "phpunit.discoverAllTests": true
 }

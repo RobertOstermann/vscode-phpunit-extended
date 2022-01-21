@@ -8,13 +8,20 @@ export const parsePHP = (text: string, events: {
   onClass(range: vscode.Range, name: string): void;
 }) => {
   const lines = text.split('\n');
+  let previousFunctionLine = 0;
 
   for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
     const line = lines[lineNumber];
+    let functionRegexLines = line;
 
-    const validTestMethod = Configuration.functionRegex().exec(line);
+    if (Configuration.multilineFunctionRegex()) {
+      functionRegexLines = lines.slice(previousFunctionLine, lineNumber + 1).join('\n');
+    }
+
+    const validTestMethod = Configuration.functionRegex().exec(functionRegexLines);
     const test = Constants.phpMethodRegex.exec(line);
     if (validTestMethod && test) {
+      previousFunctionLine = lineNumber + 1;
       const [, , name] = test;
       const range = new vscode.Range(
         new vscode.Position(lineNumber, 0),

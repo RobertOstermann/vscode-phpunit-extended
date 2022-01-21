@@ -37,6 +37,7 @@
     "phpunit.showOutput": "always", // always, error, ok
     "phpunit.fileRegex": ".*(test|tests)\\w*\\.php",
     "phpunit.functionRegex": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
+    "phpunit.multilineFunctionRegex": false,
     "phpunit.folderPattern": "**/{test,tests,Test,Tests}/**/*.php",
     "phpunit.discoverAllTests": true
 }
@@ -54,6 +55,7 @@
 | `phpunit.fileRegex`                 | The regular expression used to determine test files.                                                                             | `".*(test\|tests)\\w\*\\.php"`                           |
 | `phpunit.folderPattern`             | A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true.                      | `"**/{test,tests,Test,Tests}/**/*.php"`                  |
 | `phpunit.functionRegex`             | The regular expression used to determine the functions within a file to test.                                                    | `\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(` |
+| `phpunit.multilineFunctionRegex`    | Determines if the functionRegex looks at multiple lines. This is useful if the test is defined by an annotation comment.         | `false`                                                  |
 | `phpunit.parallelTests`             | The number of tests to run in parallel in the test explorer.                                                                     | `0`                                                      |
 | `phpunit.scriptsAfterTests`         | Scripts to execute after the tests run                                                                                           | `{ "ok": [], "error": []}`                               |
 | `phpunit.showOutput`                | Show the output console after the tests run (always, error, ok).                                                                 | `always`                                                 |
@@ -72,6 +74,7 @@
 - `folderPattern` is only used when `discoverAllTests` is set to `true`.
 - The file in the active editor is added based solely upon the `fileRegex`.
 - `functionRegex` sets the regex to find functions within a test file.
+- `multilineFunctionRegex` allows the functionRegex to look at multiple lines. The functionRegex adds the `s` flag.
 - `parallelTests` allows multiple tests to run concurrently. I would not recommend setting this above `8`.
 - `timeout` sets the time a test can run. A test that does not complete before the timeout will be cancelled.
 - `verboseTestExplorerOutput` allows output to show for each test, but can take longer to run.

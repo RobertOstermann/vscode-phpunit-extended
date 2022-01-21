@@ -31,7 +31,16 @@ export class Configuration {
     const regexString: string = vscode.workspace
       .getConfiguration("phpunit")
       .get("functionRegex");
-    return new RegExp(regexString, 'gi');
+    if (vscode.workspace.getConfiguration("phpunit").get("multilineFunctionRegex")) {
+      return new RegExp(regexString, "gis");
+    }
+    return new RegExp(regexString, "gi");
+  }
+
+  public static multilineFunctionRegex(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit")
+      .get("multilineFunctionRegex");
   }
 
   public static verboseTestExplorerOutput(): boolean {

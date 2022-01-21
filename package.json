@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -103,6 +103,11 @@
           "type": "string",
           "default": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
           "description": "The regular expression used to determine the functions within a file to test."
+        },
+        "phpunit.multilineFunctionRegex": {
+          "type": "boolean",
+          "default": false,
+          "description": "Determines if the functionRegex looks at multiple lines. This is useful if the test is defined by an annotation comment."
         },
         "phpunit.parallelTests": {
           "type": "number",

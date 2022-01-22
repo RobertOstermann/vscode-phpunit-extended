@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.6] - 2022-01-21
 
+- Add `multilineFunctionRegex` configuration option
+
+## [0.2.6] - 2022-01-21
+
 - Update the README
 
 ## [0.2.5] - 2021-12-01

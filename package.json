@@ -61,7 +61,6 @@
       }
     ],
     "configuration": {
-      "type": "object",
       "title": "PHPUnit Configuration",
       "properties": {
         "phpunit.args": {

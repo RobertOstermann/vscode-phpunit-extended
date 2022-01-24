@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.6] - 2022-01-21
+## [0.2.8] - 2022-01-24
+
+- Activate the extension when the workspace contains a .php file
+
+## [0.2.7] - 2022-01-21
 
 - Add `multilineFunctionRegex` configuration option
 

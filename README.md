@@ -19,7 +19,7 @@
         "XDEBUG_CONFIG": "idekey=VSCODE"
     },
     "phpunit.commandLine.args": [
-        "--configuration", "./phpunit.xml.dist"
+        "--testdox"
     ],
     "phpunit.commandLine.excludedGroups": [
         // Groups to be excluded when running the TestSuiteWithExclusions command
@@ -34,7 +34,10 @@
         ],
         "error": []
     },
-    "phpunit.commandLine.showOutput": "always", // always, error, ok
+    "phpunit.commandLine.showOutput": "always",
+    "phpunit.testExplorer.args": [
+        "--configuration", "./phpunit.xml.dist"
+    ],
     "phpunit.testExplorer.fileRegex": ".*(test|tests)\\w*\\.php",
     "phpunit.testExplorer.functionRegex": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
     "phpunit.testExplorer.multilineFunctionRegex": false,
@@ -45,22 +48,23 @@
 
 ## Settings
 
-| Name                                             | Description                                                                                                                      | Default                                                  |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `phpunit.envVars`                                | Set environment variables before running phpunit                                                                                 | `{}`                                                     |
-| `phpunit.execPath`                               | Path to phpunit executable (if empty it tries to use composer installation).                                                     | `""`                                                     |
-| `phpunit.commandLine.args`                       | Any phpunit args (phpunit --help)                                                                                                | `[]`                                                     |
-| `phpunit.commandLine.excludedGroups`             | Groups to be excluded from the tests                                                                                             | `[]`                                                     |
-| `phpunit.commandLine.scriptsAfterTests`          | Scripts to execute after the tests run                                                                                           | `{ "ok": [], "error": []}`                               |
-| `phpunit.commandLine.showOutput`                 | Show the output console after the tests run (always, error, ok).                                                                 | `always`                                                 |
-| `phpunit.testExplorer.discoverAllTests`          | Determines whether to discover all tests immediately or discover them individually once opened in the editor.                    | `true`                                                   |
-| `phpunit.testExplorer.fileRegex`                 | The regular expression used to determine test files.                                                                             | `".*(test\|tests)\\w\*\\.php"`                           |
-| `phpunit.testExplorer.folderPattern`             | A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true.                      | `"**/{test,tests,Test,Tests}/**/*.php"`                  |
-| `phpunit.testExplorer.functionRegex`             | The regular expression used to determine the functions within a file to test.                                                    | `\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(` |
-| `phpunit.testExplorer.multilineFunctionRegex`    | Determines if the functionRegex looks at multiple lines. This is useful if the test is defined by an annotation comment.         | `false`                                                  |
-| `phpunit.testExplorer.parallelTests`             | The number of tests to run in parallel in the test explorer.                                                                     | `0`                                                      |
-| `phpunit.testExplorer.timeout`                   | The time (seconds) to allow a test to run. The default is no timeout.                                                            | `0`                                                      |
-| `phpunit.testExplorer.verboseTestExplorerOutput` | Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test. | `false`                                                  |
+| Name                                             | Description                                                                                                                               | Default                                                  |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `phpunit.envVars`                                | Set environment variables before running phpunit                                                                                          | `{}`                                                     |
+| `phpunit.execPath`                               | Path to phpunit executable (if empty it tries to use composer installation).                                                              | `""`                                                     |
+| `phpunit.commandLine.args`                       | Any phpunit args (phpunit --help)                                                                                                         | `[]`                                                     |
+| `phpunit.commandLine.excludedGroups`             | Groups to be excluded from the tests                                                                                                      | `[]`                                                     |
+| `phpunit.commandLine.scriptsAfterTests`          | Scripts to execute after the tests run                                                                                                    | `{ "ok": [], "error": []}`                               |
+| `phpunit.commandLine.showOutput`                 | Show the output console after the tests run (always, error, ok).                                                                          | `always`                                                 |
+| `phpunit.testExplorer.args`                      | This is useful for setting the configuration. Warning: some arguments, such as --testdox, will not allow the test explorer tests to pass. | `[]`                                                     |
+| `phpunit.testExplorer.discoverAllTests`          | Determines whether to discover all tests immediately or discover them individually once opened in the editor.                             | `true`                                                   |
+| `phpunit.testExplorer.fileRegex`                 | The regular expression used to determine test files.                                                                                      | `".*(test\|tests)\\w\*\\.php"`                           |
+| `phpunit.testExplorer.folderPattern`             | A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true.                               | `"**/{test,tests,Test,Tests}/**/*.php"`                  |
+| `phpunit.testExplorer.functionRegex`             | The regular expression used to determine the functions within a file to test.                                                             | `\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(` |
+| `phpunit.testExplorer.multilineFunctionRegex`    | Determines if the functionRegex looks at multiple lines. This is useful if the test is defined by an annotation comment.                  | `false`                                                  |
+| `phpunit.testExplorer.parallelTests`             | The number of tests to run in parallel in the test explorer.                                                                              | `0`                                                      |
+| `phpunit.testExplorer.timeout`                   | The time (seconds) to allow a test to run. The default is no timeout.                                                                     | `0`                                                      |
+| `phpunit.testExplorer.verboseTestExplorerOutput` | Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test.          | `false`                                                  |
 
 ## Combined Settings
 
@@ -76,6 +80,7 @@
 
 ## Test Explorer Settings
 
+- `args` allows setting arguments for the tests. Some arguments, such as --testdox, will not allow the test explorer tests to pass.
 - `discoverAllTests` allows all tests with paths that match the `folderPattern` glob AND the `fileRegex` to be added to the test explorer.
 - `fileRegex` is used to determine the files to add to the test explorer.
 - The file in the active editor is added based solely upon the `fileRegex`.

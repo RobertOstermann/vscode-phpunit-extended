@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import fs = require('fs');
-import { Configuration } from './Helpers/configuration';
+import Configuration from './Helpers/configuration';
 
 export class PhpUnit {
     private args: string[];

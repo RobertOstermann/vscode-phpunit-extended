@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export class Configuration {
+export default class Configuration {
   static initialize(): void {
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("phpunit.testExplorer")) {
@@ -29,6 +29,12 @@ export class Configuration {
     return vscode.workspace
       .getConfiguration("phpunit")
       .get("envVars");
+  }
+
+  static args(): string[] {
+    return vscode.workspace
+      .getConfiguration("phpunit.testExplorer")
+      .get("args", []);;
   }
 
   static discoverAllTests(): boolean {

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Configuration } from '../Helpers/configuration';
+import Configuration from '../Helpers/configuration';
 
 import { PhpUnit } from '../phpUnit';
 

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Configuration } from './Helpers/configuration';
+import Configuration from './Helpers/configuration';
 import { Constants } from './Helpers/constants';
 
 export const parsePHP = (text: string, events: {

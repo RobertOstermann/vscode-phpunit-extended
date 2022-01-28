@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import Configuration from './Helpers/configuration';
 
 import { OptionsHelper } from './Helpers/optionsHelper';
 import TestRunner from './testRunner';
@@ -16,9 +17,7 @@ export default class TestCase {
 
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
-    // const config = vscode.workspace.getConfiguration("phpunit");
-    // const args = [].concat(config.get<Array<string>>("args", []));
-    const args = [];
+    let args = [...Configuration.args()];
 
     if (this.currentTest) {
       args.push("--filter");

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import Commands from './CommandLine/commands';
-import { Configuration } from './TestExplorer/Helpers/configuration';
+import Configuration from './TestExplorer/Helpers/configuration';
 import TestCase from './TestExplorer/testCase';
 import TestClass from './TestExplorer/testClass';
 import TestDiscover from './TestExplorer/testDiscover';

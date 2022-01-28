@@ -1,6 +1,6 @@
 import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
-import { Configuration } from "./Helpers/configuration";
+import Configuration from "./Helpers/configuration";
 
 import { Constants } from "./Helpers/constants";
 import TestProcess from "./testProcess";

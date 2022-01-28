@@ -1,5 +1,6 @@
 import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
+import { Configuration } from "./Helpers/configuration";
 
 import { Constants } from "./Helpers/constants";
 import TestProcess from "./testProcess";
@@ -15,8 +16,7 @@ export default class TestRunner {
   }
 
   async run() {
-    const config = vscode.workspace.getConfiguration("phpunit");
-    const phpunitPath = config.get<string>("execPath", "phpunit");
+    const phpunitPath = Configuration.execPath();
 
     if (phpunitPath == "") {
       return this.execThroughComposer();
@@ -65,16 +65,12 @@ export default class TestRunner {
 
     const spawnOptions: SpawnOptions = {
       cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ""),
-      env: vscode.workspace.getConfiguration("phpunit").envVars,
+      env: Configuration.envVars(),
     };
-
-    const timeout: number = vscode.workspace
-      .getConfiguration("phpunit")
-      .get("timeout");
 
     const output = await TestRunnerHelper.promiseWithTimeout(
       new TestProcess().run(command, this.args, spawnOptions),
-      timeout * 1000,
+      Configuration.timeout() * 1000,
       Constants.timeoutMessage
     );
 

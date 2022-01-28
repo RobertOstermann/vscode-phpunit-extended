@@ -63,57 +63,27 @@
     "configuration": {
       "title": "PHPUnit Configuration",
       "properties": {
-        "phpunit.args": {
-          "type": "array",
-          "default": [],
-          "description": "Any phpunit args (phpunit --help)"
-        },
-        "phpunit.discoverAllTests": {
-          "type": "boolean",
-          "default": true,
-          "description": "Determines whether to discover all tests immediately or discover them individually once opened in the editor."
-        },
         "phpunit.envVars": {
           "type": "object",
           "default": {},
           "title": "Set environment variables before running phpunit"
-        },
-        "phpunit.excludedGroups": {
-          "type": "array",
-          "default": [],
-          "description": "Groups to be excluded from the tests"
         },
         "phpunit.execPath": {
           "type": "string",
           "default": "",
           "description": "Path to phpunit executable (if empty it tries to use composer installation)."
         },
-        "phpunit.fileRegex": {
-          "type": "string",
-          "default": ".*(test|tests)\\w*\\.php",
-          "description": "The regular expression used to determine test files."
+        "phpunit.commandLine.args": {
+          "type": "array",
+          "default": [],
+          "description": "Any phpunit args (phpunit --help)"
         },
-        "phpunit.folderPattern": {
-          "type": "string",
-          "default": "**/{test,tests,Test,Tests}/**/*.php",
-          "description": "A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true."
+        "phpunit.commandLine.excludedGroups": {
+          "type": "array",
+          "default": [],
+          "description": "Groups to be excluded from the tests"
         },
-        "phpunit.functionRegex": {
-          "type": "string",
-          "default": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
-          "description": "The regular expression used to determine the functions within a file to test."
-        },
-        "phpunit.multilineFunctionRegex": {
-          "type": "boolean",
-          "default": false,
-          "description": "Determines if the functionRegex looks at multiple lines. This is useful if the test is defined by an annotation comment."
-        },
-        "phpunit.parallelTests": {
-          "type": "number",
-          "default": 0,
-          "description": "The number of tests to run in parallel in the test explorer."
-        },
-        "phpunit.scriptsAfterTests": {
+        "phpunit.commandLine.scriptsAfterTests": {
           "type": "object",
           "default": {
             "ok": [],
@@ -121,17 +91,52 @@
           },
           "description": "Scripts to execute after the tests run"
         },
-        "phpunit.timeout": {
+        "phpunit.commandLine.showOutput": {
+          "type": "string",
+          "enum": [
+            "always",
+            "error",
+            "ok"
+          ],
+          "default": "always",
+          "description": "Show the output console after the tests run (always, error, ok)."
+        },
+        "phpunit.testExplorer.discoverAllTests": {
+          "type": "boolean",
+          "default": true,
+          "description": "Determines whether to discover all tests immediately or discover them individually once opened in the editor."
+        },
+        "phpunit.testExplorer.fileRegex": {
+          "type": "string",
+          "default": ".*(test|tests)\\w*\\.php",
+          "description": "The regular expression used to determine test files."
+        },
+        "phpunit.testExplorer.folderPattern": {
+          "type": "string",
+          "default": "**/{test,tests,Test,Tests}/**/*.php",
+          "description": "A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true."
+        },
+        "phpunit.testExplorer.functionRegex": {
+          "type": "string",
+          "default": "\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(",
+          "description": "The regular expression used to determine the functions within a file to test."
+        },
+        "phpunit.testExplorer.multilineFunctionRegex": {
+          "type": "boolean",
+          "default": false,
+          "description": "Determines if the functionRegex looks at multiple lines. This is useful if the test is defined by an annotation comment."
+        },
+        "phpunit.testExplorer.parallelTests": {
+          "type": "number",
+          "default": 0,
+          "description": "The number of tests to run in parallel in the test explorer."
+        },
+        "phpunit.testExplorer.timeout": {
           "type": "number",
           "default": 0,
           "description": "The time (seconds) to allow a test to run."
         },
-        "phpunit.showOutput": {
-          "type": "string",
-          "default": "always",
-          "description": "Show the output console after the tests run (always, error, ok)."
-        },
-        "phpunit.verboseTestExplorerOutput": {
+        "phpunit.testExplorer.verboseTestExplorerOutput": {
           "type": "boolean",
           "default": false,
           "description": "Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test."

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { Configuration } from '../Helpers/configuration';
 
 import { PhpUnit } from '../phpUnit';
 
@@ -6,20 +7,18 @@ export class TestSuite {
 
     private args: string[];
     private outputChannel: vscode.OutputChannel;
-    private withExclutions: boolean;
+    private withExclusions: boolean;
 
-    constructor(args: string[], outputChannel: vscode.OutputChannel, withExclutions = false) {
+    constructor(args: string[], outputChannel: vscode.OutputChannel, withExclusions = false) {
         this.args = args;
         this.outputChannel = outputChannel;
-        this.withExclutions = withExclutions;
+        this.withExclusions = withExclusions;
     }
 
     public run() {
-        const config = vscode.workspace.getConfiguration("phpunit");
-
-        if (this.withExclutions) {
+        if (this.withExclusions) {
             this.args.push('--exclude-group');
-            this.args.push(config.get<Array<string>>("excludedGroups", []).join(','));
+            this.args.push(Configuration.excludedGroups().join(','));
         }
 
         (new PhpUnit(this.outputChannel, this.args, false)).run();

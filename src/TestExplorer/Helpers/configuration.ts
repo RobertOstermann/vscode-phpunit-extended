@@ -1,51 +1,87 @@
 import * as vscode from 'vscode';
 
 export class Configuration {
-  public static discoverAllTests(): boolean {
+  static initialize(): void {
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (event.affectsConfiguration("phpunit.testExplorer")) {
+        const action = 'Reload';
+        vscode.window
+          .showInformationMessage(
+            `Reload window for configuration change to take effect.`,
+            action
+          )
+          .then(selectedAction => {
+            if (selectedAction === action) {
+              vscode.commands.executeCommand('workbench.action.reloadWindow');
+            }
+          });
+      }
+    });
+  }
+
+  static execPath(): string {
     return vscode.workspace
       .getConfiguration("phpunit")
+      .get("execPath", "phpunit");
+  }
+
+  static envVars(): any {
+    return vscode.workspace
+      .getConfiguration("phpunit")
+      .get("envVars");
+  }
+
+  static discoverAllTests(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit.testExplorer")
       .get("discoverAllTests");
   }
 
-  public static fileRegex(): RegExp {
+  static fileRegex(): RegExp {
     const regexString: string = vscode.workspace
-      .getConfiguration("phpunit")
+      .getConfiguration("phpunit.testExplorer")
       .get("fileRegex");
 
     return new RegExp(regexString, 'gi');
   }
 
-  public static parallelTests(): number {
+  static folderPattern(): string {
     return vscode.workspace
-      .getConfiguration("phpunit")
-      .get("parallelTests");
-  }
-
-  public static folderPattern(): string {
-    return vscode.workspace
-      .getConfiguration("phpunit")
+      .getConfiguration("phpunit.testExplorer")
       .get("folderPattern");
   }
 
-  public static functionRegex(): RegExp {
+  static functionRegex(): RegExp {
     const regexString: string = vscode.workspace
-      .getConfiguration("phpunit")
+      .getConfiguration("phpunit.testExplorer")
       .get("functionRegex");
-    if (vscode.workspace.getConfiguration("phpunit").get("multilineFunctionRegex")) {
+    if (vscode.workspace.getConfiguration("phpunit.testExplorer").get("multilineFunctionRegex")) {
       return new RegExp(regexString, "gis");
     }
     return new RegExp(regexString, "gi");
   }
 
-  public static multilineFunctionRegex(): boolean {
+  static multilineFunctionRegex(): boolean {
     return vscode.workspace
-      .getConfiguration("phpunit")
+      .getConfiguration("phpunit.testExplorer")
       .get("multilineFunctionRegex");
   }
 
-  public static verboseTestExplorerOutput(): boolean {
+  static parallelTests(): number {
     return vscode.workspace
-      .getConfiguration("phpunit")
+      .getConfiguration("phpunit.testExplorer")
+      .get("parallelTests");
+  }
+
+  static timeout(): number {
+    return vscode.workspace
+      .getConfiguration("phpunit.testExplorer")
+      .get("timeout");
+  }
+
+  static verboseTestExplorerOutput(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit.testExplorer")
       .get("verboseTestExplorerOutput");
   }
 }

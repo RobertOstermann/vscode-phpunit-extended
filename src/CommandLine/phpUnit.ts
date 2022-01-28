@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import cp = require('child_process');
 import fs = require('fs');
+import { Configuration } from './Helpers/configuration';
 
 export class PhpUnit {
     private args: string[];
@@ -17,8 +18,7 @@ export class PhpUnit {
     }
 
     public run() {
-        const config = vscode.workspace.getConfiguration("phpunit");
-        const phpunitPath = config.get<string>("execPath", "phpunit");
+        const phpunitPath = Configuration.execPath();
 
         if (phpunitPath == "") {
             this.execThroughComposer();
@@ -38,10 +38,10 @@ export class PhpUnit {
     }
 
     public execPhpUnit(phpunitPath: string, workingDirectory = null) {
+        const showOutput = Configuration.showOutput();
         this.outputChannel.clear();
 
         workingDirectory = workingDirectory == null ? this.findWorkingDirectory() : workingDirectory;
-        const showOutput = vscode.workspace.getConfiguration('phpunit').showOutput;
         if (showOutput != 'always') {
             this.outputChannel.hide();
         }
@@ -74,7 +74,7 @@ export class PhpUnit {
         const phpunitProcess = cp.spawn(
             command,
             this.args,
-            { cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ''), env: vscode.workspace.getConfiguration('phpunit').envVars }
+            { cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ''), env: Configuration.envVars() }
         );
 
         PhpUnit.currentTest = phpunitProcess;
@@ -94,7 +94,7 @@ export class PhpUnit {
             }
 
             vscode.workspace.getConfiguration('phpunit').scriptsAfterTests[status]
-                .forEach((script) => {
+                .forEach((script: any) => {
                     if (typeof script === 'string') {
                         cp.spawn(script);
                     } else {

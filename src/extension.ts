@@ -97,19 +97,5 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	TestDiscover.updateNodeForDocument(controller, vscode.window?.activeTextEditor?.document);
 
-	vscode.workspace.onDidChangeConfiguration((event) => {
-		if (event.affectsConfiguration("phpunit.discoverAllTests")) {
-			const action = 'Reload';
-			vscode.window
-				.showInformationMessage(
-					`Reload window for configuration change to take effect.`,
-					action
-				)
-				.then(selectedAction => {
-					if (selectedAction === action) {
-						vscode.commands.executeCommand('workbench.action.reloadWindow');
-					}
-				});
-		}
-	});
+	Configuration.initialize();
 }

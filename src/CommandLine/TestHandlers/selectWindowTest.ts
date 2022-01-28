@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { Helper } from '../helper';
+import { Helper } from '../Helpers/helper';
 import { PhpUnit } from '../phpUnit';
 
 export class SelectWindowTest {

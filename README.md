@@ -62,10 +62,17 @@
 | `phpunit.testExplorer.timeout`                   | The time (seconds) to allow a test to run. The default is no timeout.                                                            | `0`                                                      |
 | `phpunit.testExplorer.verboseTestExplorerOutput` | Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test. | `false`                                                  |
 
-## Notes / Tips / Advanced
+## Combined Settings
 
-- **args** is recommended to set in your 'workspace settings'. You can add any phpunit args, check phpunit --help.
-- To hook into the debugger ([github.com/felixfbecker/vscode-php-debug](https://github.com/felixfbecker/vscode-php-debug)). Add Key:`XDEBUG_CONFIG`, Value:`idekey=VSCODE` to your `phpunit.envVars` object.
+- `execPath` determines the phpunit path.
+- `envVars` allows this extension to hook into the debugger ([github.com/felixfbecker/vscode-php-debug](https://github.com/felixfbecker/vscode-php-debug)) as show in the setup section.
+
+## Command Line Settings
+
+- `args` allows phpunit to run with any available arguments shown in _phpunit --help_
+- `excludedGroups` excludes the given groups when running the _TestSuiteWithExclusions_ command.
+- `scriptsAfterTest` runs the given scripts based upon the pass/fail status of the test.
+- `showOutput` determines when to show the output console after the tests run. I would recommend leaving this as the default _always_.
 
 ## Test Explorer Settings
 

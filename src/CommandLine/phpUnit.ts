@@ -88,8 +88,8 @@ export class PhpUnit {
             this.outputChannel.append(buffer.toString());
         });
         phpunitProcess.on("close", (code) => {
-            const status = code == 0 ? 'ok' : 'error';
-            if ((showOutput == 'ok' && code == 0) || (showOutput == 'error' && code == 1)) {
+            const status = code == 0 ? ShowOutput.Ok : ShowOutput.Error;
+            if ((showOutput == ShowOutput.Ok && code == 0) || (showOutput == ShowOutput.Error && code == 1)) {
                 this.outputChannel.show();
             }
 
@@ -109,7 +109,7 @@ export class PhpUnit {
             }
         });
 
-        if (showOutput == 'always') {
+        if (showOutput == ShowOutput.Always) {
             this.outputChannel.show();
         }
     }
@@ -154,4 +154,10 @@ export class PhpUnit {
             vscode.window.showInformationMessage("There are no tests running.");
         }
     }
+}
+
+enum ShowOutput {
+    Always = 'always',
+    Error = 'error',
+    Ok = 'ok'
 }

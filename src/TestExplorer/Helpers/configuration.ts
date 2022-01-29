@@ -3,7 +3,13 @@ import * as vscode from 'vscode';
 export default class Configuration {
   static initialize(): void {
     vscode.workspace.onDidChangeConfiguration((event) => {
-      if (event.affectsConfiguration("phpunit.testExplorer")) {
+      if (
+        event.affectsConfiguration("phpunit.testExplorer.discoverAllTests") ||
+        event.affectsConfiguration("phpunit.testExplorer.folderPattern") ||
+        event.affectsConfiguration("phpunit.testExplorer.fileRegex") ||
+        event.affectsConfiguration("phpunit.testExplorer.functionRegex") ||
+        event.affectsConfiguration("phpunit.testExplorer.multilineFunctionRegex")
+      ) {
         const action = 'Reload';
         vscode.window
           .showInformationMessage(
@@ -77,6 +83,12 @@ export default class Configuration {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
       .get("parallelTests");
+  }
+
+  static showOutput(): string {
+    return vscode.workspace
+      .getConfiguration("phpunit.testExplorer")
+      .get("showOutput");
   }
 
   static timeout(): number {

@@ -28,8 +28,8 @@ export default class TestProcess {
         buffers.push(data);
       });
 
-      this.process.on('error', (err: any) => {
-        resolve(err.message);
+      this.process.on('error', (error: any) => {
+        resolve(error.message);
       });
 
       this.process.on('close', () => {

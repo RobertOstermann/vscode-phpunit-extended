@@ -1,5 +1,6 @@
 import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
+import Commands from "../CommandLine/commands";
 import Configuration from "./Helpers/configuration";
 
 import { Constants } from "./Helpers/constants";
@@ -76,6 +77,26 @@ export default class TestRunner {
 
     const { success, message } = TestRunnerHelper.parsePhpUnitOutput(output);
 
+    const showOutput = Configuration.showOutput();
+    switch (showOutput) {
+      case ShowOutput.Always:
+        Commands.outputChannel.append(`${output}\n-------------------------------------------------------\n`);
+        Commands.outputChannel.show();
+        break;
+      case ShowOutput.Error:
+        if (success) break;
+        Commands.outputChannel.append(`${output}\n-------------------------------------------------------\n`);
+        Commands.outputChannel.show();
+      case ShowOutput.Never:
+        break;
+    }
+
     return { success: success, message: message, output: output };
   }
+}
+
+enum ShowOutput {
+  Always = 'always',
+  Error = 'error',
+  Never = 'never'
 }

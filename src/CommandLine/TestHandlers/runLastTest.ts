@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 import { PhpUnit } from '../phpUnit';
 
 export class RunLastTest {
-
     private outputChannel: any;
 
     constructor(outputChannel: vscode.OutputChannel) {

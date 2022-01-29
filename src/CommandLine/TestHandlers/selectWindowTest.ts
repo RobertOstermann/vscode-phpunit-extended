@@ -4,7 +4,6 @@ import { Helper } from '../Helpers/helper';
 import { PhpUnit } from '../phpUnit';
 
 export class SelectWindowTest {
-
     private editor: vscode.TextEditor;
     private args: string[];
     private outputChannel: vscode.OutputChannel;

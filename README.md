@@ -63,6 +63,7 @@
 | `phpunit.testExplorer.functionRegex`             | The regular expression used to determine the functions within a file to test.                                                             | `\\s*(public\\s+){0,1}function\\s+(\\w*test\\w*)\\s*\\(` |
 | `phpunit.testExplorer.multilineFunctionRegex`    | Determines if the functionRegex looks at multiple lines. This is useful if the test is defined by an annotation comment.                  | `false`                                                  |
 | `phpunit.testExplorer.parallelTests`             | The number of tests to run in parallel in the test explorer.                                                                              | `0`                                                      |
+| `phpunit.testExplorer.showOutput`                | Show the output console after the tests run (always, error, never).                                                                       | `never`                                                  |
 | `phpunit.testExplorer.timeout`                   | The time (seconds) to allow a test to run. The default is no timeout.                                                                     | `0`                                                      |
 | `phpunit.testExplorer.verboseTestExplorerOutput` | Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test.          | `false`                                                  |
 
@@ -88,6 +89,7 @@
 - `functionRegex` sets the regex to find functions within a test file.
 - `multilineFunctionRegex` allows the functionRegex to look at multiple lines. The functionRegex adds the `s` flag.
 - `parallelTests` allows multiple tests to run concurrently. I would not recommend setting this above `8`.
+- `showOutput` is similar to the command line setting of the same name. Shows the output console when specified.
 - `timeout` sets the time a test can run. A test that does not complete before the timeout will be cancelled.
 - `verboseTestExplorerOutput` allows output to show for each test, but can take longer to run.
 

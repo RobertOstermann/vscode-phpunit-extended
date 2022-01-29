@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2022-01-28
+
+- The names of settings have been changed! Please update setting in the settings.json file.
+- The setting `phpunit.testExplorer.args` has been added to allow for configuration options.
+- The setting `phpunit.testExplorer.showOutput` has been added to allow for easier viewing of the output for test explorer tests.
+
 ## [0.2.8] - 2022-01-24
 
 - Activate the extension when the workspace contains a .php file

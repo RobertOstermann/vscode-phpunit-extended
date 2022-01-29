@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "0.2.8",
+  "version": "1.0.0",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -101,6 +101,11 @@
           "default": "always",
           "description": "Show the output console after the tests run (always, error, ok)."
         },
+        "phpunit.testExplorer.args": {
+          "type": "array",
+          "default": [],
+          "description": "This is useful for setting the configuration. Warning: some arguments, such as --testdox, will not allow the test explorer tests to pass."
+        },
         "phpunit.testExplorer.discoverAllTests": {
           "type": "boolean",
           "default": true,
@@ -130,6 +135,16 @@
           "type": "number",
           "default": 0,
           "description": "The number of tests to run in parallel in the test explorer."
+        },
+        "phpunit.testExplorer.showOutput": {
+          "type": "string",
+          "enum": [
+            "always",
+            "error",
+            "never"
+          ],
+          "default": "never",
+          "description": "Show the output console after the tests run (always, error, never)."
         },
         "phpunit.testExplorer.timeout": {
           "type": "number",

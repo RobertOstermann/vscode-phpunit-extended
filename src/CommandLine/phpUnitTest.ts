@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Configuration from './Helpers/configuration';
+import CommandLineConfiguration from './Helpers/configuration';
 
 import { PhpUnit } from "./phpUnit";
 import { CurrentFileTest } from './TestHandlers/currentFileTest';
@@ -45,7 +45,7 @@ export class TestRunner {
     }
 
     private executeTest(type: string) {
-        const args = [...Configuration.args()];
+        const args = [...CommandLineConfiguration.args()];
         const editor = vscode.window.activeTextEditor;
         let testHandler: TestHandler;
 

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import Configuration from './Helpers/configuration';
+import TestExplorerConfiguration from './Helpers/configuration';
 import { Constants } from './Helpers/constants';
 
 export const parsePHP = (text: string, events: {
@@ -14,11 +14,11 @@ export const parsePHP = (text: string, events: {
     const line = lines[lineNumber];
     let functionRegexLines = line;
 
-    if (Configuration.multilineFunctionRegex()) {
+    if (TestExplorerConfiguration.multilineFunctionRegex()) {
       functionRegexLines = lines.slice(previousFunctionLine, lineNumber + 1).join('\n');
     }
 
-    const validTestMethod = Configuration.functionRegex().exec(functionRegexLines);
+    const validTestMethod = TestExplorerConfiguration.functionRegex().exec(functionRegexLines);
     const test = Constants.phpMethodRegex.exec(line);
     if (validTestMethod && test) {
       previousFunctionLine = lineNumber + 1;

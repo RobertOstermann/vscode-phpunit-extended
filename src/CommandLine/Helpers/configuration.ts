@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export default class Configuration {
+export default class CommandLineConfiguration {
   static execPath(): string {
     return vscode.workspace
       .getConfiguration("phpunit")

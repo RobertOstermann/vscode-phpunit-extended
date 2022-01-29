@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export default class Configuration {
+export default class TestExplorerConfiguration {
   static initialize(): void {
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Configuration from '../Helpers/configuration';
+import CommandLineConfiguration from '../Helpers/configuration';
 
 import { PhpUnit } from '../phpUnit';
 
@@ -18,7 +18,7 @@ export class TestSuite {
     public run() {
         if (this.withExclusions) {
             this.args.push('--exclude-group');
-            this.args.push(Configuration.excludedGroups().join(','));
+            this.args.push(CommandLineConfiguration.excludedGroups().join(','));
         }
 
         (new PhpUnit(this.outputChannel, this.args, false)).run();

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import Commands from './CommandLine/commands';
-import Configuration from './TestExplorer/Helpers/configuration';
+import TestExplorerConfiguration from './TestExplorer/Helpers/configuration';
 import TestCase from './TestExplorer/testCase';
 import TestClass from './TestExplorer/testClass';
 import TestDiscover from './TestExplorer/testDiscover';
@@ -28,7 +28,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				if (data instanceof TestClass) {
 					run.enqueued(test);
 					queue.push({ test, data });
-					if (Configuration.verboseTestExplorerOutput()) {
+					if (TestExplorerConfiguration.verboseTestExplorerOutput()) {
 						await discoverTests(TestDiscover.gatherTestItems(test.children));
 					}
 				} else if (data instanceof TestCase) {
@@ -53,7 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					run.started(test);
 					promises.push(data.run(test, run));
 				}
-				if (promises.length > Configuration.parallelTests()) {
+				if (promises.length > TestExplorerConfiguration.parallelTests()) {
 					await Promise.all(promises);
 					promises = [];
 				}
@@ -71,7 +71,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	controller.resolveHandler = async item => {
 		if (!item) {
-			if (Configuration.discoverAllTests()) {
+			if (TestExplorerConfiguration.discoverAllTests()) {
 				context.subscriptions.push(...TestDiscover.startWatchingWorkspace(controller));
 			}
 			return;
@@ -97,5 +97,5 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	TestDiscover.updateNodeForDocument(controller, vscode.window?.activeTextEditor?.document);
 
-	Configuration.initialize();
+	TestExplorerConfiguration.initialize();
 }

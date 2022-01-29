@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Configuration from './Helpers/configuration';
+import TestExplorerConfiguration from './Helpers/configuration';
 
 import { Constants } from './Helpers/constants';
 import { OptionsHelper } from './Helpers/optionsHelper';
@@ -19,7 +19,7 @@ export default class TestClass {
 
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
-    const args = [...Configuration.args()];
+    const args = [...TestExplorerConfiguration.args()];
 
     if (this.currentTest) {
       args.push("--filter");
@@ -46,7 +46,7 @@ export default class TestClass {
         OptionsHelper.appendFailedOutput(item, options, errorMessage, output, duration);
       }
 
-      if (!Configuration.verboseTestExplorerOutput()) {
+      if (!TestExplorerConfiguration.verboseTestExplorerOutput()) {
         this.populateChildTestOutput(item, options, output, success, error);
       }
     } else {

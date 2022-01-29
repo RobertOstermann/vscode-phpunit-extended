@@ -1,7 +1,7 @@
 import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
 import Commands from "../CommandLine/commands";
-import Configuration from "./Helpers/configuration";
+import TestExplorerConfiguration from "./Helpers/configuration";
 
 import { Constants } from "./Helpers/constants";
 import TestProcess from "./testProcess";
@@ -17,7 +17,7 @@ export default class TestRunner {
   }
 
   async run() {
-    const phpunitPath = Configuration.execPath();
+    const phpunitPath = TestExplorerConfiguration.execPath();
 
     if (phpunitPath == "") {
       return this.execThroughComposer();
@@ -66,18 +66,18 @@ export default class TestRunner {
 
     const spawnOptions: SpawnOptions = {
       cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ""),
-      env: Configuration.envVars(),
+      env: TestExplorerConfiguration.envVars(),
     };
 
     const output = await TestRunnerHelper.promiseWithTimeout(
       new TestProcess().run(command, this.args, spawnOptions),
-      Configuration.timeout() * 1000,
+      TestExplorerConfiguration.timeout() * 1000,
       Constants.timeoutMessage
     );
 
     const { success, message } = TestRunnerHelper.parsePhpUnitOutput(output);
 
-    const showOutput = Configuration.showOutput();
+    const showOutput = TestExplorerConfiguration.showOutput();
     switch (showOutput) {
       case ShowOutput.Always:
         Commands.outputChannel.append(`${output}\n-------------------------------------------------------\n`);

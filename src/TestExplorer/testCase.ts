@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Configuration from './Helpers/configuration';
+import TestExplorerConfiguration from './Helpers/configuration';
 
 import { OptionsHelper } from './Helpers/optionsHelper';
 import TestRunner from './testRunner';
@@ -17,7 +17,7 @@ export default class TestCase {
 
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
-    let args = [...Configuration.args()];
+    let args = [...TestExplorerConfiguration.args()];
 
     if (this.currentTest) {
       args.push("--filter");

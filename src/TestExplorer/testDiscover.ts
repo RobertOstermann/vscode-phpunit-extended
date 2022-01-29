@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Configuration from './Helpers/configuration';
+import TestExplorerConfiguration from './Helpers/configuration';
 import { testData, TestFile } from './testFile';
 
 export default class TestDiscover {
@@ -9,7 +9,7 @@ export default class TestDiscover {
     }
 
     return vscode.workspace.workspaceFolders.map(workspaceFolder => {
-      const pattern = new vscode.RelativePattern(workspaceFolder, Configuration.folderPattern());
+      const pattern = new vscode.RelativePattern(workspaceFolder, TestExplorerConfiguration.folderPattern());
       const watcher = vscode.workspace.createFileSystemWatcher(pattern);
 
       watcher.onDidCreate(uri => {
@@ -74,7 +74,7 @@ export default class TestDiscover {
   }
 
   static validTestFilePath(path: string) {
-    if (Configuration.fileRegex().exec(path)) {
+    if (TestExplorerConfiguration.fileRegex().exec(path)) {
       return true;
     }
 

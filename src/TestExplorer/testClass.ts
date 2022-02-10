@@ -21,6 +21,11 @@ export default class TestClass {
     const start = Date.now();
     let args = [...TestExplorerConfiguration.sharedArgs(), ...TestExplorerConfiguration.args()];
 
+    if (TestExplorerConfiguration.configurationPath()) {
+      args.unshift("--configuration");
+      args.unshift(TestExplorerConfiguration.configurationPath());
+    }
+
     if (this.currentTest) {
       args.push("--filter");
       args.push(this.currentTest);

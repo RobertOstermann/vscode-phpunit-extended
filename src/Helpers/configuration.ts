@@ -1,6 +1,12 @@
 import * as vscode from 'vscode';
 
 export default class SharedConfiguration {
+  static configurationPath(): string {
+    return vscode.workspace
+      .getConfiguration("phpunit")
+      .get("configurationPath");
+  }
+
   static execPath(): string {
     return vscode.workspace
       .getConfiguration("phpunit")
@@ -23,5 +29,11 @@ export default class SharedConfiguration {
     return vscode.workspace
       .getConfiguration("phpunit")
       .get("workingDirectory");
+  }
+
+  static experimental_useRelativePaths(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental")
+      .get("useRelativePaths");
   }
 }

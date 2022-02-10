@@ -49,6 +49,11 @@ export class TestRunner {
         const editor = vscode.window.activeTextEditor;
         let testHandler: TestHandler;
 
+        if (CommandLineConfiguration.configurationPath()) {
+            args.unshift("--configuration");
+            args.unshift(CommandLineConfiguration.configurationPath());
+        }
+
         switch (type) {
             case 'select-window':
                 testHandler = new SelectWindowTest(editor, args, this.outputChannel);

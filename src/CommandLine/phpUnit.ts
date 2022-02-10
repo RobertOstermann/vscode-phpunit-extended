@@ -60,7 +60,19 @@ export class PhpUnit {
         }
 
         if (this.putFsPathIntoArgs) {
-            this.args.push(vscode.window.activeTextEditor.document.uri.fsPath);
+            let fsPath = vscode.window.activeTextEditor.document.uri.fsPath;
+
+            if (CommandLineConfiguration.experimental_useRelativePaths()) {
+                fsPath = vscode.workspace.asRelativePath(
+                    vscode.window.activeTextEditor.document.uri,
+                    true
+                );
+                if (/^win/.test(process.platform)) {
+                    fsPath = fsPath.replace(/\\/g, '/');
+                }
+            }
+
+            this.args.push(fsPath);
         }
 
         PhpUnit.lastCommand = {

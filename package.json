@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -67,6 +67,11 @@
           "type": "array",
           "default": [],
           "description": "This is useful for setting the configuration settings shared between the command line and the test explorer."
+        },
+        "phpunit.configurationPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to phpunit.xml configuration file (if empty it tries to use find the nearest configuration file)."
         },
         "phpunit.envVars": {
           "type": "object",
@@ -165,6 +170,11 @@
           "type": "boolean",
           "default": false,
           "description": "Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test."
+        },
+        "phpunit.experimental.useRelativePaths": {
+          "type": "boolean",
+          "default": false,
+          "description": "Warning: This feature might be change or removed in future updates. Use relative paths instead of the full path."
         }
       }
     },

@@ -13,9 +13,8 @@
 
 ```JSON
 {
-    "phpunit.args": [ // Shared arguments between commandLine and testExplorer
-        "--configuration", "./phpunit.xml.dist"
-    ],
+    "phpunit.args": [], // Shared arguments between commandLine and testExplorer
+    "phpunit.configurationPath": "path/to/phpunit.xml",
     "phpunit.execPath": "path/to/phpunit", // If this value is set to '' it will try to use the composer phpunit installation.
     "phpunit.envVars": {
         // Here you can define the environment variables to be set before executing phpunit
@@ -51,6 +50,7 @@
 | Name                                             | Description                                                                                                                                                                                                                                                | Default                                                  |
 | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | `phpunit.args`                                   | This is useful for setting the configuration settings shared between the command line and the test explorer.                                                                                                                                               | `{}`                                                     |
+| `phpunit.configurationPath`                      | Path to phpunit.xml configuration file (if empty it tries to use find the nearest configuration file).                                                                                                                                                     | `''`                                                     |
 | `phpunit.envVars`                                | Set environment variables before running phpunit                                                                                                                                                                                                           | `{}`                                                     |
 | `phpunit.execPath`                               | Path to phpunit executable (if empty it tries to use composer installation).                                                                                                                                                                               | `""`                                                     |
 | `phpunit.workingDirectory`                       | This determines the working directory of the process that runs the test commands. Set to `Find` to find the working directory based upon the `phpunit.xml` or `phpunit.xml.dist` path. Set to `Parent` to use the working directory of the parent process. | `"Find"`                                                 |
@@ -72,6 +72,7 @@
 ## Combined Settings
 
 - `args` sets the arguments that are used by both the command line and the test explorer.
+- `configurationPath` determines the path to the phpunit.xml configuration file.
 - `execPath` determines the phpunit path.
 - `envVars` allows this extension to hook into the debugger ([github.com/felixfbecker/vscode-php-debug](https://github.com/felixfbecker/vscode-php-debug)) as show in the setup section.
 - `workingDirectory` allows you to set the working directory of the process that runs the phpunit command.
@@ -130,6 +131,7 @@ Run with (`Cmd+Shift+P` on OSX or `Ctrl+Shift+P` on Windows and Linux) and execu
 ## Credits / Links
 
 - [santigarcor](https://github.com/santigarcor/vscode-phpunit-extended)
+- [calebporzio](https://github.com/calebporzio/better-phpunit)
 - [VSCode's Extensions Samples](https://github.com/microsoft/vscode-extension-samples/tree/main/test-provider-sample)
 - [VSCode's Testing Documentation](https://code.visualstudio.com/api/extension-guides/testing)
 

@@ -2,6 +2,7 @@ import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
 import Commands from "../CommandLine/commands";
 import { ShowOutput, WorkingDirectory } from "../Helpers/enums";
+import PathHelper from "../Helpers/pathHelper";
 import TestExplorerConfiguration from "./Helpers/configuration";
 
 import Constants from "./Helpers/constants";
@@ -29,7 +30,7 @@ export default class TestRunner {
 
   private async execThroughComposer() {
     const phpUnitComposerBinFile =
-      TestRunnerHelper.findNearestFileFullPath("vendor/bin/phpunit", this.fsPath);
+      PathHelper.findNearestFileFullPath("vendor/bin/phpunit", this.fsPath);
 
     if (phpUnitComposerBinFile != null) {
       return this.execPhpUnit(phpUnitComposerBinFile);
@@ -44,7 +45,7 @@ export default class TestRunner {
     let workingDirectory = TestExplorerConfiguration.workingDirectory();
     switch (workingDirectory.toLowerCase()) {
       case WorkingDirectory.Find:
-        workingDirectory = TestRunnerHelper.findWorkingDirectory(this.fsPath);
+        workingDirectory = PathHelper.findWorkingDirectory(this.fsPath);
         if (workingDirectory == null) {
           const errorMessage = "Couldn't find a working directory.";
           vscode.window.showErrorMessage(errorMessage);

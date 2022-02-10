@@ -5,6 +5,7 @@ import fs = require('fs');
 import CommandLineConfiguration from './Helpers/configuration';
 import { SpawnOptions } from 'child_process';
 import { ShowOutput, WorkingDirectory } from '../Helpers/enums';
+import PathHelper from '../Helpers/pathHelper';
 
 export class PhpUnit {
     private args: string[];
@@ -30,7 +31,7 @@ export class PhpUnit {
     }
 
     private execThroughComposer() {
-        const phpUnitComposerBinFile = this.findNearestFileFullPath('vendor/bin/phpunit');
+        const phpUnitComposerBinFile = PathHelper.findNearestFileFullPath('vendor/bin/phpunit');
 
         if (phpUnitComposerBinFile != null) {
             this.execPhpUnit(phpUnitComposerBinFile);
@@ -46,7 +47,7 @@ export class PhpUnit {
         let workingDirectory = CommandLineConfiguration.workingDirectory();
         switch (workingDirectory.toLowerCase()) {
             case WorkingDirectory.Find:
-                workingDirectory = this.findWorkingDirectory();
+                workingDirectory = PathHelper.findWorkingDirectory();
                 if (workingDirectory == null) {
                     const errorMessage = "Couldn't find a working directory.";
                     vscode.window.showErrorMessage(errorMessage);
@@ -125,38 +126,6 @@ export class PhpUnit {
         if (showOutput == ShowOutput.Always) {
             this.outputChannel.show();
         }
-    }
-
-    private findNearestFileFullPath(fileRelativeName: string, currentPath = '') {
-        const rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
-
-        if (currentPath == '') {
-            const filePath = vscode.window.activeTextEditor.document.uri.fsPath;
-            currentPath = filePath.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, '');
-        } else {
-            currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, '');
-        }
-
-        const fileFullPath = `${currentPath}/${fileRelativeName}`;
-
-        if (fs.existsSync(fileFullPath)) {
-            return fileFullPath;
-        } else if (currentPath != rootPath) {
-            return this.findNearestFileFullPath(fileRelativeName, currentPath);
-        } else {
-            return null;
-        }
-    }
-
-    private findWorkingDirectory() {
-        const workingDirectory = this.findNearestFileFullPath('phpunit.xml')
-            || this.findNearestFileFullPath('phpunit.xml.dist');
-
-        if (workingDirectory == null) {
-            vscode.window.showErrorMessage('Couldn\'t find a working directory.');
-        }
-
-        return workingDirectory;
     }
 
     static cancelCurrentTest() {

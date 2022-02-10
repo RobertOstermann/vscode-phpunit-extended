@@ -1,18 +1,7 @@
 import * as vscode from 'vscode';
+import SharedConfiguration from '../../Helpers/configuration';
 
-export default class CommandLineConfiguration {
-  static execPath(): string {
-    return vscode.workspace
-      .getConfiguration("phpunit")
-      .get("execPath", "phpunit");
-  }
-
-  static envVars(): any {
-    return vscode.workspace
-      .getConfiguration("phpunit")
-      .get("envVars");
-  }
-
+export default class CommandLineConfiguration extends SharedConfiguration {
   static args(): string[] {
     return vscode.workspace
       .getConfiguration("phpunit.commandLine")

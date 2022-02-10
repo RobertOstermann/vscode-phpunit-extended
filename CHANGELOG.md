@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.1] - 2022-01-28
+
+- Add `workingDirectory` configuration option. Defaults to `find` for backward compatability.
+- Add `args` configuration option for shared arguments.
+
 ## [1.0.0] - 2022-01-28
 
 - The names of settings have been changed! Please update setting in the settings.json file.

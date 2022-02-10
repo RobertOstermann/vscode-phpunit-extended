@@ -45,7 +45,7 @@ export class TestRunner {
     }
 
     private executeTest(type: string) {
-        const args = [...CommandLineConfiguration.args()];
+        const args = [...CommandLineConfiguration.sharedArgs(), ...CommandLineConfiguration.args()];
         const editor = vscode.window.activeTextEditor;
         let testHandler: TestHandler;
 

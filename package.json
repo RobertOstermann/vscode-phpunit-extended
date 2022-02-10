@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -63,6 +63,11 @@
     "configuration": {
       "title": "PHPUnit Configuration",
       "properties": {
+        "phpunit.args": {
+          "type": "array",
+          "default": [],
+          "description": "This is useful for setting the configuration settings shared between the command line and the test explorer."
+        },
         "phpunit.envVars": {
           "type": "object",
           "default": {},
@@ -72,6 +77,11 @@
           "type": "string",
           "default": "",
           "description": "Path to phpunit executable (if empty it tries to use composer installation)."
+        },
+        "phpunit.workingDirectory": {
+          "type": "string",
+          "default": "Find",
+          "markdownDescription": "This determines the working directory of the process that runs the test commands. Set to `Find` to find the working directory based upon the `phpunit.xml` or `phpunit.xml.dist` path. Set to `Parent` to use the working directory of the parent process."
         },
         "phpunit.commandLine.args": {
           "type": "array",

@@ -22,7 +22,6 @@ export class RunLastTest {
 
             phpunit.execPhpUnit(
                 PhpUnit.lastCommand.phpunitPath,
-                PhpUnit.lastCommand.workingDirectory
             );
         }
     }

@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import TestExplorerConfiguration from './Helpers/configuration';
-import { Constants } from './Helpers/constants';
+import Constants from './Helpers/constants';
 
 export const parsePHP = (text: string, events: {
   onTest(range: vscode.Range, name: string): void;

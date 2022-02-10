@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import fs = require('fs');
-import { Constants } from './Helpers/constants';
+import Constants from './Helpers/constants';
 
 export default class TestRunnerHelper {
   static findWorkingDirectory(currentPath: string) {

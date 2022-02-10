@@ -1,9 +1,10 @@
 import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
 import Commands from "../CommandLine/commands";
+import { ShowOutput, WorkingDirectory } from "../Helpers/enums";
 import TestExplorerConfiguration from "./Helpers/configuration";
 
-import { Constants } from "./Helpers/constants";
+import Constants from "./Helpers/constants";
 import TestProcess from "./testProcess";
 import TestRunnerHelper from "./testRunnerHelper";
 
@@ -39,15 +40,20 @@ export default class TestRunner {
     }
   }
 
-  public async execPhpUnit(phpunitPath: string, workingDirectory = null) {
-    if (!workingDirectory) {
-      workingDirectory = TestRunnerHelper.findWorkingDirectory(this.fsPath);
-    }
-
-    if (workingDirectory == null) {
-      const errorMessage = "Couldn't find a working directory.";
-      vscode.window.showErrorMessage(errorMessage);
-      return { success: false, output: errorMessage };
+  public async execPhpUnit(phpunitPath: string) {
+    let workingDirectory = TestExplorerConfiguration.workingDirectory();
+    switch (workingDirectory.toLowerCase()) {
+      case WorkingDirectory.Find:
+        workingDirectory = TestRunnerHelper.findWorkingDirectory(this.fsPath);
+        if (workingDirectory == null) {
+          const errorMessage = "Couldn't find a working directory.";
+          vscode.window.showErrorMessage(errorMessage);
+          return { success: false, output: errorMessage };
+        }
+        break;
+      case WorkingDirectory.Parent:
+        workingDirectory = undefined;
+        break;
     }
 
     if (this.fsPath) {
@@ -65,7 +71,7 @@ export default class TestRunner {
     }
 
     const spawnOptions: SpawnOptions = {
-      cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ""),
+      cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
       env: TestExplorerConfiguration.envVars(),
     };
 
@@ -93,10 +99,4 @@ export default class TestRunner {
 
     return { success: success, message: message, output: output };
   }
-}
-
-enum ShowOutput {
-  Always = 'always',
-  Error = 'error',
-  Never = 'never'
 }

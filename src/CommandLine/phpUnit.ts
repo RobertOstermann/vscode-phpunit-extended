@@ -3,6 +3,8 @@ import * as vscode from 'vscode';
 import cp = require('child_process');
 import fs = require('fs');
 import CommandLineConfiguration from './Helpers/configuration';
+import { SpawnOptions } from 'child_process';
+import { ShowOutput, WorkingDirectory } from '../Helpers/enums';
 
 export class PhpUnit {
     private args: string[];
@@ -37,17 +39,23 @@ export class PhpUnit {
         }
     }
 
-    public execPhpUnit(phpunitPath: string, workingDirectory = null) {
+    public execPhpUnit(phpunitPath: string) {
         const showOutput = CommandLineConfiguration.showOutput();
         this.outputChannel.clear();
 
-        workingDirectory = workingDirectory == null ? this.findWorkingDirectory() : workingDirectory;
-        if (showOutput != 'always') {
-            this.outputChannel.hide();
-        }
-
-        if (workingDirectory == null) {
-            return;
+        let workingDirectory = CommandLineConfiguration.workingDirectory();
+        switch (workingDirectory.toLowerCase()) {
+            case WorkingDirectory.Find:
+                workingDirectory = this.findWorkingDirectory();
+                if (workingDirectory == null) {
+                    const errorMessage = "Couldn't find a working directory.";
+                    vscode.window.showErrorMessage(errorMessage);
+                    return { success: false, output: errorMessage };
+                }
+                break;
+            case WorkingDirectory.Parent:
+                workingDirectory = undefined;
+                break;
         }
 
         if (this.putFsPathIntoArgs) {
@@ -71,10 +79,15 @@ export class PhpUnit {
             command = phpunitPath;
         }
 
+        const spawnOptions: SpawnOptions = {
+            cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
+            env: CommandLineConfiguration.envVars(),
+        };
+
         const phpunitProcess = cp.spawn(
             command,
             this.args,
-            { cwd: workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, ''), env: CommandLineConfiguration.envVars() }
+            spawnOptions
         );
 
         PhpUnit.currentTest = phpunitProcess;
@@ -154,10 +167,4 @@ export class PhpUnit {
             vscode.window.showInformationMessage("There are no tests running.");
         }
     }
-}
-
-enum ShowOutput {
-    Always = 'always',
-    Error = 'error',
-    Ok = 'ok'
 }

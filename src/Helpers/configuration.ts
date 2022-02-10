@@ -13,6 +13,12 @@ export default class SharedConfiguration {
       .get("envVars");
   }
 
+  static sharedArgs(): string[] {
+    return vscode.workspace
+      .getConfiguration("phpunit")
+      .get<Array<string>>("args", []);
+  }
+
   static workingDirectory(): string {
     return vscode.workspace
       .getConfiguration("phpunit")

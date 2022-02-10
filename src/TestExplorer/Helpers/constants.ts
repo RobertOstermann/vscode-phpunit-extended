@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-export class Constants {
+export default class Constants {
   static readonly nearestFileSearchDepth: number = 100;
 
   static readonly timeoutMessage: string = "Test Failed: Timeout";

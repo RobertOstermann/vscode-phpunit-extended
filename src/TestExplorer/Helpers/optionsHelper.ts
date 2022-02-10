@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-export class OptionsHelper {
+export default class OptionsHelper {
   static appendItemOutput(item: vscode.TestItem, options: vscode.TestRun, message: string): void {
     const location = new vscode.Location(item.uri, item.range);
 

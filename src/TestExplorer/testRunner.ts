@@ -15,7 +15,7 @@ export default class TestRunner {
 
   constructor(args: string[], fsPath: string) {
     this.args = args;
-    this.fsPath = fsPath;
+    this.fsPath = PathHelper.normalizePath(fsPath);
   }
 
   async run() {

@@ -176,10 +176,50 @@
           "default": false,
           "description": "Warning: This feature might be change or removed in future updates. Use relative paths instead of the full path."
         },
+        "phpunit.experimental.docker.enable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run tests in a Docker container."
+        },
+        "phpunit.experimental.docker.command": {
+          "type": "string",
+          "default": "",
+          "description": "The Docker command to execute a container. If empty, an error will be thrown during execution."
+        },
+        "phpunit.experimental.docker.paths": {
+          "type": "object",
+          "default": {},
+          "description": "The docker path map. Keys are local (host) paths and values are remote (container) paths."
+        },
         "phpunit.experimental.ssh.enable": {
           "type": "boolean",
           "default": false,
-          "description": "Warning: Currently only works on the command line (or might not work at all). Run tests over ssh"
+          "description": "Run tests over ssh"
+        },
+        "phpunit.experimental.ssh.user": {
+          "type": "string",
+          "default": "",
+          "description": "The user to use when running tests via SSH"
+        },
+        "phpunit.experimental.ssh.host": {
+          "type": "string",
+          "default": "",
+          "description": "The hostname to use when running tests via SSH"
+        },
+        "phpunit.experimental.ssh.paths": {
+          "type": "object",
+          "default": {},
+          "description": "The SSH path map. Keys are local (host) paths and values are remote (guest) paths."
+        },
+        "phpunit.experimental.ssh.execPath": {
+          "type": "string",
+          "default": "",
+          "description": "The path (and flags) to an SSH-compatible binary. If empty, it will use SSH on *nix and Putty on Windows."
+        },
+        "phpunit.experimental.ssh.args": {
+          "type": "string",
+          "default": "",
+          "description": "Additional command line options to pass to ssh/putty/plink"
         }
       }
     },

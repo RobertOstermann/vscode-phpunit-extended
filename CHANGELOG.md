@@ -2,7 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.1] - 2022-01-28
+## [1.0.3] - 2022-02-10
+
+- Fix bug with `configurationPath` setting.
+
+## [1.0.2] - 2022-02-10
+
+- Add `configurationPath` configuration option.
+- Add experimental option `useRelativePaths` configuration option.
+
+## [1.0.1] - 2022-02-10
 
 - Add `workingDirectory` configuration option. Defaults to `find` for backward compatability.
 - Add `args` configuration option for shared arguments.

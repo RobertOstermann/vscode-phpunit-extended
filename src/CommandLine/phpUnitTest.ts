@@ -50,8 +50,8 @@ export class TestRunner {
         let testHandler: TestHandler;
 
         if (CommandLineConfiguration.configurationPath()) {
-            args.unshift("--configuration");
             args.unshift(CommandLineConfiguration.configurationPath());
+            args.unshift("--configuration");
         }
 
         switch (type) {

@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -175,6 +175,11 @@
           "type": "boolean",
           "default": false,
           "description": "Warning: This feature might be change or removed in future updates. Use relative paths instead of the full path."
+        },
+        "phpunit.experimental.ssh.enable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Warning: Currently only works on the command line (or might not work at all). Run tests over ssh"
         }
       }
     },

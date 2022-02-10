@@ -22,8 +22,8 @@ export default class TestClass {
     let args = [...TestExplorerConfiguration.sharedArgs(), ...TestExplorerConfiguration.args()];
 
     if (TestExplorerConfiguration.configurationPath()) {
-      args.unshift("--configuration");
       args.unshift(TestExplorerConfiguration.configurationPath());
+      args.unshift("--configuration");
     }
 
     if (this.currentTest) {

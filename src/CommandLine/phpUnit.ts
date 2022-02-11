@@ -44,21 +44,87 @@ export class PhpUnit {
     const showOutput = CommandLineConfiguration.showOutput();
     this.outputChannel.clear();
 
+    const workingDirectory = this.getWorkingDirectory();
+    if (workingDirectory === null) {
+      const errorMessage = "Couldn't find a working directory.";
+      vscode.window.showErrorMessage(errorMessage);
+      return { success: false, output: errorMessage };
+    }
+
+    const command = this.setArguments(phpunitPath, workingDirectory);
+    const spawnOptions: SpawnOptions = {
+      cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
+      env: CommandLineConfiguration.envVars(),
+    };
+
+    const phpunitProcess = cp.spawn(
+      command,
+      this.args,
+      spawnOptions
+    );
+
+    PhpUnit.currentTest = phpunitProcess;
+
+    this.outputChannel.appendLine(`${phpunitPath} ${this.args.join(' ')}\n`);
+
+    phpunitProcess.stderr.on("data", (buffer: Buffer) => {
+      this.outputChannel.append(buffer.toString());
+    });
+    phpunitProcess.stdout.on("data", (buffer: Buffer) => {
+      this.outputChannel.append(buffer.toString());
+    });
+    phpunitProcess.on("close", (code) => {
+      this.outputChannel.appendLine('\n-------------------------------------------------------\n');
+      const status = code == 0 ? ShowOutput.Ok : ShowOutput.Error;
+      if ((showOutput == ShowOutput.Ok && code == 0) || (showOutput == ShowOutput.Error && code == 1)) {
+        this.outputChannel.show();
+      }
+
+      vscode.workspace.getConfiguration('phpunit').scriptsAfterTests[status]
+        .forEach((script: any) => {
+          if (typeof script === 'string') {
+            cp.spawn(script);
+          } else {
+            cp.spawn(script.command, script.args);
+          }
+        });
+    });
+
+    phpunitProcess.on("exit", (code, signal) => {
+      if (signal != null) {
+        this.outputChannel.append('Cancelled');
+        this.outputChannel.appendLine('\n-------------------------------------------------------\n');
+      }
+    });
+
+    if (showOutput == ShowOutput.Always) {
+      this.outputChannel.show();
+    }
+  }
+
+  static cancelCurrentTest() {
+    if (PhpUnit.currentTest) {
+      PhpUnit.currentTest.kill();
+      PhpUnit.currentTest = null;
+    } else {
+      vscode.window.showInformationMessage("There are no tests running.");
+    }
+  }
+
+  private getWorkingDirectory(): string {
     let workingDirectory = CommandLineConfiguration.workingDirectory();
     switch (workingDirectory.toLowerCase()) {
       case WorkingDirectory.Find:
         workingDirectory = PathHelper.findWorkingDirectory();
-        if (workingDirectory == null) {
-          const errorMessage = "Couldn't find a working directory.";
-          vscode.window.showErrorMessage(errorMessage);
-          return { success: false, output: errorMessage };
-        }
         break;
       case WorkingDirectory.Parent:
         workingDirectory = undefined;
         break;
     }
+    return workingDirectory;
+  }
 
+  private setArguments(phpunitPath: string, workingDirectory: string): string {
     if (this.putFsPathIntoArgs) {
       let fsPath = PathHelper.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);
 
@@ -82,60 +148,6 @@ export class PhpUnit {
       command = phpunitPath;
     }
 
-    const spawnOptions: SpawnOptions = {
-      cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
-      env: CommandLineConfiguration.envVars(),
-    };
-
-    const phpunitProcess = cp.spawn(
-      command,
-      this.args,
-      spawnOptions
-    );
-
-    PhpUnit.currentTest = phpunitProcess;
-
-    this.outputChannel.appendLine(phpunitPath + ' ' + this.args.join(' '));
-
-    phpunitProcess.stderr.on("data", (buffer: Buffer) => {
-      this.outputChannel.append(buffer.toString());
-    });
-    phpunitProcess.stdout.on("data", (buffer: Buffer) => {
-      this.outputChannel.append(buffer.toString());
-    });
-    phpunitProcess.on("close", (code) => {
-      const status = code == 0 ? ShowOutput.Ok : ShowOutput.Error;
-      if ((showOutput == ShowOutput.Ok && code == 0) || (showOutput == ShowOutput.Error && code == 1)) {
-        this.outputChannel.show();
-      }
-
-      vscode.workspace.getConfiguration('phpunit').scriptsAfterTests[status]
-        .forEach((script: any) => {
-          if (typeof script === 'string') {
-            cp.spawn(script);
-          } else {
-            cp.spawn(script.command, script.args);
-          }
-        });
-    });
-
-    phpunitProcess.on("exit", (code, signal) => {
-      if (signal != null) {
-        this.outputChannel.append('Cancelled');
-      }
-    });
-
-    if (showOutput == ShowOutput.Always) {
-      this.outputChannel.show();
-    }
-  }
-
-  static cancelCurrentTest() {
-    if (PhpUnit.currentTest) {
-      PhpUnit.currentTest.kill();
-      PhpUnit.currentTest = null;
-    } else {
-      vscode.window.showInformationMessage("There are no tests running.");
-    }
+    return command;
   }
 }

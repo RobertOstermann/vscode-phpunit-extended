@@ -42,35 +42,14 @@ export default class TestRunner {
   }
 
   public async execPhpUnit(phpunitPath: string) {
-    let workingDirectory = TestExplorerConfiguration.workingDirectory();
-    switch (workingDirectory.toLowerCase()) {
-      case WorkingDirectory.Find:
-        workingDirectory = PathHelper.findWorkingDirectory(this.fsPath);
-        if (workingDirectory == null) {
-          const errorMessage = "Couldn't find a working directory.";
-          vscode.window.showErrorMessage(errorMessage);
-          return { success: false, output: errorMessage };
-        }
-        break;
-      case WorkingDirectory.Parent:
-        workingDirectory = undefined;
-        break;
+    const workingDirectory = this.getWorkingDirectory();
+    if (workingDirectory === null) {
+      const errorMessage = "Couldn't find a working directory.";
+      vscode.window.showErrorMessage(errorMessage);
+      return { success: false, output: errorMessage };
     }
 
-    if (this.fsPath) {
-      this.args.push(this.fsPath);
-    }
-
-    let command = "";
-
-    if (/^win/.test(process.platform)) {
-      command = "cmd";
-      this.args.unshift(phpunitPath);
-      this.args.unshift("/c");
-    } else {
-      command = phpunitPath;
-    }
-
+    const command = this.setArguments(phpunitPath);
     const spawnOptions: SpawnOptions = {
       cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
       env: TestExplorerConfiguration.envVars(),
@@ -87,17 +66,49 @@ export default class TestRunner {
     const showOutput = TestExplorerConfiguration.showOutput();
     switch (showOutput) {
       case ShowOutput.Always:
-        Commands.outputChannel.append(`${output}\n-------------------------------------------------------\n`);
+        Commands.outputChannel.appendLine(`${phpunitPath} ${this.args.join(' ')}\n`);
+        Commands.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
         Commands.outputChannel.show();
         break;
       case ShowOutput.Error:
         if (success) break;
-        Commands.outputChannel.append(`${output}\n-------------------------------------------------------\n`);
+        Commands.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
         Commands.outputChannel.show();
       case ShowOutput.Never:
         break;
     }
 
     return { success: success, message: message, output: output };
+  }
+
+  private getWorkingDirectory(): string {
+    let workingDirectory = TestExplorerConfiguration.workingDirectory();
+    switch (workingDirectory.toLowerCase()) {
+      case WorkingDirectory.Find:
+        workingDirectory = PathHelper.findWorkingDirectory(this.fsPath);
+        break;
+      case WorkingDirectory.Parent:
+        workingDirectory = undefined;
+        break;
+    }
+    return workingDirectory;
+  }
+
+  private setArguments(phpunitPath: string): string {
+    if (this.fsPath) {
+      this.args.push(this.fsPath);
+    }
+
+    let command = "";
+
+    if (/^win/.test(process.platform)) {
+      command = "cmd";
+      this.args.unshift(phpunitPath);
+      this.args.unshift("/c");
+    } else {
+      command = phpunitPath;
+    }
+
+    return command;
   }
 }

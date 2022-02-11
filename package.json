@@ -171,11 +171,6 @@
           "default": false,
           "description": "Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test."
         },
-        "phpunit.experimental.useRelativePaths": {
-          "type": "boolean",
-          "default": false,
-          "description": "Warning: This feature might be change or removed in future updates. Use relative paths instead of the full path."
-        },
         "phpunit.experimental.docker.enable": {
           "type": "boolean",
           "default": false,

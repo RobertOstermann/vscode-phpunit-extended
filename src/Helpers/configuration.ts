@@ -31,12 +31,6 @@ export default class SharedConfiguration {
       .get("workingDirectory");
   }
 
-  static experimental_useRelativePaths(): boolean {
-    return vscode.workspace
-      .getConfiguration("phpunit.experimental")
-      .get("useRelativePaths");
-  }
-
   static experimental_docker_enable(): boolean {
     return vscode.workspace
       .getConfiguration("phpunit.experimental.docker")

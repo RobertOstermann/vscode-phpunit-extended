@@ -62,16 +62,6 @@ export class PhpUnit {
     if (this.putFsPathIntoArgs) {
       let fsPath = PathHelper.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);
 
-      if (CommandLineConfiguration.experimental_useRelativePaths()) {
-        fsPath = vscode.workspace.asRelativePath(
-          vscode.window.activeTextEditor.document.uri,
-          true
-        );
-        if (/^win/.test(process.platform)) {
-          fsPath = fsPath.replace(/\\/g, '/');
-        }
-      }
-
       this.args.push(fsPath);
     }
 

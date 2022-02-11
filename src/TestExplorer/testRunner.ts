@@ -58,19 +58,7 @@ export default class TestRunner {
     }
 
     if (this.fsPath) {
-      let fsPath = this.fsPath;
-
-      if (TestExplorerConfiguration.experimental_useRelativePaths()) {
-        fsPath = vscode.workspace.asRelativePath(
-          vscode.window.activeTextEditor.document.uri,
-          true
-        );
-        if (/^win/.test(process.platform)) {
-          fsPath = fsPath.replace(/\\/g, '/');
-        }
-      }
-
-      this.args.push(fsPath);
+      this.args.push(this.fsPath);
     }
 
     let command = "";

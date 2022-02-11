@@ -38,22 +38,4 @@ export default class PathHelper {
       .replace(/\\/g, '/') // Convert backslashes from Windows paths to forward slashes.
       .replace(/ /g, '\\ '); // Escape spaces.
   }
-
-  static remapLocalPath(actualPath: string): string {
-    for (const [localPath, remotePath] of Object.entries(this.getPaths())) {
-      const expandedLocalPath = localPath.replace(/^~/, os.homedir());
-      if (actualPath.startsWith(expandedLocalPath)) {
-        return actualPath.replace(expandedLocalPath, remotePath);
-      }
-    }
-
-    return actualPath;
-  }
-
-  private static getPaths() {
-    if (Object.keys(SharedConfiguration.experimental_docker_paths()).length !== 0) {
-      return SharedConfiguration.experimental_docker_paths();
-    }
-    return SharedConfiguration.experimental_ssh_paths();
-  }
 }

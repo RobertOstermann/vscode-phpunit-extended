@@ -72,6 +72,7 @@ export default class TestRunner {
         break;
       case ShowOutput.Error:
         if (success) break;
+        Commands.outputChannel.appendLine(`${phpunitPath} ${this.args.join(' ')}\n`);
         Commands.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
         Commands.outputChannel.show();
       case ShowOutput.Never:

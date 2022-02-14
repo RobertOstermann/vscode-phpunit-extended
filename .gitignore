@@ -4,3 +4,7 @@ node_modules
 .vscode-test
 /vscode.d.ts
 /vscode.proposed.d.ts
+# Composer Installation
+composer.lock
+.phpunit.result.cache
+*/vendor

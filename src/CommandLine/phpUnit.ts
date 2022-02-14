@@ -160,7 +160,7 @@ export default class PhpUnit {
    */
   private setArguments(phpunitPath: string, workingDirectory: string): string {
     if (this.putFsPathIntoArgs) {
-      const fsPath = PathHelper.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);
+      const fsPath = PathHelper.remapLocalPath(vscode.window.activeTextEditor.document.uri.fsPath);
 
       this.args.push(fsPath);
     }

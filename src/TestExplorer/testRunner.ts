@@ -21,7 +21,7 @@ export default class TestRunner {
    */
   constructor(args: string[], fsPath: string) {
     this.args = args;
-    this.fsPath = PathHelper.normalizePath(fsPath);
+    this.fsPath = PathHelper.remapLocalPath(fsPath);
   }
 
   /**

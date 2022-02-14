@@ -48,55 +48,55 @@ export default class SharedConfiguration {
 
   static docker_enable(): boolean {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.docker")
+      .getConfiguration("phpunit.docker")
       .get("enable");
   }
 
   static docker_command(): string {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.docker")
+      .getConfiguration("phpunit.docker")
       .get("command");
   }
 
   static docker_paths(): object {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.docker")
+      .getConfiguration("phpunit.docker")
       .get("paths");
   }
 
   static ssh_enable(): boolean {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.ssh")
+      .getConfiguration("phpunit.ssh")
       .get("enable");
   }
 
   static ssh_args(): string[] {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.ssh")
+      .getConfiguration("phpunit.ssh")
       .get("args");
   }
 
   static ssh_user(): string {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.ssh")
+      .getConfiguration("phpunit.ssh")
       .get("user");
   }
 
   static ssh_host(): string {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.ssh")
+      .getConfiguration("phpunit.ssh")
       .get("host");
   }
 
   static ssh_paths(): object {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.ssh")
+      .getConfiguration("phpunit.ssh")
       .get("paths");
   }
 
   static ssh_execPath(): string {
     return vscode.workspace
-      .getConfiguration("phpunit.experimental.ssh")
+      .getConfiguration("phpunit.ssh")
       .get("execPath");
   }
 }

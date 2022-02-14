@@ -45,4 +45,58 @@ export default class SharedConfiguration {
       .getConfiguration("phpunit")
       .get("workingDirectory");
   }
+
+  static docker_enable(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.docker")
+      .get("enable");
+  }
+
+  static docker_command(): string {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.docker")
+      .get("command");
+  }
+
+  static docker_paths(): object {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.docker")
+      .get("paths");
+  }
+
+  static ssh_enable(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.ssh")
+      .get("enable");
+  }
+
+  static ssh_args(): string[] {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.ssh")
+      .get("args");
+  }
+
+  static ssh_user(): string {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.ssh")
+      .get("user");
+  }
+
+  static ssh_host(): string {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.ssh")
+      .get("host");
+  }
+
+  static ssh_paths(): object {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.ssh")
+      .get("paths");
+  }
+
+  static ssh_execPath(): string {
+    return vscode.workspace
+      .getConfiguration("phpunit.experimental.ssh")
+      .get("execPath");
+  }
 }

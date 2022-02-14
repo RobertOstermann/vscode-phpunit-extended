@@ -34,8 +34,12 @@ export default class PathHelper {
   }
 
   static normalizePath(path: string): string {
+    if (/^win/.test(process.platform)) {
+      return path.replace(/\\/g, '/');
+    }
+
     return path
-      .replace(/\\/g, '/') // Convert backslashes from Windows paths to forward slashes.
+      .replace(/\\/g, '/') // Convert backslashes from windows paths to forward slashes.
       .replace(/ /g, '\\ '); // Escape spaces.
   }
 }

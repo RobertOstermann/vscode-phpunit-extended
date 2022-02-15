@@ -1,16 +1,20 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "simple-import-sort"],
+  "plugins": [
+    "@typescript-eslint",
+    "eslint-plugin-tsdoc",
+    "simple-import-sort"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
+    "tsdoc/syntax": "warn",
     "quotes": [2, "double"],
     "@typescript-eslint/ban-types": 0,
     "@typescript-eslint/no-explicit-any": 0,

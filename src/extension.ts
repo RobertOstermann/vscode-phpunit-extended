@@ -53,7 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
 					run.started(test);
 					promises.push(data.run(test, run));
 				}
-				if (promises.length > TestExplorerConfiguration.parallelTests()) {
+				if (promises.length >= TestExplorerConfiguration.parallelTests()) {
 					await Promise.all(promises);
 					promises = [];
 				}

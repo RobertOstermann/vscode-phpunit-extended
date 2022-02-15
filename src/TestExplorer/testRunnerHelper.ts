@@ -1,6 +1,14 @@
 import Constants from "./Helpers/constants";
 
 export default class TestRunnerHelper {
+  /**
+   * Parse the full output of the PHPUnit test run and
+   * use a variety of regexes to determine the success status
+   * and the shortened message to display inline next to the test.
+   * 
+   * @param text - The full output of the PHPUnit test run.
+   * @returns The success status and a shortened message for the test.
+   */
   static parsePhpUnitOutput(text: string) {
     const lines = text.split("\n");
 
@@ -37,6 +45,14 @@ export default class TestRunnerHelper {
     return { success: false, message: Constants.invalidTestMessage };
   }
 
+  /**
+   * Parse the full output of the PHPUnit test run (for a test class) and
+   * use the {@link Constants.classOutputRegex} to determine
+   * the success status and the shortened message to display inline next to the test.
+   * 
+   * @param text - The full output of the PHPUnit test run.
+   * @returns The success status and a shortened message for the test class.
+   */
   static parsePhpUnitOutputForClassTest(text: string) {
     const result = Constants.classOutputRegex.exec(text);
 
@@ -48,6 +64,16 @@ export default class TestRunnerHelper {
     return { errorStatus: true, output: Constants.timeoutMessage };
   }
 
+  /**
+   * Parse the full output of the PHPUnit test run (for a test class) and
+   * determine the success status of the test and a shortened message
+   * for the individual test to display. Note: Currently the passing output message,
+   * {@link Constants.individualTestPassedMessage}, is not displayed.
+   * 
+   * @param text - The full output of the PHPUnit test run.
+   * @param name - The function name of the given test.
+   * @returns The success status and a shortened message for the individual test.
+   */
   static parsePhpUnitOutputForIndividualTest(text: string, name: string) {
     const regexString = `(${name}(?:[^\\)])*).*(?:Tests:.*Assertions.*(?:Incomplete|Risky|Skipped|Failures)(?:\\w*[^\\r\\n\\.])*)`;
     const regex = new RegExp(regexString, "is");
@@ -65,6 +91,15 @@ export default class TestRunnerHelper {
     return Constants.individualTestPassedMessage;
   }
 
+  /**
+   * Run any promise against a given time (seconds) and cancel the promise
+   * if the timeout is exceeded.
+   * 
+   * @param promise - The promise to run.
+   * @param timeout - The time (seconds) before the promise is cancelled.
+   * @param timeoutMessage - The message to display if the timeout is met before the promise is complete. 
+   * @returns The promise, if finished before the timeout, or a timeout message.
+   */
   static promiseWithTimeout(promise: any, timeout: number, timeoutMessage: string) {
     if (!timeout) {
       return promise;
@@ -73,7 +108,7 @@ export default class TestRunnerHelper {
     const timeoutPromise = new Promise((resolve) => {
       setTimeout(() => {
         resolve(timeoutMessage);
-      }, timeout);
+      }, timeout * 1000);
     });
 
     return Promise.race([promise, timeoutPromise]);

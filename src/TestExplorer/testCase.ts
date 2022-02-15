@@ -9,12 +9,25 @@ export default class TestCase {
   private fsPath: string;
   public generation: number;
 
+  /**
+   * Initialize the test case.
+   * 
+   * @param currentTest - The name of the test.
+   * @param fsPath - The file path to the test.
+   * @param generation - The level of the test.
+   */
   constructor(currentTest: string, fsPath: vscode.Uri, generation: number) {
     this.currentTest = currentTest;
     this.fsPath = fsPath.fsPath;
     this.generation = generation;
   }
 
+  /**
+   * Execute the given test case and append the test output.
+   * 
+   * @param item - The test item to run.
+   * @param options - The test run options.
+   */
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
     const args = [...TestExplorerConfiguration.sharedArgs(), ...TestExplorerConfiguration.args()];

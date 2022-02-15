@@ -124,6 +124,13 @@ export default class PhpUnit {
     return workingDirectory;
   }
 
+  /**
+   * Sets the arguments and returns the command for the node process.
+   * 
+   * @param phpunitPath - The executable path for PHP Unit.
+   * @param workingDirectory  - The working directory the child process spawns in.
+   * @returns The command to spawn a child process with.
+   */
   private setArguments(phpunitPath: string, workingDirectory: string): string {
     if (this.putFsPathIntoArgs) {
       const fsPath = PathHelper.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);

@@ -11,6 +11,13 @@ const textDecoder = new TextDecoder("utf-8");
 
 let generationCounter = 0;
 
+/**
+ * Retrieve content from a file that is not currently
+ * open within a VSCode editor.
+ * 
+ * @param uri - The path of the file to read.
+ * @returns The content of the given file.
+ */
 export const getContentFromFilesystem = async (uri: vscode.Uri) => {
   try {
     const rawContent = await vscode.workspace.fs.readFile(uri);
@@ -24,6 +31,13 @@ export const getContentFromFilesystem = async (uri: vscode.Uri) => {
 export class TestFile {
   public didResolve = false;
 
+  /**
+   * Updates the given test item for a test file
+   * that is not currently open within a VSCode editor.
+   * 
+   * @param controller - The controller for the test run.
+   * @param item - The test item to update.
+   */
   public async updateFromDisk(controller: vscode.TestController, item: vscode.TestItem) {
     try {
       const content = await getContentFromFilesystem(item.uri!);
@@ -34,6 +48,14 @@ export class TestFile {
     }
   }
 
+  /**
+   * Parses the tests from the content text and updates the tests
+   * within the file to contain those of the content text.
+   * 
+   * @param controller - The controller for the test run.
+   * @param content - The full text of the file.
+   * @param item - The test item to update.
+   */
   public updateFromContents(controller: vscode.TestController, content: string, item: vscode.TestItem) {
     const ancestors = [{ item, children: [] as vscode.TestItem[] }];
     const thisGeneration = generationCounter++;

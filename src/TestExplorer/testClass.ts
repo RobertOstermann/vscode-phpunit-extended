@@ -11,12 +11,25 @@ export default class TestClass {
   private fsPath: string;
   public generation: number;
 
+  /**
+   * Initialize the test class.
+   * 
+   * @param currentTest - The name of the test.
+   * @param fsPath - The file path to the test.
+   * @param generation - The generation of the test.
+   */
   constructor(currentTest: string, fsPath: vscode.Uri, generation: number) {
     this.currentTest = currentTest;
     this.fsPath = fsPath.fsPath;
     this.generation = generation;
   }
 
+  /**
+   * Execute the given test class and append the test output.
+   * 
+   * @param item - The test item to run.
+   * @param options - The test run options.
+   */
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
     const args = [...TestExplorerConfiguration.sharedArgs(), ...TestExplorerConfiguration.args()];
@@ -59,6 +72,17 @@ export default class TestClass {
     }
   }
 
+  /**
+   * This is useful when running class tests.
+   * Appends the success or error status to each individual test.
+   * Does not currently append an output message to passing tests.
+   * 
+   * @param parent - The test item.
+   * @param options - The test run options.
+   * @param output - The output of the test.
+   * @param success - The success status of the test.
+   * @param error - The error status of the test.
+   */
   private populateChildTestOutput(parent: vscode.TestItem, options: vscode.TestRun, output: string, success: boolean, error: boolean) {
     parent.children.forEach(item => {
       const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label);

@@ -3,6 +3,9 @@ import * as vscode from "vscode";
 import SharedConfiguration from "../../Helpers/configuration";
 
 export default class TestExplorerConfiguration extends SharedConfiguration {
+  /**
+   * Initialize the configuration options that require a reload upon change.
+   */
   static initialize(): void {
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (
@@ -27,18 +30,27 @@ export default class TestExplorerConfiguration extends SharedConfiguration {
     });
   }
 
+  /**
+   * @returns The test explorer arguments.
+   */
   static args(): string[] {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
-      .get("args", []);;
+      .get("args", []);
   }
 
+  /**
+   * @returns Discover all tests within the workspace or only discover tests in opened files.
+   */
   static discoverAllTests(): boolean {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
       .get("discoverAllTests");
   }
 
+  /**
+   * @returns The file regex to determine the test files.
+   */
   static fileRegex(): RegExp {
     const regexString: string = vscode.workspace
       .getConfiguration("phpunit.testExplorer")
@@ -47,12 +59,18 @@ export default class TestExplorerConfiguration extends SharedConfiguration {
     return new RegExp(regexString, "gi");
   }
 
+  /**
+   * @returns The folder pattern to determine the files to watch.
+   */
   static folderPattern(): string {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
       .get("folderPattern");
   }
 
+  /**
+   * @returns The function regex to determine the tests to run.
+   */
   static functionRegex(): RegExp {
     const regexString: string = vscode.workspace
       .getConfiguration("phpunit.testExplorer")
@@ -63,30 +81,45 @@ export default class TestExplorerConfiguration extends SharedConfiguration {
     return new RegExp(regexString, "gi");
   }
 
+  /**
+   * @returns Determines if the function regex should evaluate multiple lines.
+   */
   static multilineFunctionRegex(): boolean {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
       .get("multilineFunctionRegex");
   }
 
+  /**
+   * @returns The number of tests to run in parallel.
+   */
   static parallelTests(): number {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
       .get("parallelTests");
   }
 
+  /**
+   * @returns The times when the output is added.
+   */
   static showOutput(): string {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
       .get("showOutput");
   }
 
+  /**
+   * @returns The time allotted for each test.
+   */
   static timeout(): number {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
       .get("timeout");
   }
 
+  /**
+   * @returns Run all individual tests instead of using the test class to populate individual output.
+   */
   static verboseTestExplorerOutput(): boolean {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")

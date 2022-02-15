@@ -1,8 +1,8 @@
-import * as vscode from 'vscode';
-import TestExplorerConfiguration from './Helpers/configuration';
+import * as vscode from "vscode";
 
-import OptionsHelper from './Helpers/optionsHelper';
-import TestRunner from './testRunner';
+import TestExplorerConfiguration from "./Helpers/configuration";
+import OptionsHelper from "./Helpers/optionsHelper";
+import TestRunner from "./testRunner";
 
 export default class TestCase {
   private currentTest: string;
@@ -17,7 +17,7 @@ export default class TestCase {
 
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
-    let args = [...TestExplorerConfiguration.sharedArgs(), ...TestExplorerConfiguration.args()];
+    const args = [...TestExplorerConfiguration.sharedArgs(), ...TestExplorerConfiguration.args()];
 
     if (TestExplorerConfiguration.configurationPath()) {
       args.unshift(TestExplorerConfiguration.configurationPath());

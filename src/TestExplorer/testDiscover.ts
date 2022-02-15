@@ -1,6 +1,7 @@
-import * as vscode from 'vscode';
-import TestExplorerConfiguration from './Helpers/configuration';
-import { testData, TestFile } from './testFile';
+import * as vscode from "vscode";
+
+import TestExplorerConfiguration from "./Helpers/configuration";
+import { testData, TestFile } from "./testFile";
 
 export default class TestDiscover {
   static startWatchingWorkspace(controller: vscode.TestController) {
@@ -42,7 +43,7 @@ export default class TestDiscover {
   }
 
   static updateNodeForDocument(controller: vscode.TestController, document: vscode.TextDocument) {
-    if (!document || document.uri.scheme !== 'file' || !TestDiscover.validTestFilePath(document.uri.path)) {
+    if (!document || document.uri.scheme !== "file" || !TestDiscover.validTestFilePath(document.uri.path)) {
       return;
     }
 
@@ -63,7 +64,7 @@ export default class TestDiscover {
       return { file: existing, data: testData.get(existing) as TestFile };
     }
 
-    const file = controller.createTestItem(uri.toString(), uri.path.split('/').pop()!, uri);
+    const file = controller.createTestItem(uri.toString(), uri.path.split("/").pop()!, uri);
     file.canResolveChildren = true;
     controller.items.add(file);
 

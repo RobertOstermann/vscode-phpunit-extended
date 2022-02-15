@@ -1,6 +1,6 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-import { PhpUnit } from '../phpUnit';
+import PhpUnit from "../phpUnit";
 
 export class RunLastTest {
   private outputChannel: any;

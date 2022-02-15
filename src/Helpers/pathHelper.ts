@@ -1,18 +1,16 @@
-import * as vscode from 'vscode';
-import fs = require('fs');
-import os = require('os');
-import SharedConfiguration from './configuration';
+import * as vscode from "vscode";
+import fs = require("fs");
 
 export default class PathHelper {
-  static findWorkingDirectory(currentPath: string = '') {
-    return this.findNearestFileFullPath('phpunit.xml', currentPath)
-      || this.findNearestFileFullPath('phpunit.xml.dist', currentPath);
+  static findWorkingDirectory(currentPath = "") {
+    return this.findNearestFileFullPath("phpunit.xml", currentPath)
+      || this.findNearestFileFullPath("phpunit.xml.dist", currentPath);
   }
 
-  static findNearestFileFullPath(fileRelativeName: string, currentPath: string = '') {
+  static findNearestFileFullPath(fileRelativeName: string, currentPath = "") {
     let rootPath: string = null;
-    currentPath = currentPath !== '' ? currentPath : this.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);
-    for (let workspaceFolder of vscode.workspace.workspaceFolders) {
+    currentPath = currentPath !== "" ? currentPath : this.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);
+    for (const workspaceFolder of vscode.workspace.workspaceFolders) {
       const workspacePath = workspaceFolder.uri.fsPath;
       if (currentPath.includes(workspacePath)) {
         rootPath = workspacePath;
@@ -20,7 +18,8 @@ export default class PathHelper {
       }
     }
 
-    currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, '');
+    // eslint-disable-next-line no-useless-escape
+    currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, "");
 
     const fileFullPath = `${currentPath}/${fileRelativeName}`;
 
@@ -35,11 +34,11 @@ export default class PathHelper {
 
   static normalizePath(path: string): string {
     if (/^win/.test(process.platform)) {
-      return path.replace(/\\/g, '/');
+      return path.replace(/\\/g, "/");
     }
 
     return path
-      .replace(/\\/g, '/') // Convert backslashes from windows paths to forward slashes.
-      .replace(/ /g, '\\ '); // Escape spaces.
+      .replace(/\\/g, "/") // Convert backslashes from windows paths to forward slashes.
+      .replace(/ /g, "\\ "); // Escape spaces.
   }
 }

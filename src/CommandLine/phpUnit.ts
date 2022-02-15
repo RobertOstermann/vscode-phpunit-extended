@@ -1,13 +1,13 @@
 /* eslint-disable no-useless-escape */
-import * as vscode from 'vscode';
-import cp = require('child_process');
-import fs = require('fs');
-import CommandLineConfiguration from './Helpers/configuration';
-import { SpawnOptions } from 'child_process';
-import { ShowOutput, WorkingDirectory } from '../Helpers/enums';
-import PathHelper from '../Helpers/pathHelper';
+import * as vscode from "vscode";
+import cp = require("child_process");
+import { SpawnOptions } from "child_process";
 
-export class PhpUnit {
+import { ShowOutput, WorkingDirectory } from "../Helpers/enums";
+import PathHelper from "../Helpers/pathHelper";
+import CommandLineConfiguration from "./Helpers/configuration";
+
+export default class PhpUnit {
   private args: string[];
   private putFsPathIntoArgs: boolean;
   private outputChannel: vscode.OutputChannel;
@@ -31,12 +31,12 @@ export class PhpUnit {
   }
 
   private execThroughComposer() {
-    const phpUnitComposerBinFile = PathHelper.findNearestFileFullPath('vendor/bin/phpunit');
+    const phpUnitComposerBinFile = PathHelper.findNearestFileFullPath("vendor/bin/phpunit");
 
     if (phpUnitComposerBinFile != null) {
       this.execPhpUnit(phpUnitComposerBinFile);
     } else {
-      vscode.window.showErrorMessage('Couldn\'t find a vendor/bin/phpunit file.');
+      vscode.window.showErrorMessage("Couldn't find a vendor/bin/phpunit file.");
     }
   }
 
@@ -65,7 +65,7 @@ export class PhpUnit {
 
     PhpUnit.currentTest = phpunitProcess;
 
-    this.outputChannel.appendLine(`${phpunitPath} ${this.args.join(' ')}\n`);
+    this.outputChannel.appendLine(`${phpunitPath} ${this.args.join(" ")}\n`);
 
     phpunitProcess.stderr.on("data", (buffer: Buffer) => {
       this.outputChannel.append(buffer.toString());
@@ -74,15 +74,15 @@ export class PhpUnit {
       this.outputChannel.append(buffer.toString());
     });
     phpunitProcess.on("close", (code) => {
-      this.outputChannel.appendLine('\n-------------------------------------------------------\n');
+      this.outputChannel.appendLine("\n-------------------------------------------------------\n");
       const status = code == 0 ? ShowOutput.Ok : ShowOutput.Error;
       if ((showOutput == ShowOutput.Ok && code == 0) || (showOutput == ShowOutput.Error && code == 1)) {
         this.outputChannel.show();
       }
 
-      vscode.workspace.getConfiguration('phpunit').scriptsAfterTests[status]
+      vscode.workspace.getConfiguration("phpunit").scriptsAfterTests[status]
         .forEach((script: any) => {
-          if (typeof script === 'string') {
+          if (typeof script === "string") {
             cp.spawn(script);
           } else {
             cp.spawn(script.command, script.args);
@@ -92,8 +92,8 @@ export class PhpUnit {
 
     phpunitProcess.on("exit", (code, signal) => {
       if (signal != null) {
-        this.outputChannel.append('Cancelled');
-        this.outputChannel.appendLine('\n-------------------------------------------------------\n');
+        this.outputChannel.append("Cancelled");
+        this.outputChannel.appendLine("\n-------------------------------------------------------\n");
       }
     });
 
@@ -126,7 +126,7 @@ export class PhpUnit {
 
   private setArguments(phpunitPath: string, workingDirectory: string): string {
     if (this.putFsPathIntoArgs) {
-      let fsPath = PathHelper.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);
+      const fsPath = PathHelper.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);
 
       this.args.push(fsPath);
     }
@@ -138,12 +138,12 @@ export class PhpUnit {
       putFsPathIntoArgs: false
     };
 
-    let command = '';
+    let command = "";
 
     if (/^win/.test(process.platform)) {
-      command = 'cmd';
+      command = "cmd";
       this.args.unshift(phpunitPath);
-      this.args.unshift('/c');
+      this.args.unshift("/c");
     } else {
       command = phpunitPath;
     }

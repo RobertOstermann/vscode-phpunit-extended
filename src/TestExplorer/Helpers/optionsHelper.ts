@@ -1,4 +1,4 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
 export default class OptionsHelper {
   static appendItemOutput(item: vscode.TestItem, options: vscode.TestRun, message: string): void {

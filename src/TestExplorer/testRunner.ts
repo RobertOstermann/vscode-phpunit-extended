@@ -1,10 +1,10 @@
 import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
+
 import Commands from "../CommandLine/commands";
 import { ShowOutput, WorkingDirectory } from "../Helpers/enums";
 import PathHelper from "../Helpers/pathHelper";
 import TestExplorerConfiguration from "./Helpers/configuration";
-
 import Constants from "./Helpers/constants";
 import TestProcess from "./testProcess";
 import TestRunnerHelper from "./testRunnerHelper";
@@ -51,6 +51,7 @@ export default class TestRunner {
 
     const command = this.setArguments(phpunitPath);
     const spawnOptions: SpawnOptions = {
+      // eslint-disable-next-line no-useless-escape
       cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
       env: TestExplorerConfiguration.envVars(),
     };
@@ -66,15 +67,16 @@ export default class TestRunner {
     const showOutput = TestExplorerConfiguration.showOutput();
     switch (showOutput) {
       case ShowOutput.Always:
-        Commands.outputChannel.appendLine(`${phpunitPath} ${this.args.join(' ')}\n`);
+        Commands.outputChannel.appendLine(`${phpunitPath} ${this.args.join(" ")}\n`);
         Commands.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
         Commands.outputChannel.show();
         break;
       case ShowOutput.Error:
         if (success) break;
-        Commands.outputChannel.appendLine(`${phpunitPath} ${this.args.join(' ')}\n`);
+        Commands.outputChannel.appendLine(`${phpunitPath} ${this.args.join(" ")}\n`);
         Commands.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
         Commands.outputChannel.show();
+        break;
       case ShowOutput.Never:
         break;
     }

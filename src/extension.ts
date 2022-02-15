@@ -1,16 +1,16 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-import Commands from './CommandLine/commands';
-import TestExplorerConfiguration from './TestExplorer/Helpers/configuration';
-import TestCase from './TestExplorer/testCase';
-import TestClass from './TestExplorer/testClass';
-import TestDiscover from './TestExplorer/testDiscover';
-import { testData, TestFile } from './TestExplorer/testFile';
+import Commands from "./CommandLine/commands";
+import TestExplorerConfiguration from "./TestExplorer/Helpers/configuration";
+import TestCase from "./TestExplorer/testCase";
+import TestClass from "./TestExplorer/testClass";
+import TestDiscover from "./TestExplorer/testDiscover";
+import { testData, TestFile } from "./TestExplorer/testFile";
 
 export async function activate(context: vscode.ExtensionContext) {
 	Commands.registerCommands(context);
 
-	const controller = vscode.tests.createTestController('PHPUnitTests', 'PHPUnit Tests');
+	const controller = vscode.tests.createTestController("PHPUnitTests", "PHPUnit Tests");
 	context.subscriptions.push(controller);
 
 	const runHandler = (request: vscode.TestRunRequest, cancellation: vscode.CancellationToken) => {
@@ -67,7 +67,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		discoverTests(request.include ?? TestDiscover.gatherTestItems(controller.items)).then(runTestQueue);
 	};
 
-	controller.createRunProfile('Run Tests', vscode.TestRunProfileKind.Run, runHandler, true);
+	controller.createRunProfile("Run Tests", vscode.TestRunProfileKind.Run, runHandler, true);
 
 	controller.resolveHandler = async item => {
 		if (!item) {

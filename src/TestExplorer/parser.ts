@@ -1,13 +1,13 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-import TestExplorerConfiguration from './Helpers/configuration';
-import Constants from './Helpers/constants';
+import TestExplorerConfiguration from "./Helpers/configuration";
+import Constants from "./Helpers/constants";
 
 export const parsePHP = (text: string, events: {
   onTest(range: vscode.Range, name: string): void;
   onClass(range: vscode.Range, name: string): void;
 }) => {
-  const lines = text.split('\n');
+  const lines = text.split("\n");
   let previousFunctionLine = 0;
 
   for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
@@ -15,7 +15,7 @@ export const parsePHP = (text: string, events: {
     let functionRegexLines = line;
 
     if (TestExplorerConfiguration.multilineFunctionRegex()) {
-      functionRegexLines = lines.slice(previousFunctionLine, lineNumber + 1).join('\n');
+      functionRegexLines = lines.slice(previousFunctionLine, lineNumber + 1).join("\n");
     }
 
     const validTestMethod = TestExplorerConfiguration.functionRegex().exec(functionRegexLines);

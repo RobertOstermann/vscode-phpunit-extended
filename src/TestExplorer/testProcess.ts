@@ -1,4 +1,4 @@
-import { ChildProcess, spawn, SpawnOptions } from 'child_process';
+import { ChildProcess, spawn, SpawnOptions } from "child_process";
 
 export default class TestProcess {
   private process: ChildProcess | null = null;
@@ -20,23 +20,23 @@ export default class TestProcess {
         return;
       }
 
-      this.process.stdout?.on('data', data => {
+      this.process.stdout?.on("data", data => {
         buffers.push(data);
       });
 
-      this.process.stderr?.on('data', data => {
+      this.process.stderr?.on("data", data => {
         buffers.push(data);
       });
 
-      this.process.on('error', (error: any) => {
+      this.process.on("error", (error: any) => {
         resolve(error.message);
       });
 
-      this.process.on('close', () => {
+      this.process.on("close", () => {
         const output = buffers.reduce((response, buffer) => {
           response += buffer.toString();
           return (response);
-        }, '');
+        }, "");
 
         resolve(output);
       });

@@ -1,13 +1,13 @@
-import * as vscode from 'vscode';
-import CommandLineConfiguration from './Helpers/configuration';
+import * as vscode from "vscode";
 
-import { PhpUnit } from "./phpUnit";
-import { CurrentFileTest } from './TestHandlers/currentFileTest';
-import { NeareastTest } from './TestHandlers/neareastTest';
-import { RunLastTest } from './TestHandlers/runLastTest';
-import { SelectWindowTest } from './TestHandlers/selectWindowTest';
-import { TestSuite } from './TestHandlers/testSuite';
-import { TestHandler } from './utils';
+import CommandLineConfiguration from "./Helpers/configuration";
+import PhpUnit from "./phpUnit";
+import { CurrentFileTest } from "./TestHandlers/currentFileTest";
+import { NeareastTest } from "./TestHandlers/neareastTest";
+import { RunLastTest } from "./TestHandlers/runLastTest";
+import { SelectWindowTest } from "./TestHandlers/selectWindowTest";
+import { TestSuite } from "./TestHandlers/testSuite";
+import { TestHandler } from "./utils";
 
 export class TestRunner {
   private outputChannel: vscode.OutputChannel;
@@ -17,27 +17,27 @@ export class TestRunner {
   }
 
   public runTest() {
-    this.executeTest('select-window');
+    this.executeTest("select-window");
   }
 
   public runCurrentFileTest() {
-    this.executeTest('current-file');
+    this.executeTest("current-file");
   }
 
   public runTestSuite() {
-    this.executeTest('suite');
+    this.executeTest("suite");
   }
 
   public runTestSuiteWithExclusions() {
-    this.executeTest('suite-with-exclusions');
+    this.executeTest("suite-with-exclusions");
   }
 
   public runNearestTest() {
-    this.executeTest('nearest');
+    this.executeTest("nearest");
   }
 
   public runLastTest() {
-    this.executeTest('last');
+    this.executeTest("last");
   }
 
   public cancelCurrentTest() {
@@ -55,22 +55,22 @@ export class TestRunner {
     }
 
     switch (type) {
-      case 'select-window':
+      case "select-window":
         testHandler = new SelectWindowTest(editor, args, this.outputChannel);
         break;
-      case 'current-file':
+      case "current-file":
         testHandler = new CurrentFileTest(args, this.outputChannel);
         break;
-      case 'suite':
+      case "suite":
         testHandler = new TestSuite(args, this.outputChannel);
         break;
-      case 'suite-with-exclusions':
+      case "suite-with-exclusions":
         testHandler = new TestSuite(args, this.outputChannel, true);
         break;
-      case 'nearest':
+      case "nearest":
         testHandler = new NeareastTest(editor, args, this.outputChannel);
         break;
-      case 'last':
+      case "last":
         testHandler = new RunLastTest(this.outputChannel);
         break;
     }

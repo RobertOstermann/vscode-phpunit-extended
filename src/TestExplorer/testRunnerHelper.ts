@@ -1,11 +1,10 @@
-import fs = require('fs');
-import Constants from './Helpers/constants';
+import Constants from "./Helpers/constants";
 
 export default class TestRunnerHelper {
   static parsePhpUnitOutput(text: string) {
-    const lines = text.split('\n');
+    const lines = text.split("\n");
 
-    for (let line of lines) {
+    for (const line of lines) {
       const successMessage = Constants.phpUnitSuccessRegex.exec(line);
       if (successMessage) {
         const [message] = successMessage;
@@ -51,7 +50,7 @@ export default class TestRunnerHelper {
 
   static parsePhpUnitOutputForIndividualTest(text: string, name: string) {
     const regexString = `(${name}(?:[^\\)])*).*(?:Tests:.*Assertions.*(?:Incomplete|Risky|Skipped|Failures)(?:\\w*[^\\r\\n\\.])*)`;
-    const regex = new RegExp(regexString, 'is');
+    const regex = new RegExp(regexString, "is");
     const result = regex.exec(text);
 
     if (result) {

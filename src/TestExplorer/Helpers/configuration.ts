@@ -1,5 +1,6 @@
-import * as vscode from 'vscode';
-import SharedConfiguration from '../../Helpers/configuration';
+import * as vscode from "vscode";
+
+import SharedConfiguration from "../../Helpers/configuration";
 
 export default class TestExplorerConfiguration extends SharedConfiguration {
   static initialize(): void {
@@ -11,15 +12,15 @@ export default class TestExplorerConfiguration extends SharedConfiguration {
         event.affectsConfiguration("phpunit.testExplorer.functionRegex") ||
         event.affectsConfiguration("phpunit.testExplorer.multilineFunctionRegex")
       ) {
-        const action = 'Reload';
+        const action = "Reload";
         vscode.window
           .showInformationMessage(
-            `Reload window for configuration change to take effect.`,
+            "Reload window for configuration change to take effect.",
             action
           )
           .then(selectedAction => {
             if (selectedAction === action) {
-              vscode.commands.executeCommand('workbench.action.reloadWindow');
+              vscode.commands.executeCommand("workbench.action.reloadWindow");
             }
           });
       }
@@ -43,7 +44,7 @@ export default class TestExplorerConfiguration extends SharedConfiguration {
       .getConfiguration("phpunit.testExplorer")
       .get("fileRegex");
 
-    return new RegExp(regexString, 'gi');
+    return new RegExp(regexString, "gi");
   }
 
   static folderPattern(): string {

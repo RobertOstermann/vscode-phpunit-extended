@@ -1,13 +1,13 @@
-import { TextDecoder } from 'util';
-import * as vscode from 'vscode';
+import { TextDecoder } from "util";
+import * as vscode from "vscode";
 
-import { parsePHP } from './parser';
-import TestCase from './testCase';
-import TestClass from './testClass';
+import { parsePHP } from "./parser";
+import TestCase from "./testCase";
+import TestClass from "./testClass";
 
 export type phpTestData = TestFile | TestClass | TestCase;
 export const testData = new WeakMap<vscode.TestItem, phpTestData>();
-const textDecoder = new TextDecoder('utf-8');
+const textDecoder = new TextDecoder("utf-8");
 
 let generationCounter = 0;
 
@@ -17,7 +17,7 @@ export const getContentFromFilesystem = async (uri: vscode.Uri) => {
     return textDecoder.decode(rawContent);
   } catch (error) {
     console.warn(`Error providing tests for ${uri.fsPath}`, error);
-    return '';
+    return "";
   }
 };
 

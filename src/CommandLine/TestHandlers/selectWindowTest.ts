@@ -1,7 +1,7 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-import { Helper } from '../Helpers/helper';
-import { PhpUnit } from '../phpUnit';
+import Helper from "../Helpers/helper";
+import PhpUnit from "../phpUnit";
 
 export class SelectWindowTest {
   private editor: vscode.TextEditor;
@@ -38,9 +38,9 @@ export class SelectWindowTest {
 
     this.getUserSelectedTest().then((selectedTest) => {
       if (selectedTest) {
-        if (selectedTest.indexOf('function - ') != -1) {
+        if (selectedTest.indexOf("function - ") != -1) {
           this.args.push("--filter");
-          this.args.push(selectedTest.replace('function - ', ''));
+          this.args.push(selectedTest.replace("function - ", ""));
         }
 
         // Run test selected in quick pick window.
@@ -53,12 +53,12 @@ export class SelectWindowTest {
     if (this.editor.document.fileName != null) {
       const testFunctions = [];
 
-      const currentTest = Helper.getClassNameOrMethod(this.editor, 'method');
+      const currentTest = Helper.getClassNameOrMethod(this.editor, "method");
       if (currentTest) {
-        testFunctions.push('function - ' + currentTest);
+        testFunctions.push("function - " + currentTest);
       }
 
-      testFunctions.push('class - ' + Helper.getClassNameOrMethod(this.editor, 'class'));
+      testFunctions.push("class - " + Helper.getClassNameOrMethod(this.editor, "class"));
 
       const windowText = this.editor.document.getText();
       let result = null;
@@ -67,7 +67,7 @@ export class SelectWindowTest {
         const testToAdd = result[2].toString().trim();
 
         if (!testFunctions.length || testFunctions[0] != testToAdd) {
-          testFunctions.push('function - ' + testToAdd);
+          testFunctions.push("function - " + testToAdd);
         }
       }
 

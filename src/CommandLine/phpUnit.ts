@@ -14,12 +14,20 @@ export default class PhpUnit {
   public static lastCommand: { args: string[]; putFsPathIntoArgs: boolean; phpunitPath: string; workingDirectory: string; };
   public static currentTest: cp.ChildProcess;
 
+  /**
+   * @param outputChannel - The output channel to display the results.
+   * @param args - The arguments to pass into the command.
+   * @param putFsPathIntoArgs - Determines whether or not to puth the fsPath into the arguments.
+   */
   constructor(outputChannel: vscode.OutputChannel, args: string[], putFsPathIntoArgs = true) {
     this.outputChannel = outputChannel;
     this.args = args;
     this.putFsPathIntoArgs = putFsPathIntoArgs;
   }
 
+  /**
+   * Executes the test using either composer or the given PHPUnit path.
+   */
   public run() {
     const phpunitPath = CommandLineConfiguration.execPath();
 
@@ -30,6 +38,9 @@ export default class PhpUnit {
     }
   }
 
+  /**
+   * Finds the composer installation of PHPUnit and executes the test.
+   */
   private execThroughComposer() {
     const phpUnitComposerBinFile = PathHelper.findNearestFileFullPath("vendor/bin/phpunit");
 
@@ -40,6 +51,12 @@ export default class PhpUnit {
     }
   }
 
+  /**
+   * Execute PHPUnit using the given `phpunitPath`, as well as
+   * the `args` and `fsPath` set up in the constructor.
+   * 
+   * @param phpunitPath - The executable path to PHP Unit.
+   */
   public execPhpUnit(phpunitPath: string) {
     const showOutput = CommandLineConfiguration.showOutput();
     this.outputChannel.clear();
@@ -102,6 +119,9 @@ export default class PhpUnit {
     }
   }
 
+  /**
+   * Stop running the current test.
+   */
   static cancelCurrentTest() {
     if (PhpUnit.currentTest) {
       PhpUnit.currentTest.kill();
@@ -111,6 +131,13 @@ export default class PhpUnit {
     }
   }
 
+  /**
+   * `phpunit.workingDirectory = 'Find'` - Find the working directory using the given `fsPath`.
+   * `phpunit.workingDirectory = 'Parent'` - Set the working directory as `undefined`.
+   * `phpunit.workingDirectory = '{path}'` - Get the given path for the working directory.
+   * 
+   * @returns The path to the working directory where the child process will spawn.
+   */
   private getWorkingDirectory(): string {
     let workingDirectory = CommandLineConfiguration.workingDirectory();
     switch (workingDirectory.toLowerCase()) {

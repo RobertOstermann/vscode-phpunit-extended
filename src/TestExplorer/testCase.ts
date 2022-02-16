@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
 import TestExplorerConfiguration from "./Helpers/configuration";
-import OptionsHelper from "./Helpers/optionsHelper";
+import OutputHelper from "./Helpers/outputHelper";
 import TestRunner from "./testRunner";
 
 export default class TestCase {
@@ -46,9 +46,9 @@ export default class TestCase {
       const duration = Date.now() - start;
 
       if (success) {
-        OptionsHelper.appendPassedOutput(item, options, message, output, duration);
+        OutputHelper.appendPassedOutput(item, options, message, output, duration);
       } else {
-        OptionsHelper.appendFailedOutput(item, options, message, output, duration);
+        OutputHelper.appendFailedOutput(item, options, message, output, duration);
       }
     } else {
       const testMessage = new vscode.TestMessage(`${item.label} not found`);

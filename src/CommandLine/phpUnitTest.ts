@@ -16,34 +16,60 @@ export class TestRunner {
     this.outputChannel = channel;
   }
 
+  /**
+   * Open a window to select the test to run.
+   */
   public runTest() {
     this.executeTest("select-window");
   }
 
+  /**
+   * Execute the current file.
+   */
   public runCurrentFileTest() {
     this.executeTest("current-file");
   }
 
+  /**
+   * Execute a test suite.
+   */
   public runTestSuite() {
     this.executeTest("suite");
   }
 
+  /**
+   * Execute a test suite with exclusions.
+   */
   public runTestSuiteWithExclusions() {
     this.executeTest("suite-with-exclusions");
   }
 
+  /**
+   * Execute the test closest to the cursor.
+   */
   public runNearestTest() {
     this.executeTest("nearest");
   }
 
+  /**
+   * Re-run the previous command.
+   */
   public runLastTest() {
     this.executeTest("last");
   }
 
+  /**
+   * Cancel the test that is currently running.
+   */
   public cancelCurrentTest() {
     PhpUnit.cancelCurrentTest();
   }
 
+  /**
+   * Execute the test given the type of the test.
+   * 
+   * @param type - The test to run.
+   */
   private executeTest(type: string) {
     const args = [...CommandLineConfiguration.sharedArgs(), ...CommandLineConfiguration.args()];
     const editor = vscode.window.activeTextEditor;

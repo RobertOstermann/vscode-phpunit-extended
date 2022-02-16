@@ -8,12 +8,22 @@ export class SelectWindowTest {
   private args: string[];
   private outputChannel: vscode.OutputChannel;
 
+  /**
+   * @param editor - The VSCode text editor.
+   * @param args - The arguments to pass into the command.
+   * @param outputChannel - The output channel to display the results.
+   */
   constructor(editor: vscode.TextEditor, args: string[], outputChannel: vscode.OutputChannel) {
     this.editor = editor;
     this.args = args;
     this.outputChannel = outputChannel;
   }
 
+  /**
+   * Display a quick-select window and allow
+   * the user to choose the test to execute.
+   * Run the test using {@link PhpUnit}.
+   */
   public run() {
     const range = this.editor
       ? this.editor.document.getWordRangeAtPosition(this.editor.selection.active)

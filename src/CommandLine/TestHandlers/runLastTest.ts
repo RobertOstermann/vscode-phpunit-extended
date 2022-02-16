@@ -5,10 +5,16 @@ import PhpUnit from "../phpUnit";
 export class RunLastTest {
   private outputChannel: any;
 
+  /**
+   * @param outputChannel - The output channel to display the results.
+   */
   constructor(outputChannel: vscode.OutputChannel) {
     this.outputChannel = outputChannel;
   }
 
+  /**
+   * Re-run the previous test using {@link PhpUnit}.
+   */
   public run() {
     if (PhpUnit.lastCommand == null) {
       this.outputChannel.appendLine("No previous test available.");

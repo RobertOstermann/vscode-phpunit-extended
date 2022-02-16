@@ -100,7 +100,7 @@ export default class TestExplorerConfiguration extends SharedConfiguration {
   }
 
   /**
-   * @returns The times when the output is added.
+   * @returns The situation to display the output channel.
    */
   static showOutput(): string {
     return vscode.workspace

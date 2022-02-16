@@ -6,10 +6,20 @@ export default class Helper {
     class: /class\s+(\w*)\s*{?/gi
   };
 
+  /**
+   * @returns The method regex and the class regex.
+   */
   static getRegex() {
     return this.regex;
   }
 
+  /**
+   * Retrieves the name of the method or class nearest to the cursor.
+   *
+   * @param editor - The VSCode text editor.
+   * @param type - The type of the test, either `method` or `class`.
+   * @returns The name of the method or class.
+   */
   static getClassNameOrMethod(editor: vscode.TextEditor, type: string): string | undefined {
     if (this.regex.hasOwnProperty.call(type)) {
       throw new Error("Invalid type property passed: " + type);

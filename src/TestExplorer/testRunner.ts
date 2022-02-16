@@ -1,11 +1,11 @@
 import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
 
-import Commands from "../CommandLine/commands";
 import { ShowOutput, WorkingDirectory } from "../Helpers/enums";
 import PathHelper from "../Helpers/pathHelper";
 import TestExplorerConfiguration from "./Helpers/configuration";
 import Constants from "./Helpers/constants";
+import OutputHelper from "./Helpers/outputHelper";
 import TestProcess from "./testProcess";
 import TestRunnerHelper from "./testRunnerHelper";
 
@@ -58,8 +58,8 @@ export default class TestRunner {
   }
 
   /**
-   * Execute PHPUnit using the given `phpunitPath`, as well as the `args` and `fsPath` set up
-   * in the constructor.
+   * Execute PHPUnit using the given `phpunitPath`, as well as
+   * the `args` and `fsPath` set up in the constructor.
    * 
    * @param phpunitPath - The executable path to PHP Unit.
    * @returns The success status, a shortened message, and the full output for the test run.
@@ -90,15 +90,15 @@ export default class TestRunner {
     const showOutput = TestExplorerConfiguration.showOutput();
     switch (showOutput) {
       case ShowOutput.Always:
-        Commands.outputChannel.appendLine(`${phpunitPath} ${this.args.join(" ")}\n`);
-        Commands.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
-        Commands.outputChannel.show();
+        OutputHelper.outputChannel.appendLine(`${phpunitPath} ${this.args.join(" ")}\n`);
+        OutputHelper.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
+        OutputHelper.outputChannel.show();
         break;
       case ShowOutput.Error:
         if (success) break;
-        Commands.outputChannel.appendLine(`${phpunitPath} ${this.args.join(" ")}\n`);
-        Commands.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
-        Commands.outputChannel.show();
+        OutputHelper.outputChannel.appendLine(`${phpunitPath} ${this.args.join(" ")}\n`);
+        OutputHelper.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
+        OutputHelper.outputChannel.show();
         break;
       case ShowOutput.Never:
         break;

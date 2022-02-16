@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 
 import TestExplorerConfiguration from "./Helpers/configuration";
 import Constants from "./Helpers/constants";
-import OptionsHelper from "./Helpers/optionsHelper";
+import OutputHelper from "./Helpers/outputHelper";
 import TestRunner from "./testRunner";
 import TestRunnerHelper from "./testRunnerHelper";
 
@@ -51,7 +51,7 @@ export default class TestClass {
       let error = false;
 
       if (success) {
-        OptionsHelper.appendPassedOutput(item, options, message, output, duration);
+        OutputHelper.appendPassedOutput(item, options, message, output, duration);
       } else {
         if (message === Constants.timeoutMessage) {
           errorMessage = message;
@@ -61,14 +61,14 @@ export default class TestClass {
           error = errorStatus;
           errorMessage = errorOutput;
         }
-        OptionsHelper.appendFailedOutput(item, options, errorMessage, output, duration);
+        OutputHelper.appendFailedOutput(item, options, errorMessage, output, duration);
       }
 
       if (!TestExplorerConfiguration.verboseTestExplorerOutput()) {
         this.populateChildTestOutput(item, options, output, success, error);
       }
     } else {
-      OptionsHelper.appendFailedOutput(item, options);
+      OutputHelper.appendFailedOutput(item, options);
     }
   }
 
@@ -88,12 +88,12 @@ export default class TestClass {
       const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label);
 
       if (success || (testResult === Constants.individualTestPassedMessage && !error)) {
-        OptionsHelper.appendPassedOutput(item, options);
+        OutputHelper.appendPassedOutput(item, options);
       } else {
         if (error) {
-          OptionsHelper.appendFailedOutput(item, options);
+          OutputHelper.appendFailedOutput(item, options);
         } else {
-          OptionsHelper.appendFailedOutput(item, options, testResult);
+          OutputHelper.appendFailedOutput(item, options, testResult);
         }
       }
     });

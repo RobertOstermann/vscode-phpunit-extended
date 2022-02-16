@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 
-export default class OptionsHelper {
+export default class OutputHelper {
+  static outputChannel = vscode.window.createOutputChannel("phpunit");
+
   /**
    * Appends a passed output to the given test and
    * appends the full output to the test output.
@@ -19,11 +21,11 @@ export default class OptionsHelper {
     }
 
     if (message) {
-      OptionsHelper.appendItemOutput(item, options, message);
+      OutputHelper.appendItemOutput(item, options, message);
     }
 
     if (output) {
-      OptionsHelper.appendOutput(item, options, output);
+      OutputHelper.appendOutput(item, options, output);
     }
   }
 
@@ -45,11 +47,11 @@ export default class OptionsHelper {
     }
 
     if (message) {
-      OptionsHelper.appendItemOutput(item, options, message);
+      OutputHelper.appendItemOutput(item, options, message);
     }
 
     if (output) {
-      OptionsHelper.appendOutput(item, options, output);
+      OutputHelper.appendOutput(item, options, output);
     }
   }
 

@@ -6,6 +6,11 @@ export default class Commands {
   static outputChannel = vscode.window.createOutputChannel("phpunit");
   static PHPUnitTestRunner: TestRunner = new TestRunner(Commands.outputChannel);
 
+  /**
+   * Register the extension commands with VSCode.
+   * 
+   * @param context - The VSCode extension context.
+   */
   public static registerCommands(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand("phpunit.Test", () => {
       Commands.PHPUnitTestRunner.runTest();

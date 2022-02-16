@@ -12,6 +12,7 @@
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
+    "eol-last": "error",
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "tsdoc/syntax": "warn",

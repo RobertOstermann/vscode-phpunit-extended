@@ -92,6 +92,11 @@ export default class PathHelper {
       .replace(/ /g, "\\ "); // Escape spaces.
   }
 
+  /**
+   * Retrieve the path mappings to remap current paths.
+   * 
+   * @returns The path mappings from either the ssh or docker user settings.
+   */
   private static getPaths() {
     if (SharedConfiguration.docker_enable) {
       if (!SharedConfiguration.ssh_enable() || Object.keys(SharedConfiguration.docker_paths()).length !== 0)

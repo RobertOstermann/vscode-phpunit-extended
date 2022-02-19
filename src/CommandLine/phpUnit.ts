@@ -68,7 +68,7 @@ export default class PhpUnit {
       return { success: false, output: errorMessage };
     }
 
-    const command = this.setArguments(phpunitPath, workingDirectory);
+    const command = this.getCommand(phpunitPath, workingDirectory);
     const spawnOptions: SpawnOptions = {
       cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
       env: CommandLineConfiguration.envVars(),
@@ -152,18 +152,14 @@ export default class PhpUnit {
   }
 
   /**
-   * Sets the arguments and returns the command for the node process.
+   * Sets the arguments for the node process.
    * 
    * @param phpunitPath - The executable path for PHP Unit.
    * @param workingDirectory  - The working directory the child process spawns in.
-   * @returns The command to spawn a child process with.
    */
-  private setArguments(phpunitPath: string, workingDirectory: string): string {
-    if (this.putFsPathIntoArgs) {
-      const fsPath = PathHelper.remapLocalPath(vscode.window.activeTextEditor.document.uri.fsPath);
-
-      this.args.push(fsPath);
-    }
+  private getCommand(phpunitPath: string, workingDirectory: string): string {
+    this.setArguments(phpunitPath);
+    let command = "";
 
     PhpUnit.lastCommand = {
       phpunitPath,
@@ -171,8 +167,6 @@ export default class PhpUnit {
       args: this.args.slice(),
       putFsPathIntoArgs: false
     };
-
-    let command = "";
 
     if (/^win/.test(process.platform)) {
       command = "cmd";
@@ -183,5 +177,23 @@ export default class PhpUnit {
     }
 
     return command;
+  }
+
+  /**
+   * Sets the arguments for the node process.
+   * 
+   * @param phpunitPath - The executable path for PHP Unit.
+   */
+  private setArguments(phpunitPath: string) {
+    if (this.putFsPathIntoArgs) {
+      const fsPath = PathHelper.remapLocalPath(vscode.window.activeTextEditor.document.uri.fsPath);
+
+      this.args.push(fsPath);
+    }
+
+    if (/^win/.test(process.platform)) {
+      this.args.unshift(phpunitPath);
+      this.args.unshift("/c");
+    }
   }
 }

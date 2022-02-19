@@ -63,7 +63,7 @@ export default class PathHelper {
     actualPath = this.normalizePath(actualPath);
 
     if (SharedConfiguration.docker_enable() || SharedConfiguration.ssh_enable()) {
-      for (const [localPath, remotePath] of Object.entries(this.getPaths())) {
+      for (const [localPath, remotePath] of Object.entries(SharedConfiguration.path_mapping())) {
         const expandedLocalPath = localPath.replace(/^~/, os.homedir());
         if (actualPath.startsWith(expandedLocalPath)) {
           return actualPath.replace(expandedLocalPath, remotePath);
@@ -90,19 +90,5 @@ export default class PathHelper {
     return path
       .replace(/\\/g, "/") // Convert backslashes to forward slashes.
       .replace(/ /g, "\\ "); // Escape spaces.
-  }
-
-  /**
-   * Retrieve the path mappings to remap current paths.
-   * 
-   * @returns The path mappings from either the ssh or docker user settings.
-   */
-  private static getPaths() {
-    if (SharedConfiguration.docker_enable) {
-      if (!SharedConfiguration.ssh_enable() || Object.keys(SharedConfiguration.docker_paths()).length !== 0)
-        return SharedConfiguration.docker_paths();
-    }
-
-    return SharedConfiguration.ssh_paths();
   }
 }

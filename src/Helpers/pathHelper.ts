@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import fs = require("fs");
+import os = require("os");
+import SharedConfiguration from "./configuration";
 
 export default class PathHelper {
   /**
@@ -9,6 +11,8 @@ export default class PathHelper {
    * @returns The path to the working directory.
    */
   static findWorkingDirectory(currentPath = "") {
+    currentPath = this.remapLocalPath(currentPath);
+
     return this.findNearestFileFullPath("phpunit.xml", currentPath)
       || this.findNearestFileFullPath("phpunit.xml.dist", currentPath);
   }
@@ -23,14 +27,16 @@ export default class PathHelper {
    */
   static findNearestFileFullPath(fileRelativeName: string, currentPath = "") {
     let rootPath: string = null;
-    currentPath = currentPath !== "" ? currentPath : this.normalizePath(vscode.window.activeTextEditor.document.uri.fsPath);
+    currentPath = currentPath !== "" ? currentPath : this.remapLocalPath(vscode.window.activeTextEditor.document.uri.fsPath);
     for (const workspaceFolder of vscode.workspace.workspaceFolders) {
-      const workspacePath = workspaceFolder.uri.fsPath;
+      const workspacePath = this.remapLocalPath(workspaceFolder.uri.fsPath);
       if (currentPath.includes(workspacePath)) {
         rootPath = workspacePath;
         break;
       }
     }
+
+    if (rootPath === null) return null;
 
     // eslint-disable-next-line no-useless-escape
     currentPath = currentPath.replace(/[\\\/][^\\\/]*$/, "");
@@ -38,12 +44,34 @@ export default class PathHelper {
     const fileFullPath = `${currentPath}/${fileRelativeName}`;
 
     if (fs.existsSync(fileFullPath)) {
-      return PathHelper.normalizePath(fileFullPath);
+      return fileFullPath;
     } else if (currentPath != rootPath) {
       return this.findNearestFileFullPath(fileRelativeName, currentPath);
     } else {
       return null;
     }
+  }
+
+  /**
+   * Remaps local paths that match the path mappings
+   * to have the new path mapping.
+   * 
+   * @param actualPath - The current path.
+   * @returns The path according to the path mappings.
+   */
+  static remapLocalPath(actualPath: string): string {
+    actualPath = this.normalizePath(actualPath);
+
+    if (SharedConfiguration.docker_enable() || SharedConfiguration.ssh_enable()) {
+      for (const [localPath, remotePath] of Object.entries(SharedConfiguration.path_mapping())) {
+        const expandedLocalPath = localPath.replace(/^~/, os.homedir());
+        if (actualPath.startsWith(expandedLocalPath)) {
+          return actualPath.replace(expandedLocalPath, remotePath);
+        }
+      }
+    }
+
+    return actualPath;
   }
 
   /**
@@ -54,7 +82,7 @@ export default class PathHelper {
    * @param path - The path to normalize.
    * @returns The path converted to a linux style path.
    */
-  static normalizePath(path: string): string {
+  private static normalizePath(path: string): string {
     if (/^win/.test(process.platform)) {
       return path.replace(/\\/g, "/"); // Convert backslashes to forward slashes.
     }

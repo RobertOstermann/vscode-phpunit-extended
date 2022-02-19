@@ -83,6 +83,11 @@
           "default": "",
           "description": "Path to phpunit executable (if empty it tries to use composer installation)."
         },
+        "phpunit.pathMapping": {
+          "type": "object",
+          "default": {},
+          "description": "The path mapping. Keys are local (host) paths and values are remote (guest) paths."
+        },
         "phpunit.workingDirectory": {
           "type": "string",
           "default": "Find",
@@ -170,6 +175,26 @@
           "type": "boolean",
           "default": false,
           "description": "Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test."
+        },
+        "phpunit.docker.command": {
+          "type": "string",
+          "default": "docker exec -it <container>",
+          "description": "The Docker command to execute a container."
+        },
+        "phpunit.docker.enable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run tests in a Docker container."
+        },
+        "phpunit.ssh.command": {
+          "type": "string",
+          "default": "ssh user@host",
+          "description": "The path (and flags) to an SSH-compatible binary."
+        },
+        "phpunit.ssh.enable": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run tests over ssh"
         }
       }
     },

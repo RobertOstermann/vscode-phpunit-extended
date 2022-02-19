@@ -1,6 +1,7 @@
 import { SpawnOptions } from "child_process";
 import * as vscode from "vscode";
 
+import SharedConfiguration from "../Helpers/configuration";
 import { ShowOutput, WorkingDirectory } from "../Helpers/enums";
 import PathHelper from "../Helpers/pathHelper";
 import TestExplorerConfiguration from "./Helpers/configuration";
@@ -21,7 +22,7 @@ export default class TestRunner {
    */
   constructor(args: string[], fsPath: string) {
     this.args = args;
-    this.fsPath = PathHelper.normalizePath(fsPath);
+    this.fsPath = PathHelper.remapLocalPath(fsPath);
   }
 
   /**
@@ -72,7 +73,7 @@ export default class TestRunner {
       return { success: false, output: errorMessage };
     }
 
-    const command = this.setArguments(phpunitPath);
+    const command = this.getCommand(phpunitPath);
     const spawnOptions: SpawnOptions = {
       // eslint-disable-next-line no-useless-escape
       cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
@@ -128,27 +129,55 @@ export default class TestRunner {
   }
 
   /**
-   * Sets the arguments and returns the command for the node process.
+   * Gets the command and sets the arguments for the node process.
    * 
    * @param phpunitPath - The executable path for PHPUnit.
-   * @param workingDirectory  - The working directory the child process spawns in.
    * @returns The command to spawn a child process with.
    */
-  private setArguments(phpunitPath: string): string {
-    if (this.fsPath) {
-      this.args.push(this.fsPath);
-    }
-
+  private getCommand(phpunitPath: string): string {
+    this.setArguments(phpunitPath);
     let command = "";
 
     if (/^win/.test(process.platform)) {
       command = "cmd";
-      this.args.unshift(phpunitPath);
-      this.args.unshift("/c");
     } else {
       command = phpunitPath;
     }
 
+    if (SharedConfiguration.ssh_enable()) {
+      const sshCommand = SharedConfiguration.ssh_command();
+
+      if (SharedConfiguration.docker_enable()) {
+        const dockerCommand = SharedConfiguration.docker_command();
+        command = `${dockerCommand} ${sshCommand} ${command}`;
+      } else {
+        command = `${sshCommand} ${command}`;
+      }
+
+      return command;
+    }
+
+    if (SharedConfiguration.docker_enable()) {
+      const dockerCommand = SharedConfiguration.docker_command();
+      command = `${dockerCommand} ${command}`;
+    }
+
     return command;
+  }
+
+  /**
+   * Sets the arguments for the node process.
+   * 
+   * @param phpunitPath - The executable path for PHPUnit.
+   */
+  private setArguments(phpunitPath: string) {
+    if (this.fsPath) {
+      this.args.push(this.fsPath);
+    }
+
+    if (/^win/.test(process.platform)) {
+      this.args.unshift(phpunitPath);
+      this.args.unshift("/c");
+    }
   }
 }

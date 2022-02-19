@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.7] - 2022-02-18
+
+- Add limited Docker and SSH support.
+
 ## [1.0.6] - 2022-02-14
 
 - Improve output of Test Explorer tests.

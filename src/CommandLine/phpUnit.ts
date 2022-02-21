@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import cp = require("child_process");
 import { SpawnOptions } from "child_process";
 
+import SharedConfiguration from "../Helpers/configuration";
 import { ShowOutput, WorkingDirectory } from "../Helpers/enums";
 import PathHelper from "../Helpers/pathHelper";
 import CommandLineConfiguration from "./Helpers/configuration";
@@ -159,6 +160,8 @@ export default class PhpUnit {
    */
   private getCommand(phpunitPath: string, workingDirectory: string): string {
     this.setArguments(phpunitPath);
+    const sshCommand = SharedConfiguration.ssh_command() ? SharedConfiguration.ssh_command() + " " : "";
+    const dockerCommand = SharedConfiguration.docker_command() ? SharedConfiguration.docker_command() + " " : "";
     let command = "";
 
     PhpUnit.lastCommand = {
@@ -170,10 +173,23 @@ export default class PhpUnit {
 
     if (/^win/.test(process.platform)) {
       command = "cmd";
-      this.args.unshift(phpunitPath);
-      this.args.unshift("/c");
     } else {
       command = phpunitPath;
+    }
+
+    if (SharedConfiguration.ssh_enable()) {
+      if (SharedConfiguration.docker_enable()) {
+        command = dockerCommand + sshCommand + command;
+      } else {
+        command = sshCommand + command;
+      }
+
+      return command;
+    }
+
+    if (SharedConfiguration.docker_enable()) {
+      const dockerCommand = SharedConfiguration.docker_command();
+      command = dockerCommand + command;
     }
 
     return command;

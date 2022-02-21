@@ -136,6 +136,8 @@ export default class TestRunner {
    */
   private getCommand(phpunitPath: string): string {
     this.setArguments(phpunitPath);
+    const sshCommand = SharedConfiguration.ssh_command() ? SharedConfiguration.ssh_command().concat(" ") : "";
+    const dockerCommand = SharedConfiguration.docker_command() ? SharedConfiguration.docker_command().concat(" ") : "";
     let command = "";
 
     if (/^win/.test(process.platform)) {
@@ -145,13 +147,10 @@ export default class TestRunner {
     }
 
     if (SharedConfiguration.ssh_enable()) {
-      const sshCommand = SharedConfiguration.ssh_command();
-
       if (SharedConfiguration.docker_enable()) {
-        const dockerCommand = SharedConfiguration.docker_command();
-        command = `${dockerCommand} ${sshCommand} ${command}`;
+        command = dockerCommand + sshCommand + command;
       } else {
-        command = `${sshCommand} ${command}`;
+        command = sshCommand + command;
       }
 
       return command;
@@ -159,7 +158,7 @@ export default class TestRunner {
 
     if (SharedConfiguration.docker_enable()) {
       const dockerCommand = SharedConfiguration.docker_command();
-      command = `${dockerCommand} ${command}`;
+      command = dockerCommand + command;
     }
 
     return command;

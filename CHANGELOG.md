@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.8] - 2022-02-20
+
+- Fix Docker and SSH support for the command line tests.
+
 ## [1.0.7] - 2022-02-18
 
 - Add limited Docker and SSH support.

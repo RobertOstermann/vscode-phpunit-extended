@@ -100,6 +100,14 @@
 
 ## How to use
 
+### Test Explorer
+
+Run using the `Testing` tab.
+
+![test-explorer](images/test-explorer.png)
+
+### Command Line
+
 Run with (`Cmd+Shift+P` on OSX or `Ctrl+Shift+P` on Windows and Linux) and execute:
 
 - `PHPUnit Test Nearest`: This command will search the nearest function from the cursor position until the file's beginning.

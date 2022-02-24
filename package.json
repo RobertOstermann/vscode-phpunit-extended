@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -121,6 +121,11 @@
           "default": "always",
           "description": "Show the output console after the tests run (always, error, ok)."
         },
+        "phpunit.commandLine.showOutputInTerminal": {
+          "type": "boolean",
+          "default": false,
+          "description": "Re-run the test and show the output within a terminal instead of an output channel. This only occurs when the conditions in `phpunit.commandLine.showOutput` are met."
+        },
         "phpunit.testExplorer.args": {
           "type": "array",
           "default": [],
@@ -165,6 +170,11 @@
           ],
           "default": "never",
           "description": "Show the output console after the tests run (always, error, never)."
+        },
+        "phpunit.testExplorer.showOutputInTerminal": {
+          "type": "boolean",
+          "default": false,
+          "description": "Re-run the test and show the output within a terminal instead of an output channel. This only occurs when the conditions in `phpunit.testExplorer.showOutput` are met."
         },
         "phpunit.testExplorer.timeout": {
           "type": "number",

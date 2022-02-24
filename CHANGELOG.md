@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.8] - 2022-02-23
+
+- Add `showOutputInTerminal` options to use a terminal instead of the output channel for showing output!
+
 ## [1.0.8] - 2022-02-20
 
 - Fix Docker and SSH support for the command line tests.

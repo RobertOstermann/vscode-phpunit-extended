@@ -31,6 +31,15 @@ export default class CommandLineConfiguration extends SharedConfiguration {
   }
 
   /**
+   * @returns Determines if the test should be re-run in a terminal.
+   */
+  static showOutputInTerminal(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit.commandLine")
+      .get("showOutputInTerminal");
+  }
+
+  /**
    * @returns The scripts to run after a test is completed.
    */
   static scriptsAfterTest(): any {

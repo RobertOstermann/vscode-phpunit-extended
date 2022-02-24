@@ -109,6 +109,15 @@ export default class TestExplorerConfiguration extends SharedConfiguration {
   }
 
   /**
+   * @returns Determines if the test should be re-run in a terminal.
+   */
+  static showOutputInTerminal(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit.testExplorer")
+      .get("showOutputInTerminal");
+  }
+
+  /**
    * @returns The time allotted for each test.
    */
   static timeout(): number {

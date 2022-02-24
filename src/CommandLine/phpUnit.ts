@@ -60,6 +60,7 @@ export default class PhpUnit {
    */
   public execPhpUnit(phpunitPath: string) {
     const showOutput = CommandLineConfiguration.showOutput();
+    const showOutputInTerminal = CommandLineConfiguration.showOutputInTerminal();
     this.outputChannel.clear();
 
     const workingDirectory = this.getWorkingDirectory();
@@ -69,9 +70,10 @@ export default class PhpUnit {
       return { success: false, output: errorMessage };
     }
 
+    this.setArguments();
     const command = this.getCommand(phpunitPath, workingDirectory);
     const spawnOptions: SpawnOptions = {
-      cwd: workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : undefined,
+      cwd: workingDirectory,
       env: CommandLineConfiguration.envVars(),
     };
 
@@ -83,7 +85,7 @@ export default class PhpUnit {
 
     PhpUnit.currentTest = phpunitProcess;
 
-    this.outputChannel.appendLine(`${phpunitPath} ${this.args.join(" ")}\n`);
+    this.outputChannel.appendLine(`${command} ${this.args.join(" ")}\n`);
 
     phpunitProcess.stderr.on("data", (buffer: Buffer) => {
       this.outputChannel.append(buffer.toString());
@@ -95,7 +97,11 @@ export default class PhpUnit {
       this.outputChannel.appendLine("\n-------------------------------------------------------\n");
       const status = code == 0 ? ShowOutput.Ok : ShowOutput.Error;
       if ((showOutput == ShowOutput.Ok && code == 0) || (showOutput == ShowOutput.Error && code == 1)) {
-        this.outputChannel.show();
+        if (showOutputInTerminal) {
+          this.executeInTerminal(command, this.args, workingDirectory);
+        } else {
+          this.outputChannel.show();
+        }
       }
 
       vscode.workspace.getConfiguration("phpunit").scriptsAfterTests[status]
@@ -116,7 +122,11 @@ export default class PhpUnit {
     });
 
     if (showOutput == ShowOutput.Always) {
-      this.outputChannel.show();
+      if (showOutputInTerminal) {
+        this.executeInTerminal(command, this.args, workingDirectory);
+      } else {
+        this.outputChannel.show();
+      }
     }
   }
 
@@ -149,7 +159,8 @@ export default class PhpUnit {
         workingDirectory = undefined;
         break;
     }
-    return workingDirectory;
+    // eslint-disable-next-line no-useless-escape
+    return workingDirectory ? workingDirectory.replace(/([\\\/][^\\\/]*\.[^\\\/]+)$/, "") : workingDirectory;
   }
 
   /**
@@ -159,10 +170,9 @@ export default class PhpUnit {
    * @param workingDirectory  - The working directory the child process spawns in.
    */
   private getCommand(phpunitPath: string, workingDirectory: string): string {
-    this.setArguments(phpunitPath);
     const sshCommand = SharedConfiguration.ssh_command() ? SharedConfiguration.ssh_command() + " " : "";
     const dockerCommand = SharedConfiguration.docker_command() ? SharedConfiguration.docker_command() + " " : "";
-    let command = "";
+    let command = phpunitPath;
 
     PhpUnit.lastCommand = {
       phpunitPath,
@@ -171,10 +181,8 @@ export default class PhpUnit {
       putFsPathIntoArgs: false
     };
 
-    if (/^win/.test(process.platform)) {
-      command = "cmd";
-    } else {
-      command = phpunitPath;
+    if (/^win/.test(process.platform) && !command.endsWith(".bat")) {
+      command = command + ".bat";
     }
 
     if (SharedConfiguration.ssh_enable()) {
@@ -200,16 +208,34 @@ export default class PhpUnit {
    * 
    * @param phpunitPath - The executable path for PHP Unit.
    */
-  private setArguments(phpunitPath: string) {
+  private setArguments() {
     if (this.putFsPathIntoArgs) {
       const fsPath = PathHelper.remapLocalPath(vscode.window.activeTextEditor.document.uri.fsPath);
 
       this.args.push(fsPath);
     }
+  }
 
-    if (/^win/.test(process.platform)) {
-      this.args.unshift(phpunitPath);
-      this.args.unshift("/c");
+  /**
+   * Runs a test directly in the terminal. This may result in better output
+   * than the output channel. However, it will re-run the test when using
+   * the test explorer.
+   * 
+   * @param command -  The command to execute in the terminal.
+   * @param args - The arguments to append to the command in the terminal.
+   * @param workingDirectory - The directory to use for the terminal.
+   */
+  private executeInTerminal(command: string, args: string[], workingDirectory: string = undefined) {
+    const terminals = <vscode.Terminal[]>(<any>vscode.window).terminals;
+    let terminal = terminals.find((t) => t.name === "PHPUnit Extended");
+    if (!terminal) {
+      terminal = vscode.window.createTerminal({
+        name: "PHPUnit Extended",
+        cwd: workingDirectory,
+        env: CommandLineConfiguration.envVars()
+      } as vscode.TerminalOptions);
     }
+    terminal.show();
+    terminal.sendText(`${command} ${args.join(" ")}`);
   }
 }

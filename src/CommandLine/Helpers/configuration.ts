@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
 
-import SharedConfiguration from "../../Helpers/configuration";
-
-export default class CommandLineConfiguration extends SharedConfiguration {
+export default class CommandLineConfiguration {
   /**
    * @returns The command line arguments.
    */

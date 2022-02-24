@@ -40,7 +40,7 @@ export default class SharedConfiguration {
   /**
    * @returns The arguments shared between the Test Explorer and the Command Line.
    */
-  static sharedArgs(): string[] {
+  static args(): string[] {
     return vscode.workspace
       .getConfiguration("phpunit")
       .get<Array<string>>("args", []);

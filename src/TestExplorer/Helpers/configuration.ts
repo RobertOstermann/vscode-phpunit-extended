@@ -1,8 +1,6 @@
 import * as vscode from "vscode";
 
-import SharedConfiguration from "../../Helpers/configuration";
-
-export default class TestExplorerConfiguration extends SharedConfiguration {
+export default class TestExplorerConfiguration {
   /**
    * Initialize the configuration options that require a reload upon change.
    */

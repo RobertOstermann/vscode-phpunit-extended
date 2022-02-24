@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 
+import SharedConfiguration from "../Helpers/configuration";
 import CommandLineConfiguration from "./Helpers/configuration";
 import PhpUnit from "./phpUnit";
 import { CurrentFileTest } from "./TestHandlers/currentFileTest";
@@ -71,12 +72,12 @@ export class TestRunner {
    * @param type - The test to run.
    */
   private executeTest(type: string) {
-    const args = [...CommandLineConfiguration.sharedArgs(), ...CommandLineConfiguration.args()];
+    const args = [...SharedConfiguration.args(), ...CommandLineConfiguration.args()];
     const editor = vscode.window.activeTextEditor;
     let testHandler: TestHandler;
 
-    if (CommandLineConfiguration.configurationPath()) {
-      args.unshift(CommandLineConfiguration.configurationPath());
+    if (SharedConfiguration.configurationPath()) {
+      args.unshift(SharedConfiguration.configurationPath());
       args.unshift("--configuration");
     }
 

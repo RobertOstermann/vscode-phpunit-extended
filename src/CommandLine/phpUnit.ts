@@ -30,7 +30,7 @@ export default class PhpUnit {
    * Executes the test using either composer or the given PHPUnit path.
    */
   public run() {
-    const phpunitPath = CommandLineConfiguration.execPath();
+    const phpunitPath = SharedConfiguration.execPath();
 
     if (phpunitPath == "") {
       this.execThroughComposer();
@@ -74,7 +74,7 @@ export default class PhpUnit {
     const command = this.getCommand(phpunitPath, workingDirectory);
     const spawnOptions: SpawnOptions = {
       cwd: workingDirectory,
-      env: CommandLineConfiguration.envVars(),
+      env: SharedConfiguration.envVars(),
     };
 
     const phpunitProcess = cp.spawn(
@@ -150,7 +150,7 @@ export default class PhpUnit {
    * @returns The path to the working directory where the child process will spawn.
    */
   private getWorkingDirectory(): string {
-    let workingDirectory = CommandLineConfiguration.workingDirectory();
+    let workingDirectory = SharedConfiguration.workingDirectory();
     switch (workingDirectory.toLowerCase()) {
       case WorkingDirectory.Find:
         workingDirectory = PathHelper.findWorkingDirectory();
@@ -164,7 +164,7 @@ export default class PhpUnit {
   }
 
   /**
-   * Sets the arguments for the node process.
+   * Gets the command for the node process.
    * 
    * @param phpunitPath - The executable path for PHP Unit.
    * @param workingDirectory  - The working directory the child process spawns in.
@@ -181,7 +181,7 @@ export default class PhpUnit {
       putFsPathIntoArgs: false
     };
 
-    if (/^win/.test(process.platform) && !command.endsWith(".bat")) {
+    if (/^win/.test(process.platform) && !SharedConfiguration.execPath() && !command.match(/\..*/)) {
       command = command + ".bat";
     }
 
@@ -232,7 +232,7 @@ export default class PhpUnit {
       terminal = vscode.window.createTerminal({
         name: "PHPUnit Extended",
         cwd: workingDirectory,
-        env: CommandLineConfiguration.envVars()
+        env: SharedConfiguration.envVars()
       } as vscode.TerminalOptions);
     }
     terminal.show();

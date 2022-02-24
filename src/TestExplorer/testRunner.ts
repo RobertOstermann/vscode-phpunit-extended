@@ -31,7 +31,7 @@ export default class TestRunner {
    * @returns The output of {@link executePhpUnit}.
    */
   async run() {
-    const phpunitPath = TestExplorerConfiguration.execPath();
+    const phpunitPath = SharedConfiguration.execPath();
 
     if (phpunitPath == "") {
       return this.executeThroughComposer();
@@ -77,7 +77,7 @@ export default class TestRunner {
     const command = this.getCommand(phpunitPath);
     const spawnOptions: SpawnOptions = {
       cwd: workingDirectory,
-      env: TestExplorerConfiguration.envVars(),
+      env: SharedConfiguration.envVars(),
     };
 
     const output = await TestRunnerHelper.promiseWithTimeout(
@@ -125,7 +125,7 @@ export default class TestRunner {
    * @returns The path to the working directory where the child process will spawn.
    */
   private getWorkingDirectory(): string {
-    let workingDirectory = TestExplorerConfiguration.workingDirectory();
+    let workingDirectory = SharedConfiguration.workingDirectory();
     switch (workingDirectory.toLowerCase()) {
       case WorkingDirectory.Find:
         workingDirectory = PathHelper.findWorkingDirectory(this.fsPath);
@@ -139,7 +139,7 @@ export default class TestRunner {
   }
 
   /**
-   * Gets the command and sets the arguments for the node process.
+   * Gets the command for the node process.
    * 
    * @param phpunitPath - The executable path for PHPUnit.
    * @returns The command to spawn a child process with.
@@ -149,7 +149,7 @@ export default class TestRunner {
     const dockerCommand = SharedConfiguration.docker_command() ? SharedConfiguration.docker_command() + " " : "";
     let command = phpunitPath;
 
-    if (/^win/.test(process.platform) && !command.endsWith(".bat")) {
+    if (/^win/.test(process.platform) && !SharedConfiguration.execPath() && !command.match(/\..*/)) {
       command = command + ".bat";
     }
 
@@ -198,7 +198,7 @@ export default class TestRunner {
       terminal = vscode.window.createTerminal({
         name: "PHPUnit Extended",
         cwd: workingDirectory,
-        env: TestExplorerConfiguration.envVars()
+        env: SharedConfiguration.envVars()
       } as vscode.TerminalOptions);
     }
     terminal.show();

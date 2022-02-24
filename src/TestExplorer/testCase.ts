@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 
+import SharedConfiguration from "../Helpers/configuration";
 import TestExplorerConfiguration from "./Helpers/configuration";
 import OutputHelper from "./Helpers/outputHelper";
 import TestRunner from "./testRunner";
@@ -30,10 +31,10 @@ export default class TestCase {
    */
   async run(item: vscode.TestItem, options: vscode.TestRun) {
     const start = Date.now();
-    const args = [...TestExplorerConfiguration.sharedArgs(), ...TestExplorerConfiguration.args()];
+    const args = [...SharedConfiguration.args(), ...TestExplorerConfiguration.args()];
 
-    if (TestExplorerConfiguration.configurationPath()) {
-      args.unshift(TestExplorerConfiguration.configurationPath());
+    if (SharedConfiguration.configurationPath()) {
+      args.unshift(SharedConfiguration.configurationPath());
       args.unshift("--configuration");
     }
 

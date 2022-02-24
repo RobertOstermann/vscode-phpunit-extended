@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.8] - 2022-02-23
+## [1.1.0] - 2022-02-23
+
+- Bug fix for running on Windows
+
+## [1.0.9] - 2022-02-23
 
 - Add `showOutputInTerminal` options to use a terminal instead of the output channel for showing output!
 

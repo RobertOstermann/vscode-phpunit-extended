@@ -73,15 +73,17 @@ export default class TestRunner {
       return { success: false, output: errorMessage };
     }
 
-    this.setArguments();
+    const args = this.getArguments(phpunitPath);
     const command = this.getCommand(phpunitPath);
+    const terminalArgs = this.getArguments(phpunitPath, true);
+    const terminalCommand = this.getCommand(phpunitPath, true);
     const spawnOptions: SpawnOptions = {
       cwd: workingDirectory,
       env: SharedConfiguration.envVars(),
     };
 
     const output = await TestRunnerHelper.promiseWithTimeout(
-      new TestProcess().run(command, this.args, spawnOptions),
+      new TestProcess().run(command, args, spawnOptions),
       TestExplorerConfiguration.timeout(),
       Constants.timeoutMessage
     );
@@ -93,9 +95,10 @@ export default class TestRunner {
     switch (showOutput) {
       case ShowOutput.Always:
         if (showOutputInTerminal) {
-          this.executeInTerminal(command, this.args, workingDirectory);
+
+          this.executeInTerminal(terminalCommand, terminalArgs, workingDirectory);
         } else {
-          OutputHelper.outputChannel.appendLine(`${command} ${this.args.join(" ")}\n`);
+          OutputHelper.outputChannel.appendLine(`${command} ${args.join(" ")}\n`);
           OutputHelper.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
           OutputHelper.outputChannel.show();
         }
@@ -103,9 +106,9 @@ export default class TestRunner {
       case ShowOutput.Error:
         if (success) break;
         if (showOutputInTerminal) {
-          this.executeInTerminal(command, this.args, workingDirectory);
+          this.executeInTerminal(terminalCommand, terminalArgs, workingDirectory);
         } else {
-          OutputHelper.outputChannel.appendLine(`${command} ${this.args.join(" ")}\n`);
+          OutputHelper.outputChannel.appendLine(`${command} ${args.join(" ")}\n`);
           OutputHelper.outputChannel.appendLine(`${output}\n-------------------------------------------------------\n`);
           OutputHelper.outputChannel.show();
         }
@@ -142,15 +145,18 @@ export default class TestRunner {
    * Gets the command for the node process.
    * 
    * @param phpunitPath - The executable path for PHPUnit.
+   * @param terminalCommand - Is the command being run in the terminal.
    * @returns The command to spawn a child process with.
    */
-  private getCommand(phpunitPath: string): string {
+  private getCommand(phpunitPath: string, terminalCommand = false): string {
     const sshCommand = SharedConfiguration.ssh_command() ? SharedConfiguration.ssh_command() + " " : "";
     const dockerCommand = SharedConfiguration.docker_command() ? SharedConfiguration.docker_command() + " " : "";
     let command = phpunitPath;
 
-    if (/^win/.test(process.platform) && !SharedConfiguration.execPath() && !command.match(/\..*/)) {
-      command = command + ".bat";
+    if (/^win/.test(process.platform) && !terminalCommand) {
+      command = "cmd";
+    } else {
+      command = phpunitPath;
     }
 
     if (SharedConfiguration.ssh_enable()) {
@@ -172,14 +178,25 @@ export default class TestRunner {
   }
 
   /**
-   * Sets the arguments for the node process.
+   * Gets the arguments for the node process.
    * 
    * @param phpunitPath - The executable path for PHPUnit.
+   * @param terminalCommand - Is the command being run in the terminal.
+   * @returns The arguments to spawn the child process with.
    */
-  private setArguments() {
+  private getArguments(phpunitPath: string, terminalCommand = false): string[] {
+    const args = [...this.args];
+
     if (this.fsPath) {
-      this.args.push(this.fsPath);
+      args.push(this.fsPath);
     }
+
+    if (/^win/.test(process.platform) && !terminalCommand) {
+      args.unshift(phpunitPath);
+      args.unshift("/c");
+    }
+
+    return args;
   }
 
   /**
@@ -193,10 +210,10 @@ export default class TestRunner {
    */
   private executeInTerminal(command: string, args: string[], workingDirectory: string = undefined) {
     const terminals = <vscode.Terminal[]>(<any>vscode.window).terminals;
-    let terminal = terminals.find((t) => t.name === "PHPUnit Extended");
+    let terminal = terminals.find((t) => t.name === "PHPUnit");
     if (!terminal) {
       terminal = vscode.window.createTerminal({
-        name: "PHPUnit Extended",
+        name: "PHPUnit",
         cwd: workingDirectory,
         env: SharedConfiguration.envVars()
       } as vscode.TerminalOptions);

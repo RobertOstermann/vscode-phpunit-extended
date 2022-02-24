@@ -34,7 +34,7 @@ export default class SharedConfiguration {
   static path_mapping(): object {
     return vscode.workspace
       .getConfiguration("phpunit")
-      .get("pathMapping");
+      .get("pathMappings");
   }
 
   /**

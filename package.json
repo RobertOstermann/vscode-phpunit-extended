@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -83,7 +83,7 @@
           "default": "",
           "description": "Path to phpunit executable (if empty it tries to use composer installation)."
         },
-        "phpunit.pathMapping": {
+        "phpunit.pathMappings": {
           "type": "object",
           "default": {},
           "description": "The path mapping. Keys are local (host) paths and values are remote (guest) paths."

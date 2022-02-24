@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.1.0] - 2022-02-24
+## [1.1.2] - 2022-02-24
+
+- Update `pathMapping` to `pathMappings`.
+
+## [1.1.1] - 2022-02-24
 
 - Bug fixes for `showOutputInTerminal`.
 

@@ -13,21 +13,11 @@ class FailingTest extends TestCase
      */
     public function firstTest()
     {
-        // Arrange
-
-        // Act
-
-        // Assert
         $this->assertTrue(false);
     }
 
     public function testSecond()
     {
-        // Arrange
-
-        // Act
-
-        // Assert
         $this->assertEquals(0, 1);
     }
 }

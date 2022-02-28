@@ -13,21 +13,11 @@ class PassingTest extends TestCase
      */
     public function firstTest()
     {
-        // Arrange
-
-        // Act
-
-        // Assert
         $this->assertTrue(true);
     }
 
     public function testSecond()
     {
-        // Arrange
-
-        // Act
-
-        // Assert
         $this->assertEquals(0, 0);
     }
 }

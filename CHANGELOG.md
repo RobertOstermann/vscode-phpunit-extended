@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2022-02-25
+
+- Fix bugs with Command Line tests.
+- Handle errors better when running class tests in the test explorer.
+
 ## [1.1.2] - 2022-02-24
 
 - Update `pathMapping` to `pathMappings`.

@@ -13,11 +13,6 @@ class PassingTestWithSpacesTest extends TestCase
      */
     public function spacesTest()
     {
-        // Arrange
-
-        // Act
-
-        // Assert
         $this->assertTrue(true);
     }
 }

@@ -81,7 +81,7 @@ export default class PhpUnit {
 
     const phpunitProcess = cp.spawn(
       command,
-      this.args,
+      args,
       spawnOptions
     );
 
@@ -221,7 +221,7 @@ export default class PhpUnit {
     if (this.putFsPathIntoArgs) {
       const fsPath = PathHelper.remapLocalPath(vscode.window.activeTextEditor.document.uri.fsPath);
 
-      this.args.push(fsPath);
+      args.push(fsPath);
     }
 
     if (/^win/.test(process.platform) && !terminalCommand) {

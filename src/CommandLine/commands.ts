@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 
+import OutputHelper from "../TestExplorer/Helpers/outputHelper";
 import { TestRunner } from "./phpUnitTest";
 
 export default class Commands {
-  static outputChannel = vscode.window.createOutputChannel("phpunit");
-  static PHPUnitTestRunner: TestRunner = new TestRunner(Commands.outputChannel);
+  static PHPUnitTestRunner: TestRunner = new TestRunner(OutputHelper.outputChannel);
 
   /**
    * Register the extension commands with VSCode.

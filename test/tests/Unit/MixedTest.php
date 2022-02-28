@@ -2,6 +2,7 @@
 
 namespace Unit;
 
+use ErrorException;
 use PHPUnit\Framework\TestCase;
 
 class MixedTest extends TestCase
@@ -13,22 +14,18 @@ class MixedTest extends TestCase
      */
     public function firstTest()
     {
-        // Arrange
-
-        // Act
-
-        // Assert
         $this->assertTrue(true);
     }
 
     public function testSecond()
     {
-        // Arrange
-
-        // Act
-        sleep(3);
-
-        // Assert
         $this->assertEquals(0, 1);
+    }
+
+    public function testException()
+    {
+        // $this->expectException(ErrorException::class);
+
+        throw new ErrorException("");
     }
 }

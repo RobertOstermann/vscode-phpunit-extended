@@ -94,8 +94,8 @@ export default class TestRunner {
     const showOutputInTerminal = TestExplorerConfiguration.showOutputInTerminal();
     switch (showOutput) {
       case ShowOutput.Always:
+        OutputHelper.outputChannel.clear();
         if (showOutputInTerminal) {
-
           this.executeInTerminal(terminalCommand, terminalArgs, workingDirectory);
         } else {
           OutputHelper.outputChannel.appendLine(`${command} ${args.join(" ")}\n`);
@@ -105,6 +105,7 @@ export default class TestRunner {
         break;
       case ShowOutput.Error:
         if (success) break;
+        OutputHelper.outputChannel.clear();
         if (showOutputInTerminal) {
           this.executeInTerminal(terminalCommand, terminalArgs, workingDirectory);
         } else {

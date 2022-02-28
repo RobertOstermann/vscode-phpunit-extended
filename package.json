@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -184,7 +184,7 @@
         "phpunit.testExplorer.verboseTestExplorerOutput": {
           "type": "boolean",
           "default": false,
-          "description": "Setting to true forces test explorer to run individual tests instead of only running the class test to get output for each test."
+          "markdownDescription": "Setting to `true` forces test explorer to run individual tests instead of only running the class test to get output for each test."
         },
         "phpunit.docker.command": {
           "type": "string",

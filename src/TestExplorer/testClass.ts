@@ -89,7 +89,7 @@ export default class TestClass {
       const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label);
 
       if (success || (testResult === Constants.individualTestPassedMessage && !error)) {
-        OutputHelper.appendPassedOutput(item, options);
+        OutputHelper.appendPassedOutput(item, options, Constants.individualTestPassedMessage);
       } else {
         if (error) {
           OutputHelper.appendFailedOutput(item, options);

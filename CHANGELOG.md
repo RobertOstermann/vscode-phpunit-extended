@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.5] - 2022-02-28
+
+- Clear output when using TestExplorer.
+- Show the message `OK` for passed tests when running a test class for Test Explorer.
+
 ## [1.1.4] - 2022-02-28
 
 - Default the `functionRegex` to find tests the same way PHPUnit finds tests.

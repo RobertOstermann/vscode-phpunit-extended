@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.4] - 2022-02-28
+
+- Default the `functionRegex` to find tests the same way PHPUnit finds tests.
+- Default the `multilineFunctionRegex` to `true`.
+
 ## [1.1.3] - 2022-02-25
 
 - Fix bugs with Command Line tests.

@@ -30,10 +30,6 @@ export default class TestProcess {
         buffers.push(data);
       });
 
-      this.process.stderr?.on("data", data => {
-        buffers.push(data);
-      });
-
       this.process.on("error", (error: any) => {
         resolve(error.message);
       });

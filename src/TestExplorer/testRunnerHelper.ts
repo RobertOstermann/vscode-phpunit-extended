@@ -1,3 +1,5 @@
+import { MessageChannel } from "worker_threads";
+
 import PathHelper from "../Helpers/pathHelper";
 import Constants from "./Helpers/constants";
 import TestResult from "./Helpers/testResult";
@@ -12,14 +14,9 @@ export default class TestRunnerHelper {
    * @param fsPath - The path to the test file.
    * @returns The success status and a shortened message for the test.
    */
-  static parsePhpUnitOutput(text: string, fsPath: string = undefined) {
+  static parsePhpUnitOutput(text: string, fsPath: string = undefined): TestResult {
     const lines = text.split("\n");
-    const result: TestResult = {
-      output: "",
-      message: "",
-      success: false,
-      line: -1,
-    };
+    const result: TestResult = {};
 
     for (const line of lines) {
       if (!result.message) {
@@ -100,18 +97,22 @@ export default class TestRunnerHelper {
   static parsePhpUnitOutputForIndividualTest(text: string, name: string) {
     const regexString = `(${name}(?:[^\\)])*).*(?:Tests:.*Assertions.*(?:Incomplete|Risky|Skipped|Failures)(?:\\w*[^\\r\\n\\.])*)`;
     const regex = new RegExp(regexString, "is");
-    const result = regex.exec(text);
+    const regexResult = regex.exec(text);
 
-    if (result) {
-      const [, output] = result;
-      const { success, message } = this.parsePhpUnitOutput(output);
+    if (regexResult) {
+      const [, output] = regexResult;
+      const result = this.parsePhpUnitOutput(output);
 
-      if (!success) {
-        return message;
+      if (result.success) {
+        result.message = Constants.individualTestPassedMessage;
       }
+
+      return result;
     }
 
-    return Constants.individualTestPassedMessage;
+    const result: TestResult = {};
+    result.message = Constants.individualTestPassedMessage;
+    return null;
   }
 
   /**

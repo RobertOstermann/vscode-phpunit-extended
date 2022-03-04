@@ -48,9 +48,9 @@ export default class TestCase {
       const duration = Date.now() - start;
 
       if (result.success) {
-        OutputHelper.appendPassedOutput(item, options, result.message, result.output, duration);
+        OutputHelper.appendPassedOutput(item, options, result, duration);
       } else {
-        OutputHelper.appendFailedOutput(item, options, result.message, result.output, duration);
+        OutputHelper.appendFailedOutput(item, options, result, duration);
       }
     } else {
       const testMessage = new vscode.TestMessage(`${item.label} not found`);

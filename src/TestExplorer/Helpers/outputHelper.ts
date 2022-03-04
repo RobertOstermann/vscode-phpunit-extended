@@ -1,5 +1,8 @@
 import * as vscode from "vscode";
 
+import DecorationHelper from "./decorationHelper";
+import TestResult from "./testResult";
+
 export default class OutputHelper {
   static outputChannel = vscode.window.createOutputChannel("phpunit");
 
@@ -9,23 +12,22 @@ export default class OutputHelper {
    * 
    * @param item - The test item to append output to.
    * @param options - The test options.
-   * @param message - The message to append.
-   * @param output - The full output to append to the test output.
+   * @param result - The results of the test item.
    * @param duration - The time the test took to complete.
    */
-  static appendPassedOutput(item: vscode.TestItem, options: vscode.TestRun, message?: string, output?: string, duration?: number): void {
+  static appendPassedOutput(item: vscode.TestItem, options: vscode.TestRun, result: TestResult, duration?: number): void {
     if (duration) {
       options.passed(item, duration);
     } else {
       options.passed(item);
     }
 
-    if (message) {
-      OutputHelper.appendItemOutput(item, options, message);
+    if (result.message) {
+      OutputHelper.appendItemOutput(item, options, result.message);
     }
 
-    if (output) {
-      OutputHelper.appendOutput(item, options, output);
+    if (result.output) {
+      OutputHelper.appendOutput(item, options, result.output);
     }
   }
 
@@ -35,23 +37,26 @@ export default class OutputHelper {
    * 
    * @param item - The test item to append output to.
    * @param options - The test options.
-   * @param message - The message to append.
-   * @param output - The full output to append to the test output.
+   * @param result - The results of the test item.
    * @param duration - The time the test took to complete.
    */
-  static appendFailedOutput(item: vscode.TestItem, options: vscode.TestRun, message?: string, output?: string, duration?: number): void {
+  static appendFailedOutput(item: vscode.TestItem, options: vscode.TestRun, result?: TestResult, duration?: number): void {
     if (duration) {
       options.failed(item, [], duration);
     } else {
       options.failed(item, []);
     }
 
-    if (message) {
-      OutputHelper.appendItemOutput(item, options, message);
+    if (result.message) {
+      OutputHelper.appendItemOutput(item, options, result.message);
     }
 
-    if (output) {
-      OutputHelper.appendOutput(item, options, output);
+    if (result.output) {
+      OutputHelper.appendOutput(item, options, result.output);
+    }
+
+    if (result.line) {
+      DecorationHelper.addDecorations(item, result.line);
     }
   }
 

@@ -55,7 +55,7 @@ export default class TestRunner {
     } else {
       const errorMessage = "Couldn't find a vendor/bin/phpunit file.";
       vscode.window.showErrorMessage(errorMessage);
-      let result: TestResult;
+      const result: TestResult = {};
       result.output = errorMessage;
       result.success = false;
       return result;
@@ -74,7 +74,7 @@ export default class TestRunner {
     if (workingDirectory === null) {
       const errorMessage = "Couldn't find a working directory.";
       vscode.window.showErrorMessage(errorMessage);
-      let result: TestResult;
+      const result: TestResult = {};
       result.output = errorMessage;
       result.success = false;
       return result;

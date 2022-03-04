@@ -49,21 +49,19 @@ export default class TestClass {
       const result: TestResult = await phpUnit.run();
       const duration = Date.now() - start;
 
-      let errorMessage = "";
       let error = false;
 
       if (result.success) {
-        OutputHelper.appendPassedOutput(item, options, result.message, result.output, duration);
+        OutputHelper.appendPassedOutput(item, options, result, duration);
       } else {
         if (result.message === Constants.timeoutMessage) {
-          errorMessage = result.message;
           error = true;
         } else {
           const { errorStatus, errorOutput } = TestRunnerHelper.parsePhpUnitOutputForClassTest(result.output);
           error = errorStatus;
-          errorMessage = errorOutput;
+          result.message = errorOutput;
         }
-        OutputHelper.appendFailedOutput(item, options, errorMessage, result.output, duration);
+        OutputHelper.appendFailedOutput(item, options, result, duration);
       }
 
       if (!TestExplorerConfiguration.verboseTestExplorerOutput()) {
@@ -90,7 +88,7 @@ export default class TestClass {
       const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label);
 
       if (success || (testResult === Constants.individualTestPassedMessage && !error)) {
-        OutputHelper.appendPassedOutput(item, options, Constants.individualTestPassedMessage);
+        OutputHelper.appendPassedOutput(item, options, testResult);
       } else {
         if (error) {
           OutputHelper.appendFailedOutput(item, options);

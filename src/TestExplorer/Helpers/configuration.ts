@@ -11,6 +11,7 @@ export default class TestExplorerConfiguration {
         event.affectsConfiguration("phpunit.testExplorer.folderPattern") ||
         event.affectsConfiguration("phpunit.testExplorer.fileRegex") ||
         event.affectsConfiguration("phpunit.testExplorer.functionRegex") ||
+        event.affectsConfiguration("phpunit.testExplorer.highlightFailureLocation") ||
         event.affectsConfiguration("phpunit.testExplorer.multilineFunctionRegex")
       ) {
         const action = "Reload";
@@ -80,6 +81,15 @@ export default class TestExplorerConfiguration {
   }
 
   /**
+   * @returns Should the line causing a failure be highlighted.
+   */
+  static highlightFailureLocation(): boolean {
+    return vscode.workspace
+      .getConfiguration("phpunit.testExplorer")
+      .get("highlightFailureLocation");
+  }
+
+  /**
    * @returns Determines if the function regex should evaluate multiple lines.
    */
   static multilineFunctionRegex(): boolean {
@@ -131,5 +141,15 @@ export default class TestExplorerConfiguration {
     return vscode.workspace
       .getConfiguration("phpunit.testExplorer")
       .get("verboseTestExplorerOutput");
+  }
+
+
+  /* Colors */
+
+  /**
+   * @returns An object with the id of the background color for failed tests.
+   */
+  static failedTestBackgroundColor(): object {
+    return { id: "phpunit.failedTestBackground" };
   }
 }

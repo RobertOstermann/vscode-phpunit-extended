@@ -65,7 +65,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
 			await Promise.all(promises);
 
-			DecorationHelper.setDecorations();
+			if (TestExplorerConfiguration.highlightFailureLocation()) {
+				DecorationHelper.setDecorations();
+			}
+
 			run.end();
 		};
 
@@ -95,12 +98,16 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.workspace.onDidChangeTextDocument((editor) => {
 			TestDiscover.updateNodeForDocument(controller, editor?.document);
 
-			DecorationHelper.removeDecorations(editor?.document);
+			if (TestExplorerConfiguration.highlightFailureLocation()) {
+				DecorationHelper.removeDecorations(editor?.document);
+			}
 		}),
 		vscode.window.onDidChangeActiveTextEditor((editor) => {
 			TestDiscover.updateNodeForDocument(controller, editor?.document);
 
-			DecorationHelper.setDecorations();
+			if (TestExplorerConfiguration.highlightFailureLocation()) {
+				DecorationHelper.setDecorations();
+			}
 		})
 	);
 

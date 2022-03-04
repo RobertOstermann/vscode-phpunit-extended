@@ -6,6 +6,8 @@
   <a href="https://marketplace.visualstudio.com/items?itemName=RobertOstermann.phpunit-extended-test-explorer"><img src="https://vsmarketplacebadge.apphb.com/rating-short/RobertOstermann.phpunit-extended-test-explorer.svg" alt="VS Marketplace Rating"></a>
 </p>
 
+![test-explorer](images/test-explorer-example.png)
+
 ## Setup
 
 - Install [phpunit](https://phpunit.de/) or have phpunit installed through composer.
@@ -64,6 +66,7 @@
 | `phpunit.testExplorer.fileRegex`                 | The regular expression used to determine test files.                                                                                                                                                                                                       | `".*(test\|tests)\\w\*\\.php"`                                                |
 | `phpunit.testExplorer.folderPattern`             | A file glob pattern used to determine the folders to watch. Only used when discoverAllTests is set to true.                                                                                                                                                | `"**/{test,tests,Test,Tests}/**/*.php"`                                       |
 | `phpunit.testExplorer.functionRegex`             | The regular expression used to determine the functions within a file to test.                                                                                                                                                                              | `(\\/\\*.*?(@test).*?\\*\\/\\s*?)\|((public\\s+){0,1}function\\s+(test\\w*))` |
+| `phpunit.testExplorer.highlightFailureLocation`  | Highlight the line causing the failure in a test. You can edit the theme color with the ID `phpunit.failedTestBackground` to change the background color.                                                                                                  | `True`                                                                        |
 | `phpunit.testExplorer.multilineFunctionRegex`    | Determines if the functionRegex looks at multiple lines. This is useful if the test is defined by an annotation comment.                                                                                                                                   | `true`                                                                        |
 | `phpunit.testExplorer.parallelTests`             | The number of tests to run in parallel in the test explorer.                                                                                                                                                                                               | `0`                                                                           |
 | `phpunit.testExplorer.showOutput`                | Show the output console after the tests run (always, error, never).                                                                                                                                                                                        | `"never"`                                                                     |
@@ -95,6 +98,7 @@
 - The file in the active editor is added based solely upon the `fileRegex`.
 - `folderPattern` is only used when `discoverAllTests` is set to `true`.
 - `functionRegex` sets the regex to find functions within a test file.
+- `highlightFailureLocation` determines if the line responsible for the failing test should have a background highlight.
 - `multilineFunctionRegex` allows the functionRegex to look at multiple lines. The functionRegex adds the `s` flag.
 - `parallelTests` allows multiple tests to run concurrently. I would not recommend setting this above `8`.
 - `showOutput` is similar to the command line setting of the same name. Shows the output console when specified.

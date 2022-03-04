@@ -1,12 +1,14 @@
 import * as vscode from "vscode";
 
+import TestExplorerConfiguration from "./configuration";
+
 export default class DecorationHelper {
   static decorations: Decoration[] = [];
   static editorDecorations: EditorDecoration[] = [];
 
   static failedTestDecoratorOptions: vscode.DecorationRenderOptions = {
     isWholeLine: true,
-    backgroundColor: "red"
+    backgroundColor: TestExplorerConfiguration.failedTestBackgroundColor()
   };
 
   static failedTestDecorationType = vscode.window.createTextEditorDecorationType(this.failedTestDecoratorOptions);
@@ -77,8 +79,7 @@ export default class DecorationHelper {
   /**
    * Removes the decorations from the array.
    * 
-   * @param item - The test item that needs a decoration.
-   * @param line - The line to add the decoration to.
+   * @param document - The document that has been changed.
    */
   static removeDecorations(document: vscode.TextDocument): void {
     this.editorDecorations.forEach(editorDecoration => {

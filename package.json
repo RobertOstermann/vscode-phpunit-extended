@@ -30,6 +30,17 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
+    "colors": [
+      {
+        "id": "phpunit.failedTestBackground",
+        "description": "Background decoration color for failed tests.",
+        "defaults": {
+          "dark": "#FF000010",
+          "light": "#FF000010",
+          "highContrast": "#FF000010"
+        }
+      }
+    ],
     "commands": [
       {
         "command": "phpunit.Test",
@@ -150,6 +161,11 @@
           "type": "string",
           "default": "(\\/\\*.*?(@test).*?\\*\\/\\s*?)|((public\\s+){0,1}function\\s+(test\\w*))",
           "description": "The regular expression used to determine the functions within a file to test."
+        },
+        "phpunit.testExplorer.highlightFailureLocation": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Highlight the line causing the failure in a test. You can edit the theme color with the ID `phpunit.failedTestBackground` to change the background color."
         },
         "phpunit.testExplorer.multilineFunctionRegex": {
           "type": "boolean",

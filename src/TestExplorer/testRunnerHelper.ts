@@ -19,7 +19,7 @@ export default class TestRunnerHelper {
     const result: TestResult = {};
 
     for (const line of lines) {
-      if (!result.message) {
+      if (!result?.message) {
         const successMessage = Constants.phpUnitSuccessRegex.exec(line);
         if (successMessage) {
           const [message] = successMessage;
@@ -47,16 +47,17 @@ export default class TestRunnerHelper {
           result.success = false;
           result.message = message;
         }
-      } else {
+      } else if (!result?.line) {
         const pathWithLine = PathHelper.remapLocalPath(line);
         const path = pathWithLine.replace(/:\d+/, "");
-        if (fsPath?.toLowerCase() == path?.toLowerCase()) {
+        const localPath = PathHelper.remapLocalPath(fsPath);
+        if (localPath?.toLowerCase() == path?.toLowerCase()) {
           result.line = parseInt(pathWithLine.substring(path.length + 1));
         }
       }
     }
 
-    if (result.message) {
+    if (result?.message) {
       return result;
     }
 
@@ -92,18 +93,19 @@ export default class TestRunnerHelper {
    * 
    * @param text - The full output of the PHPUnit test run.
    * @param name - The function name of the given test.
+   * @param fsPath - The path to the test file.
    * @returns The success status and a shortened message for the individual test.
    */
-  static parsePhpUnitOutputForIndividualTest(text: string, name: string) {
-    const regexString = `(${name}(?:[^\\)])*).*(?:Tests:.*Assertions.*(?:Incomplete|Risky|Skipped|Failures)(?:\\w*[^\\r\\n\\.])*)`;
+  static parsePhpUnitOutputForIndividualTest(text: string, name: string, fsPath: string) {
+    const regexString = `(${name}(?:[^\\)])*.*)(?:Tests:.*Assertions.*(?:Incomplete|Risky|Skipped|Failures)(?:\\w*[^\\r\\n\\.])*)`;
     const regex = new RegExp(regexString, "is");
     const regexResult = regex.exec(text);
 
     if (regexResult) {
       const [, output] = regexResult;
-      const result = this.parsePhpUnitOutput(output);
+      const result = this.parsePhpUnitOutput(output, fsPath);
 
-      if (result.success) {
+      if (result?.success) {
         result.message = Constants.individualTestPassedMessage;
       }
 

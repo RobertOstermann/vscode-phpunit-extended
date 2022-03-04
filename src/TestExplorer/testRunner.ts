@@ -111,7 +111,7 @@ export default class TestRunner {
         }
         break;
       case ShowOutput.Error:
-        if (result.success) break;
+        if (result?.success) break;
         OutputHelper.outputChannel.clear();
         if (showOutputInTerminal) {
           this.executeInTerminal(terminalCommand, terminalArgs, workingDirectory);

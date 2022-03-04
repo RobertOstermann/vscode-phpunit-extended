@@ -51,16 +51,17 @@ export default class TestClass {
 
       let error = false;
 
-      if (result.success) {
+      if (result?.success) {
         OutputHelper.appendPassedOutput(item, options, result, duration);
       } else {
-        if (result.message === Constants.timeoutMessage) {
+        if (result?.message === Constants.timeoutMessage) {
           error = true;
         } else {
           const { errorStatus, errorOutput } = TestRunnerHelper.parsePhpUnitOutputForClassTest(result.output);
           error = errorStatus;
           result.message = errorOutput;
         }
+        result.line = undefined;
         OutputHelper.appendFailedOutput(item, options, result, duration);
       }
 
@@ -85,7 +86,7 @@ export default class TestClass {
    */
   private populateChildTestOutput(parent: vscode.TestItem, options: vscode.TestRun, output: string, success: boolean, error: boolean) {
     parent.children.forEach(item => {
-      const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label);
+      const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label, item.uri.fsPath);
 
       if (success || (testResult === Constants.individualTestPassedMessage && !error)) {
         OutputHelper.appendPassedOutput(item, options, testResult);

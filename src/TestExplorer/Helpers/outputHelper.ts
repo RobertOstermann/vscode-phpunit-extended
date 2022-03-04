@@ -22,11 +22,11 @@ export default class OutputHelper {
       options.passed(item);
     }
 
-    if (result.message) {
+    if (result?.message) {
       OutputHelper.appendItemOutput(item, options, result.message);
     }
 
-    if (result.output) {
+    if (result?.output) {
       OutputHelper.appendOutput(item, options, result.output);
     }
   }
@@ -47,15 +47,15 @@ export default class OutputHelper {
       options.failed(item, []);
     }
 
-    if (result.message) {
+    if (result?.message) {
       OutputHelper.appendItemOutput(item, options, result.message);
     }
 
-    if (result.output) {
+    if (result?.output) {
       OutputHelper.appendOutput(item, options, result.output);
     }
 
-    if (result.line) {
+    if (result?.line) {
       DecorationHelper.addDecorations(item, result.line);
     }
   }

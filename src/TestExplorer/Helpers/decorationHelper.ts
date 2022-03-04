@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 
 export default class DecorationHelper {
-  static failedDecorations: FailedDecorations[] = [];
+  static decorations: Decoration[] = [];
+  static editorDecorations: EditorDecoration[] = [];
 
   static failedTestDecoratorOptions: vscode.DecorationRenderOptions = {
     isWholeLine: true,
@@ -11,7 +12,49 @@ export default class DecorationHelper {
   static failedTestDecorationType = vscode.window.createTextEditorDecorationType(this.failedTestDecoratorOptions);
 
   /**
-   * Adds a background color to a given line.
+   * Sets the decorations in a document.
+   */
+  static setDecorations(): void {
+    const editors = vscode.window.visibleTextEditors;
+    this.decorations.forEach(decoration => {
+      let editor: vscode.TextEditor = undefined;
+
+      editors.forEach(textEditor => {
+        if (textEditor.document.uri.fsPath === decoration.item.uri.fsPath) {
+          editor = textEditor;
+        }
+      });
+      if (editor) {
+        const document = editor.document;
+        const range = document.lineAt(decoration.line).range;
+        const decorationOptions: vscode.DecorationOptions = { range: range };
+
+        const editorDecoration = this.editorDecorations.find(editorDecoration => editorDecoration.editor === editor);
+        if (editorDecoration) {
+          editorDecoration.decorations.push(decorationOptions);
+        } else {
+          const lineDecoration = editorDecoration?.decorations.find(lineDecoration => lineDecoration.range === range);
+          if (!lineDecoration) {
+            const editorDecoration: EditorDecoration = {
+              editor: editor,
+              decorations: [decorationOptions]
+            };
+            this.editorDecorations.push(editorDecoration);
+          }
+        }
+      }
+    });
+
+    this.editorDecorations.forEach(editorDecoration => {
+      editorDecoration.editor.setDecorations(
+        this.failedTestDecorationType,
+        editorDecoration.decorations
+      );
+    });
+  }
+
+  /**
+   * Adds the decorations to an array.
    * 
    * @param item - The test item that needs a decoration.
    * @param line - The line to add the decoration to.
@@ -23,18 +66,40 @@ export default class DecorationHelper {
       return;
     }
 
-    const range = document.lineAt(line - 1).range;
-    const decorationOptions: vscode.DecorationOptions = { range: range };
     const failedDecoration = {
       item: item,
-      decoration: decorationOptions
+      line: line - 1,
     };
 
-    this.failedDecorations.push(failedDecoration);
+    this.decorations.push(failedDecoration);
+  }
+
+  /**
+   * Removes the decorations from the array.
+   * 
+   * @param item - The test item that needs a decoration.
+   * @param line - The line to add the decoration to.
+   */
+  static removeDecorations(document: vscode.TextDocument): void {
+    this.editorDecorations.forEach(editorDecoration => {
+      if (editorDecoration.editor.document === document) {
+        editorDecoration.decorations = [];
+      }
+    });
+
+    this.decorations = this.decorations.filter(decoration => decoration.item.uri.fsPath !== document.uri.fsPath);
+
+    this.setDecorations();
   }
 }
 
-interface FailedDecorations {
-  item: vscode.TestItem;
-  decoration: vscode.DecorationOptions,
+interface Decoration {
+  item: vscode.TestItem,
+  line: number,
+  decoration?: vscode.DecorationOptions,
+}
+
+interface EditorDecoration {
+  editor: vscode.TextEditor,
+  decorations: vscode.DecorationOptions[];
 }

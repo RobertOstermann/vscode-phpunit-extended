@@ -47,7 +47,7 @@ export default class TestCase {
       const result: TestResult = await phpUnit.run();
       const duration = Date.now() - start;
 
-      if (result.success) {
+      if (result?.success) {
         OutputHelper.appendPassedOutput(item, options, result, duration);
       } else {
         OutputHelper.appendFailedOutput(item, options, result, duration);

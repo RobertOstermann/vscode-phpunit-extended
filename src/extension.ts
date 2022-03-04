@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 
 import Commands from "./CommandLine/commands";
 import TestExplorerConfiguration from "./TestExplorer/Helpers/configuration";
+import DecorationHelper from "./TestExplorer/Helpers/decorationHelper";
 import TestCase from "./TestExplorer/testCase";
 import TestClass from "./TestExplorer/testClass";
 import TestDiscover from "./TestExplorer/testDiscover";
@@ -45,6 +46,9 @@ export async function activate(context: vscode.ExtensionContext) {
 		};
 
 		const runTestQueue = async () => {
+			DecorationHelper.decorations = [];
+			DecorationHelper.editorDecorations = [];
+
 			let promises = [];
 			for await (const { test, data } of queue) {
 				if (cancellation.isCancellationRequested) {
@@ -61,6 +65,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 			await Promise.all(promises);
 
+			DecorationHelper.setDecorations();
 			run.end();
 		};
 
@@ -84,15 +89,19 @@ export async function activate(context: vscode.ExtensionContext) {
 	};
 
 	context.subscriptions.push(
-		vscode.workspace.onDidOpenTextDocument((document) =>
-			TestDiscover.updateNodeForDocument(controller, document)
-		),
-		vscode.workspace.onDidChangeTextDocument((editor) =>
-			TestDiscover.updateNodeForDocument(controller, editor?.document)
-		),
-		vscode.window.onDidChangeActiveTextEditor((editor) =>
-			TestDiscover.updateNodeForDocument(controller, editor?.document)
-		)
+		vscode.workspace.onDidOpenTextDocument((document) => {
+			TestDiscover.updateNodeForDocument(controller, document);
+		}),
+		vscode.workspace.onDidChangeTextDocument((editor) => {
+			TestDiscover.updateNodeForDocument(controller, editor?.document);
+
+			DecorationHelper.removeDecorations(editor?.document);
+		}),
+		vscode.window.onDidChangeActiveTextEditor((editor) => {
+			TestDiscover.updateNodeForDocument(controller, editor?.document);
+
+			DecorationHelper.setDecorations();
+		})
 	);
 
 	TestDiscover.updateNodeForDocument(controller, vscode.window?.activeTextEditor?.document);

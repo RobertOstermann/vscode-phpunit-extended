@@ -51,9 +51,10 @@ export default class TestRunnerHelper {
           result.message = message;
         }
       } else {
-        const normalizedLine = PathHelper.remapLocalPath(line).replace(/:\d+/, "");
-        if (fsPath?.toLowerCase() == normalizedLine?.toLowerCase()) {
-          result.line = parseInt(line.substring(normalizedLine.length + 1));
+        const pathWithLine = PathHelper.remapLocalPath(line);
+        const path = pathWithLine.replace(/:\d+/, "");
+        if (fsPath?.toLowerCase() == path?.toLowerCase()) {
+          result.line = parseInt(pathWithLine.substring(path.length + 1));
         }
       }
     }

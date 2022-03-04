@@ -235,7 +235,7 @@ export default class PhpUnit {
   /**
    * Runs a test directly in the terminal. This may result in better output
    * than the output channel. However, it will re-run the test when using
-   * the test explorer.
+   * the command line.
    * 
    * @param command -  The command to execute in the terminal.
    * @param args - The arguments to append to the command in the terminal.

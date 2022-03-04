@@ -3,6 +3,7 @@ import * as vscode from "vscode";
 import SharedConfiguration from "../Helpers/configuration";
 import TestExplorerConfiguration from "./Helpers/configuration";
 import OutputHelper from "./Helpers/outputHelper";
+import TestResult from "./Helpers/testResult";
 import TestRunner from "./testRunner";
 
 export default class TestCase {
@@ -43,13 +44,13 @@ export default class TestCase {
       args.push(this.currentTest);
 
       const phpUnit = new TestRunner(args, this.fsPath);
-      const { success, message, output } = await phpUnit.run();
+      const result: TestResult = await phpUnit.run();
       const duration = Date.now() - start;
 
-      if (success) {
-        OutputHelper.appendPassedOutput(item, options, message, output, duration);
+      if (result.success) {
+        OutputHelper.appendPassedOutput(item, options, result.message, result.output, duration);
       } else {
-        OutputHelper.appendFailedOutput(item, options, message, output, duration);
+        OutputHelper.appendFailedOutput(item, options, result.message, result.output, duration);
       }
     } else {
       const testMessage = new vscode.TestMessage(`${item.label} not found`);

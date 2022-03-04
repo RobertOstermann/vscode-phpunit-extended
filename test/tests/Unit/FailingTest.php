@@ -18,6 +18,8 @@ class FailingTest extends TestCase
 
     public function testSecond()
     {
+        $this->assertEquals([0], [1]);
         $this->assertEquals(0, 1);
+        $this->assertEquals(0, 2);
     }
 }

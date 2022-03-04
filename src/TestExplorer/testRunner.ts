@@ -7,6 +7,7 @@ import PathHelper from "../Helpers/pathHelper";
 import TestExplorerConfiguration from "./Helpers/configuration";
 import Constants from "./Helpers/constants";
 import OutputHelper from "./Helpers/outputHelper";
+import TestResult from "./Helpers/testResult";
 import TestProcess from "./testProcess";
 import TestRunnerHelper from "./testRunnerHelper";
 
@@ -45,7 +46,7 @@ export default class TestRunner {
    * 
    * @returns The output of {@link executePhpUnit}.
    */
-  private async executeThroughComposer() {
+  private async executeThroughComposer(): Promise<TestResult> {
     const phpUnitComposerBinFile =
       PathHelper.findNearestFileFullPath("vendor/bin/phpunit", this.fsPath);
 
@@ -54,7 +55,10 @@ export default class TestRunner {
     } else {
       const errorMessage = "Couldn't find a vendor/bin/phpunit file.";
       vscode.window.showErrorMessage(errorMessage);
-      return { success: false, output: errorMessage };
+      let result: TestResult;
+      result.output = errorMessage;
+      result.success = false;
+      return result;
     }
   }
 
@@ -65,12 +69,15 @@ export default class TestRunner {
    * @param phpunitPath - The executable path to PHP Unit.
    * @returns The success status, a shortened message, and the full output for the test run.
    */
-  private async executePhpUnit(phpunitPath: string) {
+  private async executePhpUnit(phpunitPath: string): Promise<TestResult> {
     const workingDirectory = this.getWorkingDirectory();
     if (workingDirectory === null) {
       const errorMessage = "Couldn't find a working directory.";
       vscode.window.showErrorMessage(errorMessage);
-      return { success: false, output: errorMessage };
+      let result: TestResult;
+      result.output = errorMessage;
+      result.success = false;
+      return result;
     }
 
     const args = this.getArguments(phpunitPath);
@@ -88,7 +95,7 @@ export default class TestRunner {
       Constants.timeoutMessage
     );
 
-    const { success, message } = TestRunnerHelper.parsePhpUnitOutput(output);
+    const result: TestResult = TestRunnerHelper.parsePhpUnitOutput(output, this.fsPath);
 
     const showOutput = TestExplorerConfiguration.showOutput();
     const showOutputInTerminal = TestExplorerConfiguration.showOutputInTerminal();
@@ -104,7 +111,7 @@ export default class TestRunner {
         }
         break;
       case ShowOutput.Error:
-        if (success) break;
+        if (result.success) break;
         OutputHelper.outputChannel.clear();
         if (showOutputInTerminal) {
           this.executeInTerminal(terminalCommand, terminalArgs, workingDirectory);
@@ -118,7 +125,8 @@ export default class TestRunner {
         break;
     }
 
-    return { success: success, message: message, output: output };
+    result.output = output;
+    return result;
   }
 
   /**

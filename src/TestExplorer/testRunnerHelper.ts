@@ -1,4 +1,6 @@
+import PathHelper from "../Helpers/pathHelper";
 import Constants from "./Helpers/constants";
+import TestResult from "./Helpers/testResult";
 
 export default class TestRunnerHelper {
   /**
@@ -7,42 +9,62 @@ export default class TestRunnerHelper {
    * and the shortened message to display inline next to the test.
    * 
    * @param text - The full output of the PHPUnit test run.
+   * @param fsPath - The path to the test file.
    * @returns The success status and a shortened message for the test.
    */
-  static parsePhpUnitOutput(text: string) {
+  static parsePhpUnitOutput(text: string, fsPath: string = undefined) {
     const lines = text.split("\n");
+    const result: TestResult = {
+      output: "",
+      message: "",
+      success: false,
+      line: -1,
+    };
 
     for (const line of lines) {
-      const successMessage = Constants.phpUnitSuccessRegex.exec(line);
-      if (successMessage) {
-        const [message] = successMessage;
-        return { success: true, message: message };
-      }
+      if (!result.message) {
+        const successMessage = Constants.phpUnitSuccessRegex.exec(line);
+        if (successMessage) {
+          const [message] = successMessage;
+          result.success = true;
+          result.message = message;
+        }
 
-      const failureMessage = Constants.phpUnitFailureRegex.exec(line);
-      if (failureMessage) {
-        const [message] = failureMessage;
-        return { success: false, message: message };
-      }
+        const failureMessage = Constants.phpUnitFailureRegex.exec(line);
+        if (failureMessage) {
+          const [message] = failureMessage;
+          result.success = false;
+          result.message = message;
+        }
 
-      const noTestsMessage = Constants.phpUnitNoTestsRegex.exec(line);
-      if (noTestsMessage) {
-        const [message] = noTestsMessage;
-        return { success: false, message: message };
-      }
+        const noTestsMessage = Constants.phpUnitNoTestsRegex.exec(line);
+        if (noTestsMessage) {
+          const [message] = noTestsMessage;
+          result.success = false;
+          result.message = message;
+        }
 
-      const noAssertionsMessage = Constants.phpUnitNoAssertionsRegex.exec(line);
-      if (noAssertionsMessage) {
-        const [message] = noAssertionsMessage;
-        return { success: false, message: message };
+        const noAssertionsMessage = Constants.phpUnitNoAssertionsRegex.exec(line);
+        if (noAssertionsMessage) {
+          const [message] = noAssertionsMessage;
+          result.success = false;
+          result.message = message;
+        }
+      } else {
+        const normalizedLine = PathHelper.remapLocalPath(line).replace(/:\d+/, "");
+        if (fsPath?.toLowerCase() == normalizedLine?.toLowerCase()) {
+          result.line = parseInt(line.substring(normalizedLine.length + 1));
+        }
       }
     }
 
-    if (text === Constants.timeoutMessage) {
-      return { success: false, message: Constants.timeoutMessage };
+    if (result.message) {
+      return result;
     }
 
-    return { success: false, message: Constants.invalidTestMessage };
+    result.success = false;
+    result.message = text === Constants.timeoutMessage ? Constants.timeoutMessage : Constants.invalidTestMessage;
+    return result;
   }
 
   /**

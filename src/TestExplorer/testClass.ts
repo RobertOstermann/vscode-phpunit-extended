@@ -88,7 +88,7 @@ export default class TestClass {
     parent.children.forEach(item => {
       const testResult = TestRunnerHelper.parsePhpUnitOutputForIndividualTest(output, item.label, item.uri.fsPath);
 
-      if (success || (testResult === Constants.individualTestPassedMessage && !error)) {
+      if (success || (testResult.success && !error)) {
         OutputHelper.appendPassedOutput(item, options, testResult);
       } else {
         if (error) {

@@ -114,7 +114,8 @@ export default class TestRunnerHelper {
 
     const result: TestResult = {};
     result.message = Constants.individualTestPassedMessage;
-    return null;
+    result.success = true;
+    return result;
   }
 
   /**

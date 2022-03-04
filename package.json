@@ -35,9 +35,9 @@
         "id": "phpunit.failedTestBackground",
         "description": "Background decoration color for failed tests.",
         "defaults": {
-          "dark": "#FF000010",
-          "light": "#FF000010",
-          "highContrast": "#FF000010"
+          "dark": "#FF000015",
+          "light": "#FF000015",
+          "highContrast": "#FF000015"
         }
       }
     ],

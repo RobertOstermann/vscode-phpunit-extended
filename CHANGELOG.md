@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.6] - 2022-03-04
+
+- Add the option `highlightFailureLocation` to highlight the line causing a failure.
+- Add the theme color `phpunit.failedTestBackground` to allow changing of the highlighted colore.
+
 ## [1.1.5] - 2022-02-28
 
 - Clear output when using TestExplorer.

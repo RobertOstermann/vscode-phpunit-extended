@@ -99,6 +99,7 @@
 - `folderPattern` is only used when `discoverAllTests` is set to `true`.
 - `functionRegex` sets the regex to find functions within a test file.
 - `highlightFailureLocation` determines if the line responsible for the failing test should have a background highlight.
+  Change the theme color using `workbench.colorCustomizations` and change the color with ID `phpunit.failedTestBackground`.
 - `multilineFunctionRegex` allows the functionRegex to look at multiple lines. The functionRegex adds the `s` flag.
 - `parallelTests` allows multiple tests to run concurrently. I would not recommend setting this above `8`.
 - `showOutput` is similar to the command line setting of the same name. Shows the output console when specified.

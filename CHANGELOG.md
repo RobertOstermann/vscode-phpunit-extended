@@ -2,10 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.7] - 2022-03-04
+
+- Use more specific wording in the README Setup section - [issue #4](https://github.com/RobertOstermann/vscode-phpunit-extended/issues/4)
+
 ## [1.1.6] - 2022-03-04
 
 - Add the option `highlightFailureLocation` to highlight the line causing a failure.
-- Add the theme color `phpunit.failedTestBackground` to allow changing of the highlighted colore.
+- Add the theme color `phpunit.failedTestBackground` to allow changing of the highlighted color.
 
 ## [1.1.5] - 2022-02-28
 

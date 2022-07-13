@@ -11,7 +11,9 @@
 ## Setup
 
 - Install [phpunit](https://phpunit.de/) or have phpunit installed through composer.
-- Set the config values:
+- Right click on the extension and select **Extension Settings** to change the configuration.
+- You could also change the configuration using the **settings.json** file.
+- Here is an example of values you can add to **settings.json**.
 
 ```JSON
 {

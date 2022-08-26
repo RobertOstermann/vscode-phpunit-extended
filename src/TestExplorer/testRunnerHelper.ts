@@ -1,5 +1,3 @@
-import { MessageChannel } from "worker_threads";
-
 import PathHelper from "../Helpers/pathHelper";
 import Constants from "./Helpers/constants";
 import TestResult from "./Helpers/testResult";
@@ -24,6 +22,7 @@ export default class TestRunnerHelper {
         if (successMessage) {
           const [message] = successMessage;
           result.success = true;
+          result.skipped = false;
           result.message = message;
         }
 
@@ -31,6 +30,7 @@ export default class TestRunnerHelper {
         if (failureMessage) {
           const [message] = failureMessage;
           result.success = false;
+          result.skipped = false;
           result.message = message;
         }
 
@@ -38,6 +38,7 @@ export default class TestRunnerHelper {
         if (noTestsMessage) {
           const [message] = noTestsMessage;
           result.success = false;
+          result.skipped = false;
           result.message = message;
         }
 
@@ -45,6 +46,15 @@ export default class TestRunnerHelper {
         if (noAssertionsMessage) {
           const [message] = noAssertionsMessage;
           result.success = false;
+          result.skipped = true;
+          result.message = message;
+        }
+
+        const notImplementedMessage = Constants.phpUnitNotImplementedRegex.exec(line);
+        if (notImplementedMessage) {
+          const [message] = notImplementedMessage;
+          result.success = false;
+          result.skipped = true;
           result.message = message;
         }
       } else if (!result?.line) {

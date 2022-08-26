@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.8] - 2022-08-24
+
+- Add a different result for skipped tests.
+- Add the theme color `phpunit.skippedTestBackground` to allow changing of the highlighted color for skipped tests.
+
 ## [1.1.7] - 2022-03-04
 
 - Use more specific wording in the README Setup section - [issue #4](https://github.com/RobertOstermann/vscode-phpunit-extended/issues/4)

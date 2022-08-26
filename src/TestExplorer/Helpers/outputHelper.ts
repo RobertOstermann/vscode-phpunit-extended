@@ -41,10 +41,14 @@ export default class OutputHelper {
    * @param duration - The time the test took to complete.
    */
   static appendFailedOutput(item: vscode.TestItem, options: vscode.TestRun, result?: TestResult, duration?: number): void {
-    if (duration) {
-      options.failed(item, [], duration);
+    if (result?.skipped) {
+      options.skipped(item);
     } else {
-      options.failed(item, []);
+      if (duration) {
+        options.failed(item, [], duration);
+      } else {
+        options.failed(item, []);
+      }
     }
 
     if (result?.message) {
@@ -56,7 +60,7 @@ export default class OutputHelper {
     }
 
     if (result?.line) {
-      DecorationHelper.addDecorations(item, result.line);
+      DecorationHelper.addDecorations(item, result);
     }
   }
 

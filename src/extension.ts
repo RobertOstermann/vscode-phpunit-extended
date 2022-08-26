@@ -47,7 +47,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
 		const runTestQueue = async () => {
 			DecorationHelper.decorations = [];
-			DecorationHelper.editorDecorations = [];
+			DecorationHelper.failedTestEditorDecorations = [];
+			DecorationHelper.skippedTestEditorDecorations = [];
 
 			let promises = [];
 			for await (const { test, data } of queue) {
@@ -96,10 +97,12 @@ export async function activate(context: vscode.ExtensionContext) {
 			TestDiscover.updateNodeForDocument(controller, document);
 		}),
 		vscode.workspace.onDidChangeTextDocument((editor) => {
-			TestDiscover.updateNodeForDocument(controller, editor?.document);
+			if (!editor?.document?.fileName.includes("extension-output-RobertOstermann")) {
+				TestDiscover.updateNodeForDocument(controller, editor?.document);
 
-			if (TestExplorerConfiguration.highlightFailureLocation()) {
-				DecorationHelper.removeDecorations(editor?.document);
+				if (TestExplorerConfiguration.highlightFailureLocation()) {
+					DecorationHelper.removeDecorations(editor?.document);
+				}
 			}
 		}),
 		vscode.window.onDidChangeActiveTextEditor((editor) => {

@@ -15,6 +15,7 @@ export default class Constants {
   static readonly phpUnitErrorRegex = /Error Regex*/i;
   static readonly phpUnitNoTestsRegex = /No tests executed/i;
   static readonly phpUnitNoAssertionsRegex = /This test did not perform any assertions/i;
+  static readonly phpUnitNotImplementedRegex = /This test has not been implemented yet/i;
 
   static readonly phpClassRegex = /^\s*class\s+(\w*)\s*{?/gi;
   static readonly phpMethodRegex = /\s*(public\s+)?function\s+(\w+)\s*\(/gi;

@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -35,9 +35,18 @@
         "id": "phpunit.failedTestBackground",
         "description": "Background decoration color for failed tests.",
         "defaults": {
-          "dark": "#FF000015",
-          "light": "#FF000015",
-          "highContrast": "#FF000015"
+          "dark": "#ff000015",
+          "light": "#ff000015",
+          "highContrast": "#ff000015"
+        }
+      },
+      {
+        "id": "phpunit.skippedTestBackground",
+        "description": "Background decoration color for failed tests.",
+        "defaults": {
+          "dark": "#ff730015",
+          "light": "#ff730015",
+          "highContrast": "#ff730015"
         }
       }
     ],
@@ -165,7 +174,7 @@
         "phpunit.testExplorer.highlightFailureLocation": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Highlight the line causing the failure in a test. You can edit the theme color with the ID `phpunit.failedTestBackground` to change the background color."
+          "markdownDescription": "Highlight the line causing the failure in a test. You can edit the theme color with the ID `phpunit.failedTestBackground` and `phpunit.skippedTestBackground` to change the background color."
         },
         "phpunit.testExplorer.multilineFunctionRegex": {
           "type": "boolean",

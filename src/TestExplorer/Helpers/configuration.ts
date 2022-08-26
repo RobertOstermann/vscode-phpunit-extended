@@ -152,4 +152,11 @@ export default class TestExplorerConfiguration {
   static failedTestBackgroundColor(): object {
     return { id: "phpunit.failedTestBackground" };
   }
+
+  /**
+   * @returns An object with the id of the background color for skipped tests.
+   */
+  static skippedTestBackgroundColor(): object {
+    return { id: "phpunit.skippedTestBackground" };
+  }
 }

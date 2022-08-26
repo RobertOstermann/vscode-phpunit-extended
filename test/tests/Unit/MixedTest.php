@@ -28,4 +28,19 @@ class MixedTest extends TestCase
 
         throw new ErrorException("");
     }
+
+    public function testIncomplete()
+    {
+        $this->markTestIncomplete('This test has not been implemented yet.');
+    }
+
+    public function testRisky()
+    {
+        $this->markAsRisky('This test is risky.');
+    }
+
+    public function testSkipped()
+    {
+        $this->markTestSkipped('This test has not been implemented yet.');
+    }
 }

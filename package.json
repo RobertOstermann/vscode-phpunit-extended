@@ -2,7 +2,7 @@
   "name": "phpunit-extended-test-explorer",
   "displayName": "PHPUnit Extended with TestExplorer",
   "description": "Run PHPUnit tests from VSCode with native testing through the test explorer.",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "publisher": "RobertOstermann",
   "icon": "images/phpunit.png",
   "engines": {
@@ -26,6 +26,7 @@
     "php"
   ],
   "activationEvents": [
+    "onLanguage:php",
     "workspaceContains:**/*.php"
   ],
   "main": "./out/src/extension",

@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.9] - 2022-12-08
+
+- Add an onLanguage activation event.
+
 ## [1.1.8] - 2022-08-24
 
 - Add a different result for skipped tests.
